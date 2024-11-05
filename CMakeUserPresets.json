@@ -1,0 +1,10 @@
+{
+    "version": 4,
+    "vendor": {
+        "conan": {}
+    },
+    "include": [
+        "/Users/fweichert/Documents/Uni/Repos/film-emulation/build/Release/generators/CMakePresets.json",
+        "build/Release/generators/CMakePresets.json"
+    ]
+}
