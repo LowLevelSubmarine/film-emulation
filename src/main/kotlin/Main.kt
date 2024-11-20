@@ -1,19 +1,10 @@
 package org.example
 
 import nu.pattern.OpenCV
-import org.opencv.core.Core
-import org.opencv.core.CvType
-import org.opencv.core.CvType.CV_8UC3
 import org.opencv.core.Mat
-import org.opencv.core.Size
 import org.opencv.highgui.HighGui
 import org.opencv.highgui.ImageWindow
-import org.opencv.imgcodecs.Imgcodecs
-import org.opencv.imgproc.Imgproc.GaussianBlur
 import org.opencv.videoio.VideoCapture
-import org.opencv.videoio.Videoio
-import kotlin.math.pow
-import kotlin.random.Random
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
@@ -35,8 +26,6 @@ fun main() {
             println("fps: ${fpsCounter.fps}")
         }
     }
-
-    videoCapture.set(Videoio.CAP_PROP_FPS, 30.0)
 
     // Start streaming
     do {
