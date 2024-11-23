@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     implementation("org.openpnp:opencv:4.9.0-0")
+    implementation("de.articdive:jnoise-pipeline:4.1.0")
     testImplementation(kotlin("test"))
 }
 

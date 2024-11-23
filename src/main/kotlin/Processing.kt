@@ -1,5 +1,8 @@
 package org.example
 
+import de.articdive.jnoise.core.api.functions.Interpolation
+import de.articdive.jnoise.generators.noise_parameters.fade_functions.FadeFunction
+import de.articdive.jnoise.pipeline.JNoise
 import org.opencv.core.*
 import org.opencv.core.CvType.*
 import org.opencv.imgcodecs.Imgcodecs
@@ -9,8 +12,38 @@ import kotlin.random.Random
 
 
 fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat) {
-    halation(inputImage, destinationImage)
+    shake(inputImage, destinationImage)
+    halation(destinationImage, destinationImage)
     grain(destinationImage, destinationImage)
+}
+
+fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
+    val jitterScale = 0.0005f
+    val weaveNoiseSpeed = 0.015f
+    val weaveNoiseScale = 0.01f
+
+    var weaveNoiseOffset by stored { 0.0 }
+    val weaveNoiseGenerator =
+        store { JNoise.newBuilder().perlin(3301, Interpolation.COSINE, FadeFunction.QUINTIC_POLY).build() }
+    val x = Random.nextFloat() * jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 0.0).toFloat() * weaveNoiseScale
+    val y = Random.nextFloat() * jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 100.0).toFloat() * weaveNoiseScale * 0.5f
+
+    weaveNoiseOffset += weaveNoiseSpeed
+
+    val transformation = Mat.zeros(2, 3, CV_32F).apply {
+        put(0, 0, floatArrayOf(1.0F))
+        put(1, 1, floatArrayOf(1.0F))
+        put(0, 2, floatArrayOf(inputImage.width().toFloat() * x))
+        put(1, 2, floatArrayOf(inputImage.height().toFloat() * y))
+    }
+    Imgproc.warpAffine(
+        inputImage,
+        destinationImage,
+        transformation,
+        destinationImage.size(),
+        0,
+        Core.BORDER_REFLECT
+    )
 }
 
 fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat) {
@@ -18,7 +51,7 @@ fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat) {
     Core.extractChannel(inputImage, redChannelImage, 2) // red channel isolated
     val gammaLut = store { createGammaLut(20.0) }
     Core.LUT(redChannelImage, gammaLut, redChannelImage)
-    GaussianBlur(redChannelImage, redChannelImage, Size(99.0,99.0), 0.0) // blurred red channel
+    GaussianBlur(redChannelImage, redChannelImage, Size(99.0, 99.0), 0.0) // blurred red channel
     val threeChannelImage = store { Mat.zeros(inputImage.size(), CV_8UC3) }  // black image with 3 channels
     Core.insertChannel(redChannelImage, threeChannelImage, 2)
     Core.add(inputImage, threeChannelImage, destinationImage)
