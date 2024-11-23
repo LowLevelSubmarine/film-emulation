@@ -15,6 +15,7 @@ fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat) {
     shake(inputImage, destinationImage)
     halation(destinationImage, destinationImage)
     grain(destinationImage, destinationImage)
+    crushedLuminance(destinationImage, destinationImage)
 }
 
 fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
@@ -49,7 +50,7 @@ fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
 fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat) {
     val redChannelImage = store { Mat() }
     Core.extractChannel(inputImage, redChannelImage, 2) // red channel isolated
-    val gammaLut = store { createGammaLut(20.0) }
+    val gammaLut = store { createGammaLUT(20.0) }
     Core.LUT(redChannelImage, gammaLut, redChannelImage)
     GaussianBlur(redChannelImage, redChannelImage, Size(99.0, 99.0), 0.0) // blurred red channel
     val threeChannelImage = store { Mat.zeros(inputImage.size(), CV_8UC3) }  // black image with 3 channels
@@ -78,4 +79,11 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat) {
 
     Core.subtract(inputImage, dynamicGrain, destinationImage)
     //dynamicGrain.copyTo(destinationImage)
+}
+
+fun ProcessingDsl.crushedLuminance(inputImage: Mat, destinationImage: Mat) {
+    val contrastLut by stored { createSplineLUT(Knot(0.2f, 0.0f), Knot(0.8f, 1.0f)) }
+    Core.LUT(inputImage, contrastLut, destinationImage)
+    val lut by stored { createSplineLUT(Knot(0.0f, 0.1f), Knot(0.2f, 0.2f), Knot(0.8f, 0.8f), Knot(1.0f, 0.9f)) }
+    Core.LUT(destinationImage, lut, destinationImage)
 }
