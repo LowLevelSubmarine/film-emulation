@@ -8,14 +8,17 @@ import org.opencv.core.CvType.*
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 import org.opencv.imgproc.Imgproc.GaussianBlur
+import kotlin.math.pow
 import kotlin.random.Random
 
 
 fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat) {
-    shake(inputImage, destinationImage)
-    halation(destinationImage, destinationImage)
+    vignette(inputImage)
+    halation(inputImage, destinationImage)
     grain(destinationImage, destinationImage)
     crushedLuminance(destinationImage, destinationImage)
+    scratches(destinationImage)
+    shake(destinationImage, destinationImage)
 }
 
 fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
@@ -26,8 +29,10 @@ fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
     var weaveNoiseOffset by stored { 0.0 }
     val weaveNoiseGenerator =
         store { JNoise.newBuilder().perlin(3301, Interpolation.COSINE, FadeFunction.QUINTIC_POLY).build() }
-    val x = Random.nextFloat() * jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 0.0).toFloat() * weaveNoiseScale
-    val y = Random.nextFloat() * jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 100.0).toFloat() * weaveNoiseScale * 0.5f
+    val x = Random.nextFloat() * jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 0.0)
+        .toFloat() * weaveNoiseScale
+    val y = Random.nextFloat() * jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 100.0)
+        .toFloat() * weaveNoiseScale * 0.5f
 
     weaveNoiseOffset += weaveNoiseSpeed
 
@@ -87,3 +92,9 @@ fun ProcessingDsl.crushedLuminance(inputImage: Mat, destinationImage: Mat) {
     val lut by stored { createSplineLUT(Knot(0.0f, 0.1f), Knot(0.2f, 0.2f), Knot(0.8f, 0.8f), Knot(1.0f, 0.9f)) }
     Core.LUT(destinationImage, lut, destinationImage)
 }
+
+fun ProcessingDsl.vignette(image: Mat) {
+    val mask by stored { createVignetteMask(0.1, image.size()) }
+    Core.subtract(image, mask, image)
+}
+

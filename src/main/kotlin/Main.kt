@@ -20,31 +20,37 @@ fun main() {
     val processing = ProcessingDsl()
     val fpsCounter = FpsCounter()
 
-    async {
+    val fpsThread = async {
         while (!Thread.interrupted()) {
             Thread.sleep(1000)
             println("fps: ${fpsCounter.fps}")
         }
     }
 
-    // Start streaming
-    do {
-        videoCapture.read(inputImage)
-        processing.apply {
-            reset()
-            process(inputImage, processedImage)
-            fpsCounter.count()
-        }
-        HighGui.imshow("test", processedImage)
-    } while (HighGui.waitKey(1) != 27)
+    try {
+        // Start streaming
+        do {
+            videoCapture.read(inputImage)
+            processing.apply {
+                reset()
+                process(inputImage, processedImage)
+                fpsCounter.count()
+            }
+            HighGui.imshow("test", processedImage)
+        } while (HighGui.waitKey(1) != 27)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 
     // Close Window
     HighGui.destroyWindow("test")
     HighGui.waitKey(1) // actually closes the window
     videoCapture.release()
+    fpsThread.interrupt()
+    fpsThread.join()
 }
 
-fun async(block: () -> Unit) = Thread(block).start()
+fun async(block: () -> Unit) = Thread(block).apply { start() }
 
 class FpsCounter(
     private val sampleDuration: Duration = 2.seconds
