@@ -8,7 +8,10 @@ import org.opencv.core.CvType.*
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 import org.opencv.imgproc.Imgproc.GaussianBlur
+import kotlin.math.PI
+import kotlin.math.cos
 import kotlin.math.pow
+import kotlin.math.sin
 import kotlin.random.Random
 
 
@@ -67,7 +70,7 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat) {
     val grainScale = 0.2
     val grainStrength = 0.15
     val staticGrain = store {
-        val texture = Imgcodecs.imread("./grain3.jpeg")
+        val texture = Imgcodecs.imread("./assets/grain/grain3.jpeg")
         Core.multiply(texture, Scalar.all(grainStrength), texture)
         val size = Size(texture.width().toDouble() * grainScale, texture.height().toDouble() * grainScale)
         Imgproc.resize(texture, texture, size)
@@ -98,3 +101,54 @@ fun ProcessingDsl.vignette(image: Mat) {
     Core.subtract(image, mask, image)
 }
 
+fun ProcessingDsl.scratches(image: Mat) {
+    val textures by stored {
+        val rawTextures = (0 until 10).map { i -> Imgcodecs.imread("./assets/scratches/$i.png") }
+        (0 until 30).map {
+            val transformation = buildTransformation {
+                rotate(Random.Default.nextFloat() * PI * 2)
+            }
+            val texture = Mat()
+            Imgproc.warpAffine(rawTextures.random(), texture, transformation, texture.size())
+            texture
+        }
+    }
+    val scratchAmount = if (Random.Default.nextFloat() > 0.9) {
+        (Random.Default.nextFloat().pow(2) * 5).toInt()
+    } else 0
+    for (i in 0 until scratchAmount) {
+        val texture = textures.random()
+        val roiRect = Rect(Random.Default.nextInt(image.width() - texture.width()), Random.Default.nextInt(image.height() - texture.height()), texture.width(), texture.height())
+        val roi = Mat(image, roiRect)
+        Core.add(roi, texture, roi)
+    }
+}
+
+class TransformationBuilder {
+    private fun new(values: List<Double>) = Mat.zeros(2, 3, CV_32F).apply {
+        put(0, 0, values.map { it.toFloat() }.toFloatArray())
+    }
+
+    private var transformation: Mat? = null
+
+    fun rotate(radians: Double) {
+        val rotation = new(listOf(cos(radians), sin(radians), 0.0, -sin(radians), cos(radians), 0.0))
+        transform(rotation)
+    }
+
+    fun translate(x: Double, y: Double) {
+        val translation = new(listOf(1.0, 0.0, x, 0.0, 1.0, y))
+    }
+
+    private fun transform(transformation: Mat) {
+        if (this.transformation == null) {
+            this.transformation = transformation
+            return
+        }
+        this.transformation = this.transformation!!.mul(transformation)
+    }
+
+    internal fun build() = transformation!!
+}
+
+fun buildTransformation(block: TransformationBuilder.() -> Unit): Mat = TransformationBuilder().apply(block).build()
