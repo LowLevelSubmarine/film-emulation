@@ -3,13 +3,15 @@ package org.example
 import dev.benedikt.math.bezier.spline.FloatBezierSpline
 import dev.benedikt.math.bezier.vector.Vector2F
 import org.opencv.core.CvType
+import org.opencv.core.CvType.CV_32F
 import org.opencv.core.Mat
 import org.opencv.core.Point
 import org.opencv.core.Size
-import java.lang.Math.pow
+import java.io.File
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
+import kotlin.random.Random
 
 data class Knot(val x: Float, val y: Float)
 
@@ -57,4 +59,50 @@ fun createVignetteMask(strength: Double, size: Size): Mat {
         }
     }
     return mask
+}
+
+fun createRandomOffsetTransformation(image: Mat): Mat {
+    return Mat.zeros(2, 3, CV_32F).apply {
+        put(0, 0, floatArrayOf(1.0F))
+        put(1, 1, floatArrayOf(1.0F))
+        put(0, 2, floatArrayOf(Random.Default.nextFloat() * image.width()))
+        put(1, 2, floatArrayOf(Random.Default.nextFloat() * image.height()))
+    }
+}
+
+fun loadLUT(cubeFilePath: String): Mat {
+    val file = File(cubeFilePath)
+    val regex = Regex("^(?<key>\\w+) (?<value>.+)\$")
+
+    //var lutSize = 33 // default size
+    val rgbValues = mutableListOf<FloatArray>()
+
+    file.forEachLine { line ->
+        if (line.startsWith("#") || line.isBlank()) return@forEachLine
+        val config = regex.matchEntire(line)?.let { it.groups["key"]!!.value to it.groups["value"]!!.value }
+        if (config != null) {
+            /*when (config.first) {
+                "LUT_3D_SIZE" -> lutSize = config.second.toInt()
+            }*/
+            return@forEachLine
+        }
+        rgbValues.add(line.split(" ").map { it.toFloat() }.toFloatArray())
+    }
+
+    val lut = Mat(1, 256, CvType.CV_8UC3)
+    rgbValues.takeEquallyDistributed(256).forEachIndexed { index, floats ->
+        lut.put(0, index, floats.map { (it * 255).toInt().toByte() }.toByteArray())
+    }
+
+    return lut
+}
+
+private fun <T> List<T>.takeEquallyDistributed(amount: Int): List<T> {
+    val list = mutableListOf<T>()
+    val offset = size / (amount - 1)
+    for (i in 0 until size - offset step offset) {
+        list.add(get(i))
+    }
+    list.add(get(size - 1))
+    return list
 }

@@ -4,7 +4,8 @@ import de.articdive.jnoise.core.api.functions.Interpolation
 import de.articdive.jnoise.generators.noise_parameters.fade_functions.FadeFunction
 import de.articdive.jnoise.pipeline.JNoise
 import org.opencv.core.*
-import org.opencv.core.CvType.*
+import org.opencv.core.CvType.CV_32F
+import org.opencv.core.CvType.CV_8UC3
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 import org.opencv.imgproc.Imgproc.GaussianBlur
@@ -18,9 +19,12 @@ import kotlin.random.Random
 fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat) {
     vignette(inputImage)
     halation(inputImage, destinationImage)
-    grain(destinationImage, destinationImage)
+    //grain(destinationImage, destinationImage)
+    applyLUT(destinationImage)
     crushedLuminance(destinationImage, destinationImage)
-    scratches(destinationImage)
+    //scratches(destinationImage)
+    dust(destinationImage)
+    colorCast(destinationImage)
     shake(destinationImage, destinationImage)
 }
 
@@ -77,12 +81,7 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat) {
         Mat(texture, Rect(Point(), inputImage.size()))
     }
     val dynamicGrain = store { Mat() }
-    val transformation = Mat.zeros(2, 3, CV_32F).apply {
-        put(0, 0, floatArrayOf(1.0F))
-        put(1, 1, floatArrayOf(1.0F))
-        put(0, 2, floatArrayOf(Random.Default.nextFloat() * inputImage.width()))
-        put(1, 2, floatArrayOf(Random.Default.nextFloat() * inputImage.height()))
-    }
+    val transformation = createRandomOffsetTransformation(inputImage)
     Imgproc.warpAffine(staticGrain, dynamicGrain, transformation, dynamicGrain.size(), 0, Core.BORDER_REFLECT)
 
     Core.subtract(inputImage, dynamicGrain, destinationImage)
@@ -118,10 +117,42 @@ fun ProcessingDsl.scratches(image: Mat) {
     } else 0
     for (i in 0 until scratchAmount) {
         val texture = textures.random()
-        val roiRect = Rect(Random.Default.nextInt(image.width() - texture.width()), Random.Default.nextInt(image.height() - texture.height()), texture.width(), texture.height())
+        val roiRect = Rect(
+            Random.Default.nextInt(image.width() - texture.width()),
+            Random.Default.nextInt(image.height() - texture.height()),
+            texture.width(),
+            texture.height()
+        )
         val roi = Mat(image, roiRect)
         Core.add(roi, texture, roi)
     }
+}
+
+fun ProcessingDsl.dust(image: Mat) {
+    val dustScale = 0.7
+    val dustStrength = 0.2
+    val staticDust = store {
+        val texture = Imgcodecs.imread("./assets/dust/dust-2.png")
+        Core.multiply(texture, Scalar.all(dustStrength), texture)
+        val size = Size(texture.width().toDouble() * dustScale, texture.height().toDouble() * dustScale)
+        Imgproc.resize(texture, texture, size)
+        Mat(texture, Rect(Point(), image.size()))
+    }
+    val dynamicDust = store { Mat() }
+    val transformation = createRandomOffsetTransformation(image)
+    Imgproc.warpAffine(staticDust, dynamicDust, transformation, dynamicDust.size(), 0, Core.BORDER_REFLECT)
+
+    Core.subtract(image, dynamicDust, image)
+}
+
+fun ProcessingDsl.colorCast(image: Mat) {
+    val blueTint = Scalar(25.0, 0.0, 0.0)
+    Core.add(image, blueTint, image)
+}
+
+fun ProcessingDsl.applyLUT(image: Mat) {
+    val lut by stored { loadLUT("./assets/luts/Kodak Portra 400 NC.cube") }
+    Core.LUT(image, lut, image)
 }
 
 class TransformationBuilder {
