@@ -13,7 +13,8 @@ import kotlin.time.TimeSource
 fun main() {
     OpenCV.loadLocally()
 
-    ImageWindow("test", 0)
+    val imageWindowName = "filmEmulation"
+    ImageWindow(imageWindowName, 0)
     val videoCapture = VideoCapture(0)  // cameraIndex = 0
     val inputImage = Mat()
     val processedImage = Mat()
@@ -36,14 +37,14 @@ fun main() {
                 process(inputImage, processedImage)
                 fpsCounter.count()
             }
-            HighGui.imshow("test", processedImage)
+            HighGui.imshow(imageWindowName, processedImage)
         } while (HighGui.waitKey(1) != 27)
     } catch (e: Exception) {
         e.printStackTrace()
     }
 
     // Close Window
-    HighGui.destroyWindow("test")
+    HighGui.destroyWindow(imageWindowName)
     HighGui.waitKey(1) // actually closes the window
     videoCapture.release()
     fpsThread.interrupt()
