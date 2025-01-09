@@ -4,8 +4,8 @@ import kotlin.reflect.KProperty
 
 class ProcessingDsl {
     private val storage = Storage()
-    fun <T> store(creator: () -> T) = storage.store { creator() }
-    fun <T> stored(creator: () -> T) = storage.stored { creator() }
+    fun <T> store(dependencies: List<Any>? = null, creator: () -> T) = storage.store(dependencies) { creator() }
+    fun <T> stored(dependencies: List<Any>? = null, creator: () -> T) = storage.stored(dependencies) { creator() }
     fun reset() = storage.reset()
     fun log(text: String) {
         println(text)
@@ -14,13 +14,15 @@ class ProcessingDsl {
 
 private class Storage {
     private val storage = mutableMapOf<Int, Any?>()
+    private val lastDependencies = mutableMapOf<Int, List<Any>?>()
     private var counter = 0
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> store(creator: () -> T): T {
-        val value = if (storage.containsKey(counter)) {
+    fun <T> store(dependencies: List<Any>?, creator: () -> T): T {
+        val value = if (storage.containsKey(counter) && lastDependencies[counter] == dependencies) {
             storage[counter] as T
         } else {
+            lastDependencies[counter] = dependencies
             val value = creator()
             storage[counter] = value
             value
@@ -29,7 +31,8 @@ private class Storage {
         return value
     }
 
-    fun <T> stored(creator: () -> T) = store { StoredValueDelegate(creator()) }
+    fun <T> stored(dependencies: List<Any>?, creator: () -> T) =
+        store(dependencies) { StoredValueDelegate(creator()) }
 
     fun reset() {
         counter = 0

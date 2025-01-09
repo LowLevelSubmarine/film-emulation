@@ -69,7 +69,7 @@ fun createRandomOffsetTransformation(image: Mat): Mat {
         put(1, 2, floatArrayOf(Random.Default.nextFloat() * image.height()))
     }
 }
-
+/*
 fun loadLUT(cubeFilePath: String): Mat {
     val file = File(cubeFilePath)
     val regex = Regex("^(?<key>\\w+) (?<value>.+)\$")
@@ -89,9 +89,18 @@ fun loadLUT(cubeFilePath: String): Mat {
         rgbValues.add(line.split(" ").map { it.toFloat() }.toFloatArray())
     }
 
+    val length = rgbValues.size.toFloat().pow(1/3.toFloat())
+
+
+    fun getColor(input: ByteArray): ByteArray {
+        fun mapInput(input: Byte) = input.toFloat() / 255 * length
+        val index = (mapInput(input[0]) * 64 * 64).toInt() + (mapInput(input[1]) * 64).toInt() + mapInput(input[2]).toInt()
+        return rgbValues[index].map { (it * 255).toInt().toByte() }.toByteArray()
+    }
+
     val lut = Mat(1, 256, CvType.CV_8UC3)
-    rgbValues.takeEquallyDistributed(256).forEachIndexed { index, floats ->
-        lut.put(0, index, floats.map { (it * 255).toInt().toByte() }.toByteArray())
+    for (i in 0 until 256) {
+        lut.put(0, i, getColor())
     }
 
     return lut
@@ -106,3 +115,4 @@ private fun <T> List<T>.takeEquallyDistributed(amount: Int): List<T> {
     list.add(get(size - 1))
     return list
 }
+*/

@@ -1,0 +1,47 @@
+<html lang="de">
+    <body>
+        <span>Grain Strength: <span id="grainStrength"></span></span>
+        <br/>
+        <label for="slider">Waehle einen Wert:</label>
+        <input type="range" id="slider" min="0" max="1" value="0.5" step="0.01">
+        <span id="sliderValue">50</span>
+        <br/>
+        <span>Dust Strength: <span id="dustStrength"></span></span>
+        <script>
+          // HTML-Elemente abrufen
+          const slider = document.getElementById("slider");
+          const sliderValue = document.getElementById("sliderValue");
+
+          // Variable initialisieren
+          let meineVariable = 0.9;
+
+          async function getConfig() {
+            const response = await fetch('http://localhost:8080', {method: 'GET'});
+            const config = await response.json();
+            console.log(config)
+            return config
+          }
+
+          getConfig().then(res => {
+            document.getElementById("grainStrength").innerHTML = res.grainStrength;
+            meineVariable = res.grainStrength;
+
+            // Slider-Wert setzen, basierend auf der Variable
+            slider.value = meineVariable;
+            sliderValue.textContent = meineVariable;
+
+            document.getElementById("dustStrength").innerHTML = res.dustStrength;
+          })
+
+          // Eventlistener hinzufügen, um Änderungen am Slider zu erfassen
+          slider.addEventListener("input", (event) => {
+            meineVariable = event.target.value; // Wert aus dem Slider holen
+            sliderValue.textContent = meineVariable; // Wert anzeigen
+            console.log(`Die Variable hat jetzt den Wert: ${meineVariable}`);
+          });
+
+          // Die Variable aus dem Script kann hier genutzt werden
+          console.log(`Initialer Wert der Variable: ${meineVariable}`);
+        </script>
+    </body>
+</html>

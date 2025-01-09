@@ -16,16 +16,16 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 
-fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat) {
+fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat, config: Config) {
     vignette(inputImage)
     halation(inputImage, destinationImage)
-    //grain(destinationImage, destinationImage)
-    applyLUT(destinationImage)
-    crushedLuminance(destinationImage, destinationImage)
-    //scratches(destinationImage)
-    dust(destinationImage)
+    grain(destinationImage, destinationImage, config)
     colorCast(destinationImage)
+    //applyLUT(destinationImage)
+    scratches(destinationImage)
+    dust(destinationImage)
     shake(destinationImage, destinationImage)
+    crushedLuminance(destinationImage, destinationImage)
 }
 
 fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
@@ -70,12 +70,11 @@ fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat) {
     Core.add(inputImage, threeChannelImage, destinationImage)
 }
 
-fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat) {
+fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) {
     val grainScale = 0.2
-    val grainStrength = 0.15
-    val staticGrain = store {
+    val staticGrain = store(dependencies = listOf(config.grainStrength)) {
         val texture = Imgcodecs.imread("./assets/grain/grain3.jpeg")
-        Core.multiply(texture, Scalar.all(grainStrength), texture)
+        Core.multiply(texture, Scalar.all(config.grainStrength.toDouble()), texture)
         val size = Size(texture.width().toDouble() * grainScale, texture.height().toDouble() * grainScale)
         Imgproc.resize(texture, texture, size)
         Mat(texture, Rect(Point(), inputImage.size()))
@@ -139,6 +138,10 @@ fun ProcessingDsl.dust(image: Mat) {
         Mat(texture, Rect(Point(), image.size()))
     }
     val dynamicDust = store { Mat() }
+
+
+    if (Random.Default.nextFloat() > 0.05) return
+
     val transformation = createRandomOffsetTransformation(image)
     Imgproc.warpAffine(staticDust, dynamicDust, transformation, dynamicDust.size(), 0, Core.BORDER_REFLECT)
 
@@ -150,10 +153,10 @@ fun ProcessingDsl.colorCast(image: Mat) {
     Core.add(image, blueTint, image)
 }
 
-fun ProcessingDsl.applyLUT(image: Mat) {
+/*fun ProcessingDsl.applyLUT(image: Mat) {
     val lut by stored { loadLUT("./assets/luts/Kodak Portra 400 NC.cube") }
     Core.LUT(image, lut, image)
-}
+}*/
 
 class TransformationBuilder {
     private fun new(values: List<Double>) = Mat.zeros(2, 3, CV_32F).apply {
