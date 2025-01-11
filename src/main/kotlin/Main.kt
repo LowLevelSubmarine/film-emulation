@@ -34,12 +34,14 @@ fun main() {
             allowHeader(HttpHeaders.ContentType)
         }
 
+        println(configRef.value)
         routing {
             get("/") {
                 call.respond(Json.encodeToString(configRef.value))
             }
             post("/") {
                 val receivedConfig = call.receive<String>()
+                println("Received config: $receivedConfig")
                 configRef.value = Json.decodeFromString(receivedConfig)
                 println("updated config: $configRef")
                 call.respond(HttpStatusCode.OK)

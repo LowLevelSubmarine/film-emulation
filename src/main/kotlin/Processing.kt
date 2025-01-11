@@ -88,7 +88,7 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) 
     val dynamicGrain = store { Mat() }
     val transformation = createRandomOffsetTransformation(inputImage)
     Imgproc.warpAffine(staticGrain, dynamicGrain, transformation, dynamicGrain.size(), 0, Core.BORDER_REFLECT)
-    Core.add(inputImage, Scalar.all(150.0 * config.grainStrength), destinationImage)
+    Core.add(inputImage, Scalar.all(150.0 * config.grainStrength.toDouble()), destinationImage)
     Core.subtract(destinationImage, dynamicGrain, destinationImage)
 }
 
