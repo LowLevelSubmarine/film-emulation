@@ -9,32 +9,22 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.utils.io.*
-import kotlinx.coroutines.delay
 import kotlinx.serialization.json.Json
 import nu.pattern.OpenCV
 import org.opencv.core.Mat
 import org.opencv.core.MatOfByte
-import org.opencv.highgui.HighGui
-import org.opencv.highgui.ImageWindow
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.videoio.VideoCapture
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 
 
+data class Ref<T>(var value: T)
+
 fun main() {
     OpenCV.loadLocally()
-
-    val imageWindowName = "filmEmulation"
-    ImageWindow(imageWindowName, 0)
-    val videoCapture = VideoCapture(0)  // cameraIndex = 0
-    val inputImage = Mat()
-    val processedImage = Mat()
-    val processing = ProcessingDsl()
-    val fpsCounter = FpsCounter()
-    var config = Config.default
+    val configRef = Ref(Config.default)
 
     embeddedServer(Netty, 8080) {
         install(CORS) {
@@ -46,64 +36,74 @@ fun main() {
 
         routing {
             get("/") {
-                call.respond(Json.encodeToString(config))
+                call.respond(Json.encodeToString(configRef.value))
             }
             post("/") {
                 val receivedConfig = call.receive<String>()
-                config = Json.decodeFromString(receivedConfig)
-                println("received config: $config")
+                configRef.value = Json.decodeFromString(receivedConfig)
+                println("updated config: $configRef")
                 call.respond(HttpStatusCode.OK)
             }
             get("/stream") {
-                call.respondBytesWriter(contentType = ContentType("multipart", "x-mixed-replace; boundary=frame")) {
-                    while (true) {
-                        val jpegBytes = run {
-                            val buffer = MatOfByte()
-                            Imgcodecs.imencode(".jpg", processedImage, buffer)
-                            buffer.toArray()
-                        }
-
-                        writeByteArray("--frame\r\n".toByteArray())
-                        writeByteArray("Content-Type: image/jpeg\r\n\r\n".toByteArray())
-                        writeByteArray(jpegBytes)
-                        writeByteArray("\r\n".toByteArray())
-
-                        flush()
-                        delay(30.milliseconds) // ~30 FPS
-                    }
-                }
+                call.respondWithVideoStream(configRef, targetFrameRate = 24)
             }
         }
-    }.start()
+    }.start(wait = true)
+}
 
+suspend fun RoutingCall.respondWithVideoStream(config: Ref<Config>, targetFrameRate: Int) = respondBytesWriter(
+    contentType = ContentType("multipart", "x-mixed-replace; boundary=frame")
+) {
+    val videoCapture = VideoCapture(0)  // cameraIndex = 0
+    val fpsCounter = FpsCounter()
     val fpsThread = async {
-        while (!Thread.interrupted()) {
-            Thread.sleep(1000)
-            println("fps: ${fpsCounter.fps}")
+        while (true) {
+            try {
+                Thread.sleep(5000)
+                println("fps: ${fpsCounter.fps}")
+            } catch (e: InterruptedException) {
+                // interrupting this is ok
+            }
         }
     }
 
-    try {
-        // Start streaming
-        do {
-            videoCapture.read(inputImage)
-            processing.apply {
-                reset()
-                process(inputImage, processedImage, config)
-                fpsCounter.count()
-            }
-            HighGui.imshow(imageWindowName, processedImage)
-        } while (HighGui.waitKey(1) != 27)
-    } catch (e: Exception) {
-        e.printStackTrace()
+    var closed = false
+    onClose { closed = true }
+
+    val processing = ProcessingDsl()
+    val inputImage = Mat()
+    val processedImage = Mat()
+    var lastFrame = TimeSource.Monotonic.markNow()
+    val targetFrameTime = 1.seconds / targetFrameRate
+    while (!closed) {
+        if (lastFrame + targetFrameTime > TimeSource.Monotonic.markNow()) continue
+        lastFrame = TimeSource.Monotonic.markNow()
+        videoCapture.read(inputImage)
+        fpsCounter.count()
+
+        processing.apply {
+            reset()
+            process(inputImage, processedImage, config.value)
+        }
+
+        val jpegBytes = run {
+            val buffer = MatOfByte()
+            Imgcodecs.imencode(".jpg", processedImage, buffer)
+            buffer.toArray()
+        }
+
+        writeByteArray("--frame\r\n".toByteArray())
+        writeByteArray("Content-Type: image/jpeg\r\n\r\n".toByteArray())
+        writeByteArray(jpegBytes)
+        writeByteArray("\r\n".toByteArray())
+        flush()
+
+        //println("frame time: ${lastFrame.elapsedNow().inWholeMilliseconds}ms")
     }
 
-    // Close Window
-    HighGui.destroyWindow(imageWindowName)
-    HighGui.waitKey(1) // actually closes the window
-    videoCapture.release()
     fpsThread.interrupt()
     fpsThread.join()
+    videoCapture.release()
 }
 
 fun async(block: () -> Unit) = Thread(block).apply { start() }

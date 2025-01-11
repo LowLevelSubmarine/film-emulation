@@ -17,15 +17,21 @@ import kotlin.random.Random
 
 
 fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat, config: Config) {
-    vignette(inputImage)
+    //slog3ToSrgb(inputImage, destinationImage)
+    vignette(inputImage, config)
     halation(inputImage, destinationImage)
     grain(destinationImage, destinationImage, config)
-    colorCast(destinationImage)
+    colorCast(destinationImage, config)
     //applyLUT(destinationImage)
     scratches(destinationImage)
-    dust(destinationImage)
+    dust(destinationImage, config)
     shake(destinationImage, destinationImage)
-    crushedLuminance(destinationImage, destinationImage)
+    crushedLuminance(destinationImage, destinationImage, config)
+}
+
+fun ProcessingDsl.slog3ToSrgb(inputImage: Mat, destinationImage: Mat) {
+    val lut by stored { createSlog3ToSrgbLut() }
+    Core.LUT(inputImage, lut, destinationImage)
 }
 
 fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
@@ -82,20 +88,31 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) 
     val dynamicGrain = store { Mat() }
     val transformation = createRandomOffsetTransformation(inputImage)
     Imgproc.warpAffine(staticGrain, dynamicGrain, transformation, dynamicGrain.size(), 0, Core.BORDER_REFLECT)
-
-    Core.subtract(inputImage, dynamicGrain, destinationImage)
-    //dynamicGrain.copyTo(destinationImage)
+    Core.add(inputImage, Scalar.all(150.0 * config.grainStrength), destinationImage)
+    Core.subtract(destinationImage, dynamicGrain, destinationImage)
 }
 
-fun ProcessingDsl.crushedLuminance(inputImage: Mat, destinationImage: Mat) {
+fun ProcessingDsl.crushedLuminance(inputImage: Mat, destinationImage: Mat, config: Config) {
     val contrastLut by stored { createSplineLUT(Knot(0.2f, 0.0f), Knot(0.8f, 1.0f)) }
     Core.LUT(inputImage, contrastLut, destinationImage)
-    val lut by stored { createSplineLUT(Knot(0.0f, 0.1f), Knot(0.2f, 0.2f), Knot(0.8f, 0.8f), Knot(1.0f, 0.9f)) }
+    val lut by stored {
+        createSplineLUT(
+            Knot(0.0f, config.crushedLuminanceStrength * 0.2f),
+            Knot(0.2f, 0.2f),
+            Knot(0.8f, 0.8f),
+            Knot(1.0f, 1.0f - config.crushedLuminanceStrength * 0.2f)
+        )
+    }
     Core.LUT(destinationImage, lut, destinationImage)
 }
 
-fun ProcessingDsl.vignette(image: Mat) {
-    val mask by stored { createVignetteMask(0.1, image.size()) }
+fun ProcessingDsl.vignette(image: Mat, config: Config) {
+    val mask by stored(dependencies = listOf(config.vignetteStrength)) {
+        createVignetteMask(
+            config.vignetteStrength.toDouble(),
+            image.size()
+        )
+    }
     Core.subtract(image, mask, image)
 }
 
@@ -127,30 +144,30 @@ fun ProcessingDsl.scratches(image: Mat) {
     }
 }
 
-fun ProcessingDsl.dust(image: Mat) {
+fun ProcessingDsl.dust(image: Mat, config: Config) {
     val dustScale = 0.7
-    val dustStrength = 0.2
-    val staticDust = store {
+    val staticDust = store(dependencies = listOf(config.dustStrength)) {
         val texture = Imgcodecs.imread("./assets/dust/dust-2.png")
-        Core.multiply(texture, Scalar.all(dustStrength), texture)
+        Core.multiply(texture, Scalar.all(config.dustStrength.toDouble()), texture)
         val size = Size(texture.width().toDouble() * dustScale, texture.height().toDouble() * dustScale)
         Imgproc.resize(texture, texture, size)
         Mat(texture, Rect(Point(), image.size()))
     }
     val dynamicDust = store { Mat() }
-
-
     if (Random.Default.nextFloat() > 0.05) return
-
     val transformation = createRandomOffsetTransformation(image)
     Imgproc.warpAffine(staticDust, dynamicDust, transformation, dynamicDust.size(), 0, Core.BORDER_REFLECT)
-
     Core.subtract(image, dynamicDust, image)
 }
 
-fun ProcessingDsl.colorCast(image: Mat) {
-    val blueTint = Scalar(25.0, 0.0, 0.0)
-    Core.add(image, blueTint, image)
+fun ProcessingDsl.colorCast(image: Mat, config: Config) {
+    Core.add(image, config.colorCast.toScalar(), image)
+}
+
+fun ProcessingDsl.tone(image: Mat, config: Config) {
+    val hsv by stored { Mat() }
+    val mask by stored { Mat() }
+    Imgproc.cvtColor(image, hsv, Imgproc.COLOR_BGR2HSV)
 }
 
 /*fun ProcessingDsl.applyLUT(image: Mat) {

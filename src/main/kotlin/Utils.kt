@@ -7,7 +7,7 @@ import org.opencv.core.CvType.CV_32F
 import org.opencv.core.Mat
 import org.opencv.core.Point
 import org.opencv.core.Size
-import java.io.File
+import kotlin.math.log10
 import kotlin.math.min
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -16,35 +16,69 @@ import kotlin.random.Random
 data class Knot(val x: Float, val y: Float)
 
 fun createGammaLUT(gammaValue: Double): Mat {
-    fun saturate(`val`: Double): Byte {
-        var iVal = Math.round(`val`).toInt()
-        iVal = if (iVal > 255) 255 else (if (iVal < 0) 0 else iVal)
-        return iVal.toByte()
+    fun saturate(floatValue: Double): Byte {
+        var value = Math.round(floatValue).toInt()
+        value = if (value > 255) 255 else (if (value < 0) 0 else value)
+        return value.toByte()
     }
 
-    val lut = Mat(1, 256, CvType.CV_8U)
-    val lutData = ByteArray((lut.total() * lut.channels()).toInt())
-    for (i in 0 until lut.cols()) {
-        lutData[i] = saturate((i / 255.0).pow(gammaValue) * 255.0)
-    }
-    lut.put(0, 0, lutData)
-    return lut
+    return createLUT { i -> saturate((i / 255.0).pow(gammaValue) * 255.0) }
 }
 
 fun createSplineLUT(knots: List<Knot>): Mat {
-    val lut = Mat(1, 256, CvType.CV_8U)
     val spline = FloatBezierSpline<Vector2F>()
     spline.addKnots(*knots.map { Vector2F(x = it.x, y = it.y) }.toTypedArray())
+    return createLUT { i -> (spline.getCoordinatesAt(i / 256.0f).y * 256).toInt().toByte() }
+}
 
+fun createSplineLUT(vararg knots: Knot) = createSplineLUT(knots.toList())
+
+fun createSlog3ToSrgbLut(): Mat = createLUT { i ->
+    val normalizedValue = i / 255.0
+    val normalizedSrgbValue = mapSlrToSrgb(mapSlog3ToSlr(normalizedValue))
+    (normalizedSrgbValue * 255.0).toInt().toByte()
+}
+
+private fun createLUT(fn: (i: Int) -> Byte): Mat {
+    val lut = Mat(1, 256, CvType.CV_8U)
     val lutData = ByteArray(256)
     for (i in 0 until 256) {
-        lutData[i] = (spline.getCoordinatesAt(i / 256.0f).y * 256).toInt().toByte()
+        lutData[i] = fn(i)
     }
     lut.put(0, 0, lutData)
     return lut
 }
 
-fun createSplineLUT(vararg knots: Knot) = createSplineLUT(knots.toList())
+// https://pro.sony/s3/cms-static-content/uploadfile/06/1237494271406.pdf
+private fun mapSlog3ToSlr(slog3Value: Double): Double {
+    // Constants for S-Log3
+    val a = 0.037584
+    val b = 0.01125000
+    val c = 0.00807360
+    val d = 0.432699
+    val e = 0.030001222851889303 // Derived value for e
+    val m = 0.432699
+
+    // Threshold for logarithmic vs linear
+    val threshold = m * log10(c) + d
+
+    val out =  if (slog3Value >= threshold) {
+        10.0.pow((slog3Value - d) / m) - c
+    } else {
+        (slog3Value - e) * b / a
+    }
+    return (out * 0.01).coerceIn(0.0, 1.0)
+}
+
+private fun mapSlrToSrgb(slrValue: Double): Double {
+    return slrValue
+    val a = 0.055
+    return if (slrValue <= 0.0031308) {
+        12.92 * slrValue
+    } else {
+        (1 + a) * slrValue.pow(1/2.4) - a
+    }
+}
 
 fun createVignetteMask(strength: Double, size: Size): Mat {
     val mask = Mat(size, CvType.CV_8UC3)
