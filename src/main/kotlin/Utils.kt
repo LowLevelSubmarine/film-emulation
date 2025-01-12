@@ -145,6 +145,8 @@ fun adjustSaturation(image: Mat, destination: Mat, saturation: Number) {
     Imgproc.cvtColor(image, destination, Imgproc.COLOR_HSV2BGR)
 }
 
+fun Int.odd() = this + 1 - this % 2
+
 /*
 fun loadLUT(cubeFilePath: String): Mat {
     val file = File(cubeFilePath)

@@ -24,5 +24,3 @@ fun main() {
     }
     Imgcodecs.imwrite("$path-edit.png", destination)
 }
-
-private operator fun Size.div(i: Number) = Size(this.width / i.toDouble(), this.height / i.toDouble())

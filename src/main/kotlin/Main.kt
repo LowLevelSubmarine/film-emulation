@@ -7,6 +7,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.utils.io.*
+import kotlinx.coroutines.*
 import kotlinx.serialization.json.Json
 import nu.pattern.OpenCV
 import org.opencv.core.Mat
@@ -14,15 +15,19 @@ import org.opencv.core.MatOfByte
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.videoio.VideoCapture
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
+import kotlin.time.measureTime
 
 
 data class Ref<T>(var value: T)
 
-fun main() {
+suspend fun main() = coroutineScope {
     OpenCV.loadLocally()
     val configRef = Ref(Config.default)
+    val frameReceivers = mutableListOf<suspend (bytes: ByteArray) -> Unit>()
+    launch { createVideoStream(configRef, 24, { frame -> frameReceivers.forEach { it(frame) }}) }
 
     embeddedServer(Netty, 8080) {
         install(CORS) {
@@ -45,7 +50,21 @@ fun main() {
                 call.respond(HttpStatusCode.OK)
             }
             get("/stream") {
-                call.respondWithVideoStream(configRef, targetFrameRate = 24)
+                call.respondBytesWriter(ContentType("multipart", "x-mixed-replace; boundary=frame")) {
+                    val onNewFrameBytes: suspend (bytes: ByteArray) -> Unit = { bytes: ByteArray ->
+                        if (!isClosedForWrite) {
+                            writeByteArray("--frame\r\n".toByteArray())
+                            writeByteArray("Content-Type: image/jpeg\r\n\r\n".toByteArray())
+                            writeByteArray(bytes)
+                            writeByteArray("\r\n".toByteArray())
+                            flush()
+                        }
+                    }
+
+                    frameReceivers.add(onNewFrameBytes)
+                    onClose { frameReceivers.remove(onNewFrameBytes) }
+                    awaitCancellation()
+                }
             }
             get("/reset") {
                 configRef.value = Config.default
@@ -53,64 +72,72 @@ fun main() {
             }
         }
     }.start(wait = true)
+
+    Unit
 }
 
-suspend fun RoutingCall.respondWithVideoStream(config: Ref<Config>, targetFrameRate: Int) = respondBytesWriter(
-    contentType = ContentType("multipart", "x-mixed-replace; boundary=frame")
-) {
-    val videoCapture = VideoCapture(0)  // cameraIndex = 0
-    val fpsCounter = FpsCounter()
-    val fpsThread = async {
-        while (true) {
-            try {
-                Thread.sleep(5000)
-                println("fps: ${fpsCounter.fps}")
-            } catch (e: InterruptedException) {
-                // interrupting this is ok
+suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFrameBytes: suspend (bytes: ByteArray) -> Unit) {
+    coroutineScope {
+        val videoCapture = VideoCapture(0)  // cameraIndex = 0
+        val fpsCounter = FpsCounter()
+        val fpsThread = launch {
+            while (isActive) {
+                try {
+                    Thread.sleep(2000)
+                    println("fps: ${fpsCounter.fps}")
+                } catch (e: InterruptedException) {
+                    // interrupting this is ok
+                }
             }
         }
-    }
 
-    var closed = false
-    onClose { closed = true }
+        var lastFrame = TimeSource.Monotonic.markNow()
+        val targetFrameTime = 1.seconds / targetFrameRate
+        var currentFrame: Mat? = null
 
-    val processing = ProcessingDsl()
-    val inputImage = Mat()
-    val processedImage = Mat()
-    var lastFrame = TimeSource.Monotonic.markNow()
-    val targetFrameTime = 1.seconds / targetFrameRate
-    while (!closed) {
-        if (lastFrame + targetFrameTime > TimeSource.Monotonic.markNow()) continue
-        lastFrame = TimeSource.Monotonic.markNow()
-        videoCapture.read(inputImage)
-        fpsCounter.count()
+        val processingThread = launch {
+            val processing = ProcessingDsl()
+            val processedFrame = Mat()
+            while (isActive) {
+                if (currentFrame == null) continue
+                //println("processing frame")
+                val frame = currentFrame!!
+                processing.apply {
+                    reset()
+                    measureTime("processing") { process(frame, processedFrame, configRef.value) }
+                }
+                currentFrame = null
+                //processing.logTimings()
 
-        processing.apply {
-            reset()
-            process(inputImage, processedImage, config.value)
+                launch {
+                    val buffer = run {
+                        val buffer = MatOfByte()
+                        Imgcodecs.imencode(".jpg", processedFrame, buffer)
+                        buffer.toArray()
+                    }
+                    onFrameBytes(buffer)
+                }
+            }
         }
 
-        val jpegBytes = run {
-            val buffer = MatOfByte()
-            Imgcodecs.imencode(".jpg", processedImage, buffer)
-            buffer.toArray()
+        val capturedFrame = Mat()
+        while (isActive) {
+            //if (lastFrame + targetFrameTime > TimeSource.Monotonic.markNow()) continue
+            videoCapture.read(capturedFrame)
+            if (currentFrame != null) {
+                //println("processing couldn't keep up with frame rate")
+                continue
+            }
+            currentFrame = capturedFrame
+            lastFrame = TimeSource.Monotonic.markNow()
+            fpsCounter.count()
         }
 
-        writeByteArray("--frame\r\n".toByteArray())
-        writeByteArray("Content-Type: image/jpeg\r\n\r\n".toByteArray())
-        writeByteArray(jpegBytes)
-        writeByteArray("\r\n".toByteArray())
-        flush()
-
-        //println("frame time: ${lastFrame.elapsedNow().inWholeMilliseconds}ms")
+        videoCapture.release()
     }
-
-    fpsThread.interrupt()
-    fpsThread.join()
-    videoCapture.release()
 }
 
-fun async(block: () -> Unit) = Thread(block).apply { start() }
+//fun async(block: () -> Unit) = Thread(block).apply { start() }
 
 class FpsCounter(
     private val sampleDuration: Duration = 2.seconds

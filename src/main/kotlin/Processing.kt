@@ -13,16 +13,16 @@ import kotlin.random.Random
 
 fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat, config: Config) {
     //slog3ToSrgb(inputImage, destinationImage)
-    vignette(inputImage, config)
-    halation(inputImage, destinationImage, config)
-    grain(destinationImage, destinationImage, config)
-    colorCast(destinationImage, config)
-    tone(destinationImage, config)
+    measureTime("vignette") { vignette(inputImage, config) }
+    measureTime("halation") { halation(inputImage, destinationImage, config) }
+    measureTime("grain") { grain(destinationImage, destinationImage, config) }
+    measureTime("colorCast") { colorCast(destinationImage, config) }
     //applyLUT(destinationImage)
-    scratches(destinationImage)
-    dust(destinationImage, config)
-    shake(destinationImage, destinationImage)
-    crushedLuminance(destinationImage, destinationImage, config)
+    measureTime("scratches") { scratches(destinationImage) }
+    measureTime("dust") { dust(destinationImage, config) }
+    measureTime("shake") { shake(destinationImage, destinationImage) }
+    measureTime("crushedLuminance") { crushedLuminance(destinationImage, destinationImage, config) }
+    measureTime("tone") { tone(destinationImage, config) }
 }
 
 fun ProcessingDsl.slog3ToSrgb(inputImage: Mat, destinationImage: Mat) {
@@ -62,24 +62,29 @@ fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
 }
 
 fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat, config: Config) {
+    val halationRes = 0.5
     val redChannelImage = store { Mat() }
     Core.extractChannel(inputImage, redChannelImage, 2) // red channel isolated
     val gammaLut = store { createGammaLUT(config.halationThreshold.toDouble()) }
+    Imgproc.resize(redChannelImage, redChannelImage, Size(), halationRes, halationRes, Imgproc.INTER_LINEAR)
     Core.LUT(redChannelImage, gammaLut, redChannelImage)
-    GaussianBlur(
-        redChannelImage,
-        redChannelImage,
-        config.halationGaussianSize.toSize(),
-        config.halationSigmaX.toDouble()
-    ) // blurred red channel
+    measureTime("halation: gaussian blur") {
+        GaussianBlur(
+            redChannelImage,
+            redChannelImage,
+            config.halationGaussianSize.toSize().map { (it * halationRes).roundToInt().odd().toDouble() },
+            config.halationSigmaX.toDouble()
+        ) // blurred red channel
+    }
     adjustLuminance(redChannelImage, redChannelImage, brightness = config.halationStrength.toDouble())
+    Imgproc.resize(redChannelImage, redChannelImage, Size(), 1.0 / halationRes, 1.0 / halationRes, Imgproc.INTER_LINEAR)
     val threeChannelImage by stored { Mat.zeros(inputImage.size(), CV_8UC3) }  // black image with 3 channels
     Core.insertChannel(redChannelImage, threeChannelImage, 2)
     Core.add(inputImage, threeChannelImage, destinationImage)
 }
 
 fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) {
-    val grainScale = 0.3
+    val grainScale = 0.2
     val staticGrain = store(dependencies = listOf(config.grainStrength)) {
         val texture = Imgcodecs.imread("./assets/grain/grain4.jpeg")
         Core.multiply(texture, Scalar.all(config.grainStrength.toDouble()), texture)
@@ -200,15 +205,17 @@ fun ProcessingDsl.tone(image: Mat, config: Config) {
         mat.setTo(config.warmColorCast.toScalar())
         mat
     }
-    Core.multiply(warmColor, orangeTonesMask3C, warmColor, 1.0 / 255.0)
+    val warmColorPart by stored { Mat() }
+    Core.multiply(warmColor, orangeTonesMask3C, warmColorPart, 1.0 / 255.0)
     val coldColor by stored(listOf(config.coldColorCast)) {
         val mat = Mat.zeros(image.size(), CvType.CV_8UC3)
         mat.setTo(config.coldColorCast.toScalar())
         mat
     }
-    Core.multiply(coldColor, orangeTonesMask3CI, coldColor, 1.0 / 255.0)
-    Core.add(image, warmColor, image)
-    Core.add(image, coldColor, image)
+    val coldColorPart by stored { Mat() }
+    Core.multiply(coldColor, orangeTonesMask3CI, coldColorPart, 1.0 / 255.0)
+    Core.add(image, warmColorPart, image)
+    Core.add(image, coldColorPart, image)
 }
 
 class TransformationBuilder {

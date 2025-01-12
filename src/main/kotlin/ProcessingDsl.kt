@@ -1,12 +1,24 @@
 import kotlin.reflect.KProperty
+import kotlin.time.Duration
+import kotlin.time.measureTimedValue
 
 class ProcessingDsl {
     private val storage = Storage()
+    private val timings = mutableMapOf<String, Duration>()
     fun <T> store(dependencies: List<Any>? = null, creator: () -> T) = storage.store(dependencies) { creator() }
     fun <T> stored(dependencies: List<Any>? = null, creator: () -> T) = storage.stored(dependencies) { creator() }
-    fun reset() = storage.reset()
-    fun log(text: String) {
-        println(text)
+    fun reset() {
+        storage.reset()
+        timings.clear()
+    }
+    fun logTimings() {
+        println(timings)
+    }
+    fun storeTime(name: String, duration: Duration) { timings[name] = duration }
+    inline fun <R> measureTime(name: String, fn: () -> R): R {
+        val timedValue = measureTimedValue(fn)
+        storeTime(name, timedValue.duration)
+        return timedValue.value
     }
 }
 
