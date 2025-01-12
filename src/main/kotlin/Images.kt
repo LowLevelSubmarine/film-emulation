@@ -5,13 +5,13 @@ import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 
 val config = Config.default.copy(
-    crushedLuminanceStrength = 0.1f,
-    halationStrength = 0.0f,
+    crushedLuminanceStrength = 0.2f,
+    halationStrength = 1f,
 )
 
 fun main() {
     OpenCV.loadLocally()
-    val path = "./assets/testing/hsd.png"
+    val path = "./assets/presentation/stairs.png"
     val source = Imgcodecs.imread(path, Imgcodecs.IMREAD_COLOR)
     val processing = ProcessingDsl()
     val destination = Mat()
@@ -22,5 +22,5 @@ fun main() {
         //Imgcodecs.imwrite("$path-im.png", destination)
         process(destination, destination, config)
     }
-    Imgcodecs.imwrite("$path-edit.png", destination)
+    Imgcodecs.imwrite("$path-tone_cold.png", destination)
 }
