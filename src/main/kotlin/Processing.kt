@@ -9,10 +9,7 @@ import org.opencv.core.CvType.CV_8UC3
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 import org.opencv.imgproc.Imgproc.GaussianBlur
-import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.pow
-import kotlin.math.sin
+import kotlin.math.*
 import kotlin.random.Random
 
 
@@ -166,8 +163,68 @@ fun ProcessingDsl.colorCast(image: Mat, config: Config) {
 
 fun ProcessingDsl.tone(image: Mat, config: Config) {
     val hsv by stored { Mat() }
-    val mask by stored { Mat() }
+    val hue by stored { Mat() }
     Imgproc.cvtColor(image, hsv, Imgproc.COLOR_BGR2HSV)
+    Core.extractChannel(hsv, hue, 0)
+    Core.multiply(hue, Scalar.all(255.0 / 179.0), hue)
+
+    val orangeRangeLut by stored {
+        createSplineLUT(
+            listOf(
+                Knot(0.1f, 1.0f),
+                Knot(0.2f, 0.0f),
+                Knot(0.9f, 0.0f),
+                Knot(1.0f, 1.0f)
+            )
+        )
+    }
+
+    val orangeTonesMask by stored { Mat() }
+    Core.LUT(hue, orangeRangeLut, orangeTonesMask)
+    val orangeTonesMaskI by stored { Mat() }
+    Core.absdiff(orangeTonesMask, Scalar.all(255.0), orangeTonesMaskI)
+
+    val warmWeight = min(1.0 / 3.0, config.warmStrength.toDouble())
+    val warmHue by stored(listOf(config.warmHue)) {
+        val mat = Mat.zeros(image.size(), CvType.CV_8U)
+        mat.setTo(Scalar(config.warmHue.toDouble()))
+        mat
+    }
+    val warmHuePortion = run {
+        val mat by stored { Mat() }
+        Core.multiply(warmHue, orangeTonesMask, mat, 1.0 / 255.0 * warmWeight)
+        mat
+    }
+    val coldWeight = min(1.0 / 3.0, config.coldStrength.toDouble())
+    val coldHue by stored(listOf(config.coldHue)) {
+        val mat = Mat.zeros(image.size(), CvType.CV_8U)
+        mat.setTo(Scalar(config.coldHue.toDouble()))
+        mat
+    }
+    val coldHuePortion = run {
+        val mat by stored { Mat() }
+        Core.multiply(coldHue, orangeTonesMaskI, mat, 1.0 / 255.0 * coldWeight)
+        mat
+    }
+    Core.addWe
+    val originWeight = 1.0 - warmWeight - coldWeight
+    val originHuePortion = run {
+        val warmI by stored { Mat() }
+        Core.multiply(hue, orangeTonesMaskI, warmI, 1.0 / 255.0 * (1 - warmWeight))
+        val coldI  by stored { Mat() }
+        Core.multiply(hue, orangeTonesMask, coldI, 1.0 / 255.0 * (1 - coldWeight))
+        val mat by stored { Mat() }
+        Core.add(coldI, warmI, mat)
+        mat
+    }
+
+    originHuePortion.copyTo(hue)
+    Core.add(hue, warmHuePortion, hue)
+    Core.add(hue, coldHuePortion, hue)
+
+    Core.multiply(hue, Scalar.all(179.0 / 255.0), hue)
+    Core.insertChannel(hue, hsv, 0)
+    Imgproc.cvtColor(hsv, image, Imgproc.COLOR_HSV2BGR)
 }
 
 /*fun ProcessingDsl.applyLUT(image: Mat) {

@@ -28,7 +28,7 @@ fun createGammaLUT(gammaValue: Double): Mat {
 fun createSplineLUT(knots: List<Knot>): Mat {
     val spline = FloatBezierSpline<Vector2F>()
     spline.addKnots(*knots.map { Vector2F(x = it.x, y = it.y) }.toTypedArray())
-    return createLUT { i -> (spline.getCoordinatesAt(i / 256.0f).y * 256).toInt().toByte() }
+    return createLUT { i -> (spline.getCoordinatesAt(i / 255.0f).y * 255).toInt().toByte() }
 }
 
 fun createSplineLUT(vararg knots: Knot) = createSplineLUT(knots.toList())

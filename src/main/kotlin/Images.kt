@@ -35,7 +35,8 @@ fun main() {
                 )
             )
         Core.LUT(destination, contrastLut, destination)
-        process(destination, destination, config)
+        Imgcodecs.imwrite("./assets/spok-im.png", destination)
+        tone(destination, config)
     }
     Imgcodecs.imwrite("./assets/spok-edit.png", destination)
 }

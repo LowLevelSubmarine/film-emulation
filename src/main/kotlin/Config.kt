@@ -14,6 +14,10 @@ data class Config(
     val sigmaX: Float,
     val gaussianSize: BlurSize,
     val colorCast: Color,
+    val warmHue: Float,
+    val warmStrength: Float,
+    val coldHue: Float,
+    val coldStrength: Float,
     val crushedLuminanceStrength: Float,
 ) {
     companion object {
@@ -25,6 +29,10 @@ data class Config(
             sigmaX = 0.0f,
             gaussianSize = BlurSize(99.0f, 99.0f),
             colorCast = Color(0.0f, 0.0f, 0.1f),
+            warmHue = 0.08f,
+            warmStrength = 0.2f,
+            coldHue = 0.58f,
+            coldStrength = 0.0f,
             crushedLuminanceStrength = 0.5f,
         )
     }
@@ -37,6 +45,7 @@ data class Color(
     val blue: Float,
 ) {
     fun toScalar() = Scalar(blue * 255.0, green * 255.0, red * 255.0)
+    operator fun div(i: Number) = Color(red / i.toFloat(), green / i.toFloat(), red / i.toFloat())
 }
 
 @Serializable
