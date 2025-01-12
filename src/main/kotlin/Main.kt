@@ -1,5 +1,3 @@
-package org.example
-
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -48,6 +46,10 @@ fun main() {
             }
             get("/stream") {
                 call.respondWithVideoStream(configRef, targetFrameRate = 24)
+            }
+            get("/reset") {
+                configRef.value = Config.default
+                call.respond(Json.encodeToString(configRef.value))
             }
         }
     }.start(wait = true)

@@ -1,5 +1,3 @@
-package org.example
-
 import dev.benedikt.math.bezier.spline.FloatBezierSpline
 import dev.benedikt.math.bezier.vector.Vector2F
 import org.opencv.core.CvType
@@ -94,7 +92,7 @@ private fun mapSlog3ToSlr(slog3Value: Double): Double {
     // Threshold for logarithmic vs linear
     val threshold = m * log10(c) + d
 
-    val out =  if (slog3Value >= threshold) {
+    val out = if (slog3Value >= threshold) {
         10.0.pow((slog3Value - d) / m) - c
     } else {
         (slog3Value - e) * b / a
@@ -108,7 +106,7 @@ private fun mapSlrToSrgb(slrValue: Double): Double {
     return if (slrValue <= 0.0031308) {
         12.92 * slrValue
     } else {
-        (1 + a) * slrValue.pow(1/2.4) - a
+        (1 + a) * slrValue.pow(1 / 2.4) - a
     }
 }
 

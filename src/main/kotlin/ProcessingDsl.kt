@@ -1,5 +1,3 @@
-package org.example
-
 import kotlin.reflect.KProperty
 
 class ProcessingDsl {
