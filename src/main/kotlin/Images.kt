@@ -1,5 +1,3 @@
-package org.example
-
 import nu.pattern.OpenCV
 import org.opencv.core.Core
 import org.opencv.core.Mat

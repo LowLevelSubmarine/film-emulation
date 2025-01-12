@@ -1,5 +1,3 @@
-package org.example
-
 import de.articdive.jnoise.core.api.functions.Interpolation
 import de.articdive.jnoise.generators.noise_parameters.fade_functions.FadeFunction
 import de.articdive.jnoise.pipeline.JNoise
@@ -19,7 +17,7 @@ import kotlin.random.Random
 fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat, config: Config) {
     //slog3ToSrgb(inputImage, destinationImage)
     vignette(inputImage, config)
-    halation(inputImage, destinationImage)
+    halation(inputImage, destinationImage, config)
     grain(destinationImage, destinationImage, config)
     colorCast(destinationImage, config)
     //applyLUT(destinationImage)
@@ -65,12 +63,17 @@ fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
     )
 }
 
-fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat) {
+fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat, config: Config) {
     val redChannelImage = store { Mat() }
     Core.extractChannel(inputImage, redChannelImage, 2) // red channel isolated
-    val gammaLut = store { createGammaLUT(20.0) }
+    val gammaLut = store { createGammaLUT(config.threshold.toDouble()) }
     Core.LUT(redChannelImage, gammaLut, redChannelImage)
-    GaussianBlur(redChannelImage, redChannelImage, Size(99.0, 99.0), 0.0) // blurred red channel
+    GaussianBlur(
+        redChannelImage,
+        redChannelImage,
+        config.gaussianSize.toSize(),
+        config.sigmaX.toDouble()
+    ) // blurred red channel
     val threeChannelImage = store { Mat.zeros(inputImage.size(), CV_8UC3) }  // black image with 3 channels
     Core.insertChannel(redChannelImage, threeChannelImage, 2)
     Core.add(inputImage, threeChannelImage, destinationImage)
@@ -121,7 +124,7 @@ fun ProcessingDsl.scratches(image: Mat) {
         val rawTextures = (0 until 10).map { i -> Imgcodecs.imread("./assets/scratches/$i.png") }
         (0 until 30).map {
             val transformation = buildTransformation {
-                rotate(Random.Default.nextFloat() * PI * 2)
+                rotate(Random.nextFloat() * PI * 2)
             }
             val texture = Mat()
             Imgproc.warpAffine(rawTextures.random(), texture, transformation, texture.size())

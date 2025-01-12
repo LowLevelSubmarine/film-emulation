@@ -1,6 +1,3 @@
-package org.example
-
-import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import org.opencv.core.Scalar
 import org.opencv.core.Size
