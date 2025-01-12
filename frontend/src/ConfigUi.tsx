@@ -32,7 +32,7 @@ export default function ConfigUi() {
       gap: 12,
       width: 250,
       height: '100%',
-      justifyContent: 'center'
+      overflowY: 'auto',
     }}>
       <div>
         <h4>Grain</h4>
@@ -92,31 +92,102 @@ export default function ConfigUi() {
         </label>
       </div>
       <div>
+        <h4>Warm Color Cast</h4>
+        <label>
+          Red: {' '} {config.warmColorCast.red}
+          <CoolSlider step={'0.01'} min={0} max={1} value={config.warmColorCast.red}
+                      onValue={(value) => updateConfig({
+                        ...config, warmColorCast: {
+                          ...config.warmColorCast,
+                          red: value
+                        }
+                      })}/>
+        </label>
+        <label>
+          Green: {' '} {config.warmColorCast.green}
+          <CoolSlider step={'0.01'} min={0} max={1} value={config.warmColorCast.green}
+                      onValue={(value) => updateConfig({
+                        ...config, warmColorCast: {
+                          ...config.warmColorCast,
+                          green: value
+                        }
+                      })}/>
+        </label>
+        <label>
+          Blue: {' '} {config.warmColorCast.blue}
+          <CoolSlider step={'0.01'} min={0} max={1} value={config.warmColorCast.blue}
+                      onValue={(value) => updateConfig({
+                        ...config, warmColorCast: {
+                          ...config.warmColorCast,
+                          blue: value
+                        }
+                      })}/>
+        </label>
+      </div>
+      <div>
+        <h4>Cold Color Cast</h4>
+        <label>
+          Red: {' '} {config.coldColorCast.red}
+          <CoolSlider step={'0.01'} min={0} max={1} value={config.coldColorCast.red}
+                      onValue={(value) => updateConfig({
+                        ...config, coldColorCast: {
+                          ...config.coldColorCast,
+                          red: value
+                        }
+                      })}/>
+        </label>
+        <label>
+          Green: {' '} {config.coldColorCast.green}
+          <CoolSlider step={'0.01'} min={0} max={1} value={config.coldColorCast.green}
+                      onValue={(value) => updateConfig({
+                        ...config, coldColorCast: {
+                          ...config.coldColorCast,
+                          green: value
+                        }
+                      })}/>
+        </label>
+        <label>
+          Blue: {' '} {config.coldColorCast.blue}
+          <CoolSlider step={'0.01'} min={0} max={1} value={config.coldColorCast.blue}
+                      onValue={(value) => updateConfig({
+                        ...config, coldColorCast: {
+                          ...config.coldColorCast,
+                          blue: value
+                        }
+                      })}/>
+        </label>
+      </div>
+      <div>
         <h4>
           Halation
         </h4>
         <label>
-          Threshold: {' '} {config.threshold}
-          <CoolSlider step={'0.01'} min={0} max={100} value={config.threshold}
-                      onValue={(value) => updateConfig({...config, threshold: value})}/>
+          Strength: {' '} {config.halationStrength}
+          <CoolSlider step={'0.01'} min={0} max={100} value={config.halationStrength}
+                      onValue={(value) => updateConfig({...config, halationStrength: value})}/>
+        </label>
+        <label>
+          Threshold: {' '} {config.halationThreshold}
+          <CoolSlider step={'0.01'} min={0} max={100} value={config.halationThreshold}
+                      onValue={(value) => updateConfig({...config, halationThreshold: value})}/>
         </label>
         <h4>Gaussian Blur</h4>
         <label>
-          Width: {' '} {config.gaussianSize.width}
-          <CoolSlider step={'2'} min={1} max={199} value={config.gaussianSize.width}
+          Width: {' '} {config.halationGaussianSize.width}
+          <CoolSlider step={'2'} min={1} max={199} value={config.halationGaussianSize.width}
                       onValue={(value) => updateConfig({
-                        ...config, gaussianSize: {
-                          ...config.gaussianSize,
+                        ...config, halationGaussianSize: {
+                          ...config.halationGaussianSize,
                           width: value
                         }
                       })}/>
         </label>
         <label>
-          Height: {' '} {config.gaussianSize.height}
-          <CoolSlider step={'2'} min={1} max={199} value={config.gaussianSize.height}
+          Height: {' '} {config.halationGaussianSize.height}
+          <CoolSlider step={'2'} min={1} max={199} value={config.halationGaussianSize.height}
                       onValue={(value) => updateConfig({
-                        ...config, gaussianSize: {
-                          ...config.gaussianSize,
+                        ...config, halationGaussianSize: {
+                          ...config.halationGaussianSize,
                           height: value
                         }
                       })}/>

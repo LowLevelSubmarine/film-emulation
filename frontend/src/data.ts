@@ -2,10 +2,13 @@ export interface Config {
   grainStrength: number,
   dustStrength: number,
   vignetteStrength: number,
-  threshold: number,
-  sigmaX: number,
-  gaussianSize: BlurSize,
+  halationStrength: number,
+  halationThreshold: number,
+  halationSigmaX: number,
+  halationGaussianSize: BlurSize,
   colorCast: Color,
+  warmColorCast: Color,
+  coldColorCast: Color,
   crushedLuminanceStrength: number
 }
 

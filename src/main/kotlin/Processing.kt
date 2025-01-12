@@ -64,21 +64,22 @@ fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
 fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat, config: Config) {
     val redChannelImage = store { Mat() }
     Core.extractChannel(inputImage, redChannelImage, 2) // red channel isolated
-    val gammaLut = store { createGammaLUT(config.threshold.toDouble()) }
+    val gammaLut = store { createGammaLUT(config.halationThreshold.toDouble()) }
     Core.LUT(redChannelImage, gammaLut, redChannelImage)
     GaussianBlur(
         redChannelImage,
         redChannelImage,
-        config.gaussianSize.toSize(),
-        config.sigmaX.toDouble()
+        config.halationGaussianSize.toSize(),
+        config.halationSigmaX.toDouble()
     ) // blurred red channel
-    val threeChannelImage = store { Mat.zeros(inputImage.size(), CV_8UC3) }  // black image with 3 channels
+    adjustLuminance(redChannelImage, redChannelImage, brightness = config.halationStrength.toDouble())
+    val threeChannelImage by stored { Mat.zeros(inputImage.size(), CV_8UC3) }  // black image with 3 channels
     Core.insertChannel(redChannelImage, threeChannelImage, 2)
     Core.add(inputImage, threeChannelImage, destinationImage)
 }
 
 fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) {
-    val grainScale = 0.2
+    val grainScale = 0.3
     val staticGrain = store(dependencies = listOf(config.grainStrength)) {
         val texture = Imgcodecs.imread("./assets/grain/grain4.jpeg")
         Core.multiply(texture, Scalar.all(config.grainStrength.toDouble()), texture)
@@ -187,7 +188,7 @@ fun ProcessingDsl.tone(image: Mat, config: Config) {
         )
     }
     Core.LUT(hue, orangeRangeLut, orangeTonesMask)
-    Core.multiply(orangeTonesMask, sat, orangeTonesMask, 1.0 / 255.0 * 2.0)
+    Core.multiply(orangeTonesMask, sat, orangeTonesMask, 1.0 / 255.0 * 1)
     Core.multiply(orangeTonesMask, lum, orangeTonesMask, 1.0 / 255.0 * 2.0)
     adjustLuminance(orangeTonesMask, orangeTonesMask, contrast = 2.0, brightness = 1.5)
     val orangeTonesMask3C by stored { Mat() }

@@ -1,10 +1,8 @@
 import dev.benedikt.math.bezier.spline.FloatBezierSpline
 import dev.benedikt.math.bezier.vector.Vector2F
-import org.opencv.core.CvType
+import org.opencv.core.*
 import org.opencv.core.CvType.CV_32F
-import org.opencv.core.Mat
-import org.opencv.core.Point
-import org.opencv.core.Size
+import org.opencv.imgproc.Imgproc
 import kotlin.math.log10
 import kotlin.math.min
 import kotlin.math.pow
@@ -134,8 +132,17 @@ fun createRandomOffsetTransformation(image: Mat): Mat {
     }
 }
 
-fun adjustLuminance(image: Mat, destination: Mat, contrast: Double = 1.0, brightness: Double = 1.0) {
-    image.convertTo(destination, -1, contrast, 127.0 - contrast * 127.0 + (255.0 * brightness - 255.0))
+fun adjustLuminance(image: Mat, destination: Mat, contrast: Number = 1.0, brightness: Number = 1.0) {
+    image.convertTo(destination, -1, contrast.toDouble(), 127.0 - contrast.toDouble() * 127.0 + (255.0 * brightness.toDouble() - 255.0))
+}
+
+fun adjustSaturation(image: Mat, destination: Mat, saturation: Number) {
+    Imgproc.cvtColor(image, destination, Imgproc.COLOR_BGR2HSV)
+    val sat = Mat()
+    Core.extractChannel(destination, sat, 1)
+    Core.multiply(sat, Scalar.all(saturation.toDouble()), sat)
+    Core.insertChannel(sat, destination, 1)
+    Imgproc.cvtColor(image, destination, Imgproc.COLOR_HSV2BGR)
 }
 
 /*
