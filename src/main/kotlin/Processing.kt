@@ -19,6 +19,7 @@ fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat, config: Config
     halation(inputImage, destinationImage)
     grain(destinationImage, destinationImage, config)
     colorCast(destinationImage, config)
+    tone(destinationImage, config)
     //applyLUT(destinationImage)
     scratches(destinationImage)
     dust(destinationImage, config)
@@ -76,7 +77,7 @@ fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat) {
 fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) {
     val grainScale = 0.2
     val staticGrain = store(dependencies = listOf(config.grainStrength)) {
-        val texture = Imgcodecs.imread("./assets/grain/grain3.jpeg")
+        val texture = Imgcodecs.imread("./assets/grain/grain4.jpeg")
         Core.multiply(texture, Scalar.all(config.grainStrength.toDouble()), texture)
         val size = Size(texture.width().toDouble() * grainScale, texture.height().toDouble() * grainScale)
         Imgproc.resize(texture, texture, size)
@@ -164,73 +165,47 @@ fun ProcessingDsl.colorCast(image: Mat, config: Config) {
 fun ProcessingDsl.tone(image: Mat, config: Config) {
     val hsv by stored { Mat() }
     val hue by stored { Mat() }
+    val sat by stored { Mat() }
+    val lum by stored { Mat() }
+    val orangeTonesMask by stored { Mat() }
     Imgproc.cvtColor(image, hsv, Imgproc.COLOR_BGR2HSV)
     Core.extractChannel(hsv, hue, 0)
+    Core.extractChannel(hsv, sat, 1)
+    Core.extractChannel(hsv, lum, 2)
     Core.multiply(hue, Scalar.all(255.0 / 179.0), hue)
-
     val orangeRangeLut by stored {
-        createSplineLUT(
+        createLinearLUT(
             listOf(
-                Knot(0.1f, 1.0f),
-                Knot(0.2f, 0.0f),
+                Knot(0.2f, 1.0f),
+                Knot(0.3f, 0.0f),
                 Knot(0.9f, 0.0f),
-                Knot(1.0f, 1.0f)
+                Knot(1.0f, 1.0f),
             )
         )
     }
-
-    val orangeTonesMask by stored { Mat() }
     Core.LUT(hue, orangeRangeLut, orangeTonesMask)
-    val orangeTonesMaskI by stored { Mat() }
-    Core.absdiff(orangeTonesMask, Scalar.all(255.0), orangeTonesMaskI)
-
-    val warmWeight = min(1.0 / 3.0, config.warmStrength.toDouble())
-    val warmHue by stored(listOf(config.warmHue)) {
-        val mat = Mat.zeros(image.size(), CvType.CV_8U)
-        mat.setTo(Scalar(config.warmHue.toDouble()))
+    Core.multiply(orangeTonesMask, sat, orangeTonesMask, 1.0 / 255.0 * 2.0)
+    Core.multiply(orangeTonesMask, lum, orangeTonesMask, 1.0 / 255.0 * 2.0)
+    adjustLuminance(orangeTonesMask, orangeTonesMask, contrast = 2.0, brightness = 1.5)
+    val orangeTonesMask3C by stored { Mat() }
+    Core.merge(listOf(orangeTonesMask, orangeTonesMask, orangeTonesMask), orangeTonesMask3C)
+    val orangeTonesMask3CI by stored { Mat() }
+    Core.absdiff(orangeTonesMask3C, Scalar.all(255.0), orangeTonesMask3CI)
+    val warmColor by stored(listOf(config.warmColorCast)) {
+        val mat = Mat.zeros(image.size(), CvType.CV_8UC3)
+        mat.setTo(config.warmColorCast.toScalar())
         mat
     }
-    val warmHuePortion = run {
-        val mat by stored { Mat() }
-        Core.multiply(warmHue, orangeTonesMask, mat, 1.0 / 255.0 * warmWeight)
+    Core.multiply(warmColor, orangeTonesMask3C, warmColor, 1.0 / 255.0)
+    val coldColor by stored(listOf(config.coldColorCast)) {
+        val mat = Mat.zeros(image.size(), CvType.CV_8UC3)
+        mat.setTo(config.coldColorCast.toScalar())
         mat
     }
-    val coldWeight = min(1.0 / 3.0, config.coldStrength.toDouble())
-    val coldHue by stored(listOf(config.coldHue)) {
-        val mat = Mat.zeros(image.size(), CvType.CV_8U)
-        mat.setTo(Scalar(config.coldHue.toDouble()))
-        mat
-    }
-    val coldHuePortion = run {
-        val mat by stored { Mat() }
-        Core.multiply(coldHue, orangeTonesMaskI, mat, 1.0 / 255.0 * coldWeight)
-        mat
-    }
-    Core.addWe
-    val originWeight = 1.0 - warmWeight - coldWeight
-    val originHuePortion = run {
-        val warmI by stored { Mat() }
-        Core.multiply(hue, orangeTonesMaskI, warmI, 1.0 / 255.0 * (1 - warmWeight))
-        val coldI  by stored { Mat() }
-        Core.multiply(hue, orangeTonesMask, coldI, 1.0 / 255.0 * (1 - coldWeight))
-        val mat by stored { Mat() }
-        Core.add(coldI, warmI, mat)
-        mat
-    }
-
-    originHuePortion.copyTo(hue)
-    Core.add(hue, warmHuePortion, hue)
-    Core.add(hue, coldHuePortion, hue)
-
-    Core.multiply(hue, Scalar.all(179.0 / 255.0), hue)
-    Core.insertChannel(hue, hsv, 0)
-    Imgproc.cvtColor(hsv, image, Imgproc.COLOR_HSV2BGR)
+    Core.multiply(coldColor, orangeTonesMask3CI, coldColor, 1.0 / 255.0)
+    Core.add(image, warmColor, image)
+    Core.add(image, coldColor, image)
 }
-
-/*fun ProcessingDsl.applyLUT(image: Mat) {
-    val lut by stored { loadLUT("./assets/luts/Kodak Portra 400 NC.cube") }
-    Core.LUT(image, lut, image)
-}*/
 
 class TransformationBuilder {
     private fun new(values: List<Double>) = Mat.zeros(2, 3, CV_32F).apply {

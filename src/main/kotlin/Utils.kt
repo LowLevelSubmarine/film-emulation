@@ -28,10 +28,42 @@ fun createGammaLUT(gammaValue: Double): Mat {
 fun createSplineLUT(knots: List<Knot>): Mat {
     val spline = FloatBezierSpline<Vector2F>()
     spline.addKnots(*knots.map { Vector2F(x = it.x, y = it.y) }.toTypedArray())
-    return createLUT { i -> (spline.getCoordinatesAt(i / 255.0f).y * 255).toInt().toByte() }
+    return createLUT { i -> (spline.getCoordinatesAt(i / 255.0f).y * 255.0f).toInt().toByte() }
 }
 
 fun createSplineLUT(vararg knots: Knot) = createSplineLUT(knots.toList())
+
+fun createLinearLUT(knots: List<Knot>): Mat {
+    val mapping = createLinearMapping(knots)
+    return createLUT { i -> (mapping(i / 255.0f) * 255.0).toInt().toByte() }
+}
+
+fun createLinearMapping(points: List<Knot>): (Float) -> Float {
+    // Ensure the points are sorted by their x-coordinate
+    val sortedPoints = points.sortedBy { it.x }
+
+    return { input ->
+        when {
+            // If input is less than the smallest x, clamp to the first y
+            input <= sortedPoints.first().x -> sortedPoints.first().y
+
+            // If input is greater than the largest x, clamp to the last y
+            input >= sortedPoints.last().x -> sortedPoints.last().y
+
+            // Otherwise, find the segment containing the input
+            else -> {
+                // Find the two points the input lies between
+                val (p1, p2) = sortedPoints.zipWithNext().first { (p1, p2) ->
+                    input >= p1.x && input <= p2.x
+                }
+
+                // Perform linear interpolation
+                val t = (input - p1.x) / (p2.x - p1.x) // Fraction of the way between p1.x and p2.x
+                p1.y + t * (p2.y - p1.y)             // Interpolated y value
+            }
+        }
+    }
+}
 
 fun createSlog3ToSrgbLut(): Mat = createLUT { i ->
     val normalizedValue = i / 255.0
@@ -103,6 +135,11 @@ fun createRandomOffsetTransformation(image: Mat): Mat {
         put(1, 2, floatArrayOf(Random.Default.nextFloat() * image.height()))
     }
 }
+
+fun adjustLuminance(image: Mat, destination: Mat, contrast: Double = 1.0, brightness: Double = 1.0) {
+    image.convertTo(destination, -1, contrast, 127.0 - contrast * 127.0 + (255.0 * brightness - 255.0))
+}
+
 /*
 fun loadLUT(cubeFilePath: String): Mat {
     val file = File(cubeFilePath)
