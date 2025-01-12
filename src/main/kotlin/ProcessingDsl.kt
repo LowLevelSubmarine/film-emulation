@@ -11,10 +11,15 @@ class ProcessingDsl {
         storage.reset()
         timings.clear()
     }
+
     fun logTimings() {
         println(timings)
     }
-    fun storeTime(name: String, duration: Duration) { timings[name] = duration }
+
+    fun storeTime(name: String, duration: Duration) {
+        timings[name] = duration
+    }
+
     inline fun <R> measureTime(name: String, fn: () -> R): R {
         val timedValue = measureTimedValue(fn)
         storeTime(name, timedValue.duration)

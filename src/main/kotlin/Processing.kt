@@ -20,7 +20,7 @@ fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat, config: Config
     //applyLUT(destinationImage)
     measureTime("scratches") { scratches(destinationImage) }
     measureTime("dust") { dust(destinationImage, config) }
-    measureTime("shake") { shake(destinationImage, destinationImage) }
+    measureTime("shake") { shake(destinationImage, destinationImage, config) }
     measureTime("crushedLuminance") { crushedLuminance(destinationImage, destinationImage, config) }
     measureTime("tone") { tone(destinationImage, config) }
 }
@@ -30,20 +30,16 @@ fun ProcessingDsl.slog3ToSrgb(inputImage: Mat, destinationImage: Mat) {
     Core.LUT(inputImage, lut, destinationImage)
 }
 
-fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat) {
-    val jitterScale = 0.0005f
-    val weaveNoiseSpeed = 0.015f
-    val weaveNoiseScale = 0.01f
-
+fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat, config: Config) {
     var weaveNoiseOffset by stored { 0.0 }
     val weaveNoiseGenerator =
         store { JNoise.newBuilder().perlin(3301, Interpolation.COSINE, FadeFunction.QUINTIC_POLY).build() }
-    val x = Random.nextFloat() * jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 0.0)
-        .toFloat() * weaveNoiseScale
-    val y = Random.nextFloat() * jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 100.0)
-        .toFloat() * weaveNoiseScale * 0.5f
+    val x = Random.nextFloat() * config.jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 0.0)
+        .toFloat() * config.weaveNoiseScale
+    val y = Random.nextFloat() * config.jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 100.0)
+        .toFloat() * config.weaveNoiseScale * 0.5f
 
-    weaveNoiseOffset += weaveNoiseSpeed
+    weaveNoiseOffset += config.weaveNoiseSpeed
 
     val transformation = Mat.zeros(2, 3, CV_32F).apply {
         put(0, 0, floatArrayOf(1.0F))
