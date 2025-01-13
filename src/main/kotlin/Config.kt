@@ -15,6 +15,9 @@ data class Config(
     val warmColorCast: Color,
     val coldColorCast: Color,
     val crushedLuminanceStrength: Float,
+    val jitterScale: Float,
+    val weaveNoiseSpeed: Float,
+    val weaveNoiseScale: Float,
 ) {
     companion object {
         val default = Config(
@@ -29,6 +32,9 @@ data class Config(
             warmColorCast = Color(red = 0.12f, green = 0.014f, blue = 0.0f) * 1.4f,
             coldColorCast = Color(red = 0.04f, green = 0.0f, blue = 0.04f) * 2f,
             crushedLuminanceStrength = 0.5f,
+            jitterScale = 0.0005f,
+            weaveNoiseSpeed = 0.015f,
+            weaveNoiseScale = 0.01f,
         )
     }
 }

@@ -174,7 +174,7 @@ export default function ConfigUi() {
         <h4>Gaussian Blur</h4>
         <label>
           Width: {' '} {config.halationGaussianSize.width}
-          <CoolSlider step={'2'} min={1} max={199} value={config.halationGaussianSize.width}
+          <CoolSlider step={'0.01'} min={0} max={200} value={config.halationGaussianSize.width}
                       onValue={(value) => updateConfig({
                         ...config, halationGaussianSize: {
                           ...config.halationGaussianSize,
@@ -184,7 +184,7 @@ export default function ConfigUi() {
         </label>
         <label>
           Height: {' '} {config.halationGaussianSize.height}
-          <CoolSlider step={'2'} min={1} max={199} value={config.halationGaussianSize.height}
+          <CoolSlider step={'0.01'} min={0} max={200} value={config.halationGaussianSize.height}
                       onValue={(value) => updateConfig({
                         ...config, halationGaussianSize: {
                           ...config.halationGaussianSize,
@@ -199,6 +199,24 @@ export default function ConfigUi() {
           Strength: {' '} {config.crushedLuminanceStrength}
           <CoolSlider step={'0.01'} min={0} max={1} value={config.crushedLuminanceStrength}
                       onValue={(value) => updateConfig({...config, crushedLuminanceStrength: value})}/>
+        </label>
+      </div>
+      <div>
+        <h4>Gate Weave</h4>
+        <label>
+          Jitter Scale: {' '} {config.jitterScale}
+          <CoolSlider step={'0.0001'} min={0} max={0.01} value={config.jitterScale}
+                      onValue={(value) => updateConfig({...config, jitterScale: value})}/>
+        </label>
+        <label>
+          Weave Noise Speed: {' '} {config.weaveNoiseSpeed}
+          <CoolSlider step={'0.01'} min={0} max={1} value={config.weaveNoiseSpeed}
+                      onValue={(value) => updateConfig({...config, weaveNoiseSpeed: value})}/>
+        </label>
+        <label>
+          Weave Noise Scale: {' '} {config.weaveNoiseScale}
+          <CoolSlider step={'0.01'} min={0} max={1} value={config.weaveNoiseScale}
+                      onValue={(value) => updateConfig({...config, weaveNoiseScale: value})}/>
         </label>
       </div>
       <button onClick={() => resetConfig().then(res => setConfig(res))}>reset config</button>

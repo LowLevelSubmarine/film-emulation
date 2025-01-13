@@ -10,6 +10,9 @@ export interface Config {
   warmColorCast: Color,
   coldColorCast: Color,
   crushedLuminanceStrength: number
+  jitterScale: number,
+  weaveNoiseSpeed: number,
+  weaveNoiseScale: number,
 }
 
 interface Color {
