@@ -65,7 +65,7 @@ fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat, config: Confi
     val halationRes = 0.5
     val redChannelImage = store { Mat() }
     Core.extractChannel(inputImage, redChannelImage, 2) // red channel isolated
-    val gammaLut = store { createGammaLUT(config.halationThreshold.toDouble()) }
+    val gammaLut = store(listOf(config.halationThreshold)) { createGammaLUT(config.halationThreshold.toDouble()) }
     Imgproc.resize(redChannelImage, redChannelImage, Size(), halationRes, halationRes, Imgproc.INTER_LINEAR)
     Core.LUT(redChannelImage, gammaLut, redChannelImage)
     measureTime("halation: gaussian blur") {
@@ -84,7 +84,7 @@ fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat, config: Confi
 }
 
 fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) {
-    val grainScale = 0.2
+    val grainScale = 0.4
     val staticGrain = store(dependencies = listOf(config.grainStrength)) {
         val texture = Imgcodecs.imread("./assets/grain/grain4.jpeg")
         Core.multiply(texture, Scalar.all(config.grainStrength.toDouble()), texture)
@@ -102,7 +102,7 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) 
 fun ProcessingDsl.crushedLuminance(inputImage: Mat, destinationImage: Mat, config: Config) {
     val contrastLut by stored { createSplineLUT(Knot(0.2f, 0.0f), Knot(0.8f, 1.0f)) }
     Core.LUT(inputImage, contrastLut, destinationImage)
-    val lut by stored {
+    val lut by stored(listOf(config.crushedLuminanceStrength)) {
         createSplineLUT(
             Knot(0.0f, config.crushedLuminanceStrength * 0.2f),
             Knot(0.2f, 0.2f),

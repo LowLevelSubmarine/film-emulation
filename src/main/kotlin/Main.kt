@@ -14,6 +14,7 @@ import org.opencv.core.Mat
 import org.opencv.core.MatOfByte
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.videoio.VideoCapture
+import org.opencv.videoio.Videoio
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds
@@ -80,7 +81,10 @@ suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFr
     coroutineScope {
         val videoCapture = VideoCapture(0)  // cameraIndex = 0
         val fpsCounter = FpsCounter()
-        val fpsThread = launch {
+
+        videoCapture.set(Videoio.CAP_PROP_FPS, targetFrameRate.toDouble())
+
+        launch {
             while (isActive) {
                 try {
                     Thread.sleep(2000)
@@ -91,11 +95,11 @@ suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFr
             }
         }
 
-        var lastFrame = TimeSource.Monotonic.markNow()
-        val targetFrameTime = 1.seconds / targetFrameRate
+        //var lastFrame = TimeSource.Monotonic.markNow()
+        //val targetFrameTime = 1.seconds / targetFrameRate
         var currentFrame: Mat? = null
 
-        val processingThread = launch {
+        launch {
             val processing = ProcessingDsl()
             val processedFrame = Mat()
             while (isActive) {
@@ -107,7 +111,7 @@ suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFr
                     measureTime("processing") { process(frame, processedFrame, configRef.value) }
                 }
                 currentFrame = null
-                //processing.logTimings()
+                //  processing.logTimings()
 
                 launch {
                     val buffer = run {
@@ -125,11 +129,11 @@ suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFr
             //if (lastFrame + targetFrameTime > TimeSource.Monotonic.markNow()) continue
             videoCapture.read(capturedFrame)
             if (currentFrame != null) {
-                //println("processing couldn't keep up with frame rate")
+                println("processing couldn't keep up with frame rate")
                 continue
             }
             currentFrame = capturedFrame
-            lastFrame = TimeSource.Monotonic.markNow()
+            //lastFrame = TimeSource.Monotonic.markNow()
             fpsCounter.count()
         }
 

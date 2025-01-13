@@ -18,7 +18,7 @@ data class Config(
 ) {
     companion object {
         val default = Config(
-            grainStrength = 0.3f,
+            grainStrength = 0.25f,
             dustStrength = 0.5f,
             vignetteStrength = 0.1f,
             halationStrength = 1.0f,
@@ -26,8 +26,8 @@ data class Config(
             halationSigmaX = 0.0f,
             halationGaussianSize = BlurSize(99.0f, 99.0f),
             colorCast = Color(0.0f, 0.04f, 0.0f),
-            warmColorCast = Color(red = 0.1f, green = 0.0f, blue = 0.0f) * 1.4f,
-            coldColorCast = Color(red = 0.04f, green = 0.0f, blue = 0.02f) * 1.4f,
+            warmColorCast = Color(red = 0.12f, green = 0.014f, blue = 0.0f) * 1.4f,
+            coldColorCast = Color(red = 0.04f, green = 0.0f, blue = 0.04f) * 2f,
             crushedLuminanceStrength = 0.5f,
         )
     }

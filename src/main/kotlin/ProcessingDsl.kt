@@ -1,5 +1,6 @@
 import kotlin.reflect.KProperty
 import kotlin.time.Duration
+import kotlin.time.DurationUnit
 import kotlin.time.measureTimedValue
 
 class ProcessingDsl {
@@ -12,7 +13,7 @@ class ProcessingDsl {
         timings.clear()
     }
     fun logTimings() {
-        println(timings)
+        println(timings.map { "${it.key}: ${it.value.toString(DurationUnit.MILLISECONDS)}" })
     }
     fun storeTime(name: String, duration: Duration) { timings[name] = duration }
     inline fun <R> measureTime(name: String, fn: () -> R): R {
