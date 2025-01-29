@@ -160,7 +160,7 @@ fun ProcessingDsl.dust(image: Mat, config: Config) {
     if (Random.Default.nextFloat() > 0.05) return
     val transformation = createRandomOffsetTransformation(image)
     Imgproc.warpAffine(staticDust, dynamicDust, transformation, dynamicDust.size(), 0, Core.BORDER_REFLECT)
-    Core.subtract(image, dynamicDust, image)
+    Core.add(image, dynamicDust, image)
 }
 
 fun ProcessingDsl.colorCast(image: Mat, config: Config) {
