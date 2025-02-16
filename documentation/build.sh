@@ -1,0 +1,1 @@
+typst compile main.typ dokumentation.pdf
