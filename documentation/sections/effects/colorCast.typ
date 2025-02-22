@@ -1,5 +1,8 @@
-= Theorie 
+#import "../../components.typ": authored_by
+
+== Color Cast
+=== Theorie 
 #authored_by("")
 
-= Implementierung
+=== Implementierung
 #authored_by("")
