@@ -10,3 +10,7 @@
 #include "sections/effekte_analog_film.typ"
 #include "sections/implementierung.typ"
 #include "sections/fazit.typ"
+
+#pagebreak()
+
+#bibliography("sources.yaml", title: "Quellenverzeichnis")
