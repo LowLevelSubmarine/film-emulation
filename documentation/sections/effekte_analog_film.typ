@@ -1,11 +1,11 @@
 = Effekte des Analog-Films
 
-#include "effects/vignette.typ"
-#include "effects/halation.typ"
-#include "effects/grain.typ"
-#include "effects/color_cast.typ"
-#include "effects/scratches.typ"
-#include "effects/dust.typ"
-#include "effects/gate_weave.typ"
-#include "effects/crushed_luminance.typ"
-#include "effects/tone.typ"
+#include "effects/vignette.typ" // Leonie
+#include "effects/halation.typ" // Leonie
+#include "effects/grain.typ"    // Leonie
+#include "effects/color_cast.typ"  // Leonie
+#include "effects/scratches.typ"  // Leonie
+#include "effects/dust.typ"  // Florian
+#include "effects/gate_weave.typ"  // Florian
+#include "effects/crushed_luminance.typ"  // Florian
+#include "effects/tone.typ"  // Florian
