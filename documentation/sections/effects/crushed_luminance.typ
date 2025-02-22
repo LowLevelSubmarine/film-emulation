@@ -1,6 +1,6 @@
 #import "../../components.typ": authored_by
 
-== Vignette
+== Crushed Luminance
 
 === Theorie 
 #authored_by("")

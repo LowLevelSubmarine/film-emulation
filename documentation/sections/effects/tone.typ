@@ -1,5 +1,9 @@
-= Theorie
+#import "../../components.typ": authored_by
+
+== Tone
+
+=== Theorie 
 #authored_by("")
 
-= Implementierung
+=== Implementierung
 #authored_by("")

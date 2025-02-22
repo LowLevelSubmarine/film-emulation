@@ -1,7 +1,6 @@
 #import "../../components.typ": authored_by
 
-== Vignette
-
+== Color Cast
 === Theorie 
 #authored_by("")
 

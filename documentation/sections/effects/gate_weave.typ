@@ -1,6 +1,6 @@
 #import "../../components.typ": authored_by
 
-== Vignette
+== Shake
 
 === Theorie 
 #authored_by("")
