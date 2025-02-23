@@ -13,3 +13,11 @@ film-structure:
     url:
       value: https://www.elmar-baumann.de/fotografie/fotobuch/node24.html
       date: 2025-02-22
+halation-example:
+    type: Web
+    title: Beispielbild für Halation
+    author: Illia Horokhovsky
+    date: 2024-04-17
+    url:
+      value: https://unsplash.com/de/fotos/eine-gruppe-von-menschen-die-auf-einem-u-bahnsteig-stehen-8HjecSHHZSo
+      date: 2025-02-22
