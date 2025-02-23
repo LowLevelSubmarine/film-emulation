@@ -4,13 +4,14 @@
 == Halation
 #authored_by("Leonie Wehser")
 
+
 === Theorie 
 #wrap-content(
     [
       #pad(box(width: 150pt)[
          #figure(
             image("../../assets/effects/halation/example.jpg", width: 150pt),
-            caption: [Beispielbild für Halation @halation-example],
+            caption: [Beispielbild für Halation @halation-example-image ],
         )<fig:halation-example>,
         #figure(
             image("../../assets/effects/halation/theorie.png", width: 150pt),
