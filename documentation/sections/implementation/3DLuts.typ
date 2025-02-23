@@ -1,11 +1,12 @@
 #import "../../components.typ": authored_by
 
 == 3D Luts
-
-=== Implementierung
 #authored_by("")
 
-```kt
+=== Implementierung
+
+
+```kotlin
 import nu.pattern.OpenCV
 import org.opencv.core.CvType
 import org.opencv.core.Mat
@@ -76,4 +77,3 @@ fun main() {
 ```
 
 === Probleme und Herausforderungen
-#authored_by("")
