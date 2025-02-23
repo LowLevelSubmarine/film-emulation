@@ -7,7 +7,7 @@ import java.nio.file.Paths
 import kotlin.math.roundToInt
 import kotlin.time.measureTime
 
-const val LUT_SIZE = 32
+const val LUT_SIZE = 64
 
 fun readLutFile(path: String): List<List<Float>> {
     val lines = Files.readAllLines(Paths.get(path))
@@ -32,19 +32,12 @@ fun convertPixel(pixel: DoubleArray, lut: List<List<Float>>): ByteArray {
 }
 
 fun convertWithLut(imgPath: String, lutPath: String, outputPath: String) {
-    // Read the LUT file
     val lut = readLutFile(lutPath)
-
-    // Load the image using OpenCV
     val img = Imgcodecs.imread(imgPath, Imgcodecs.IMREAD_COLOR)
     if (img.empty()) {
         throw IllegalArgumentException("Image not found at path: $imgPath")
     }
-
-    // Prepare the output image with appropriate type for floating-point data
     val output = Mat(img.size(), CvType.CV_8UC3)
-
-    // Process each pixel
     for (y in 0 until img.rows()) {
         for (x in 0 until img.cols()) {
             val pixel = img.get(y, x)
@@ -59,9 +52,9 @@ fun convertWithLut(imgPath: String, lutPath: String, outputPath: String) {
 fun main() {
     OpenCV.loadLocally()
 
-    val inputImagePath = "./assets/spok.png"
-    val lutFilePath = "./assets/luts/IWLTBAP Sedona - Standard.cube"
-    val outputImagePath = "./assets/spokNew.png"
+    val inputImagePath = "./assets/3dLutsTests/stairs.png"
+    val lutFilePath = "./assets/luts/Kodak Portra 400 UC.cube"
+    val outputImagePath = "./assets/3dLutsTests/stairsNew.png"
 
     val time = measureTime { convertWithLut(inputImagePath, lutFilePath, outputImagePath) }
 
