@@ -1,13 +1,11 @@
 #import "../../components.typ": authored_by
 
 == Crushed Luminance
+#authored_by("Florian Weichert")
 
 === Theorie 
-#authored_by("")
 
 === Implementierung
-#authored_by("")
-
 ```kotlin
 fun ProcessingDsl.crushedLuminance(
   inputImage: Mat, 

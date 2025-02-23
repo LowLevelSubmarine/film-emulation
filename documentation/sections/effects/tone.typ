@@ -1,13 +1,11 @@
 #import "../../components.typ": authored_by
 
 == Tone
+#authored_by("Florian Weichert")
 
 === Theorie 
-#authored_by("")
 
 === Implementierung
-#authored_by("")
-
 ```kotlin
 fun ProcessingDsl.tone(image: Mat, config: Config) {
     val hsv by stored { Mat() }

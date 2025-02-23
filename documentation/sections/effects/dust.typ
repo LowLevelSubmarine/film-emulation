@@ -1,13 +1,13 @@
 #import "../../components.typ": authored_by
 
 == Dust
+#authored_by("Florian Weichert")
 
 === Theorie 
-#authored_by("")
+- Kommen durch Staub oder Kratzer auf dem Film zustande
+- Können als helle oder dunkle Artefakte auf dem Bild auftreten
 
 === Implementierung
-#authored_by("")
-
 ```kotlin
 fun ProcessingDsl.dust(image: Mat, config: Config) {
     val dustScale = 0.7
