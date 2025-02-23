@@ -10,10 +10,12 @@ Der analoge Farbfilm beruht auf dem Prinzip der Fotoemulsion. Hierbei werden lic
 == Struktur
 #wrap-content(
     [
+      #pad(left: 12pt, bottom: 12pt)[
         #figure(
             image("../assets/film-layers.png"),
             caption: [Struktur \ eines Farbfilms],
         )<fig:film-layers>
+      ]
     ],
     [
         Ein Farbfilm besteht aus mehreren Schichten (@fig:film-layers), die jeweils eine individuelle Aufgabe erfüllen.

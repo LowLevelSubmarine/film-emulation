@@ -1,3 +1,12 @@
+#import "../../components.typ": authored_by
+
+== 3D Luts
+#authored_by("")
+
+=== Implementierung
+
+
+```kotlin
 import nu.pattern.OpenCV
 import org.opencv.core.CvType
 import org.opencv.core.Mat
@@ -56,7 +65,15 @@ fun main() {
     val lutFilePath = "./assets/luts/Kodak Portra 400 UC.cube"
     val outputImagePath = "./assets/3dLutsTests/stairsNew.png"
 
-    val time = measureTime { convertWithLut(inputImagePath, lutFilePath, outputImagePath) }
+    val time = measureTime { 
+      convertWithLut(inputImagePath, lutFilePath, outputImagePath)
+    }
 
-    println("Image processed and saved to: $outputImagePath in ${time.inWholeMilliseconds}ms")
+    println(
+      "Image processed and saved to:
+      $outputImagePath in ${time.inWholeMilliseconds}ms"
+    )
 }
+```
+
+=== Probleme und Herausforderungen
