@@ -1,13 +1,17 @@
 #import "../../components.typ": authored_by
 
 == Gate Weave
+#authored_by("Florian Weichert")
 
 === Theorie 
-#authored_by("")
+- Leichtes, hochfrequentes Wackeln im Bild
+Ursprung
+- Ungenauigkeiten bei der Aufzeichnung in der Film-Kamera
+- Ungenauigkeiten im Kopier-Vorgang
+- Ungenauigkeiten bei der Wiedergabe über einen Film-Projektor
+- Der Bild-Ausschnitt ist im Folgebild nie exakt an der selben Stelle wie zuvor
 
 === Implementierung
-#authored_by("")
-
 ```kotlin
 fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat, config: Config) {
     var weaveNoiseOffset by stored { 0.0 }
