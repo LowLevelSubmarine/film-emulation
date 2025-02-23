@@ -27,6 +27,8 @@ Unterscheidung zwischen
 === Implementierung
 #authored_by("")
 
+
+
 ```kotlin
 fun ProcessingDsl.vignette(image: Mat, config: Config) {
     val mask by stored(dependencies = listOf(config.vignetteStrength)) {

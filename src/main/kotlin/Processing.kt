@@ -17,7 +17,6 @@ fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat, config: Config
     measureTime("halation") { halation(inputImage, destinationImage, config) }
     measureTime("grain") { grain(destinationImage, destinationImage, config) }
     measureTime("colorCast") { colorCast(destinationImage, config) }
-    //applyLUT(destinationImage)
     measureTime("scratches") { scratches(destinationImage) }
     measureTime("dust") { dust(destinationImage, config) }
     measureTime("shake") { shake(destinationImage, destinationImage, config) }
@@ -30,31 +29,14 @@ fun ProcessingDsl.slog3ToSrgb(inputImage: Mat, destinationImage: Mat) {
     Core.LUT(inputImage, lut, destinationImage)
 }
 
-fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat, config: Config) {
-    var weaveNoiseOffset by stored { 0.0 }
-    val weaveNoiseGenerator =
-        store { JNoise.newBuilder().perlin(3301, Interpolation.COSINE, FadeFunction.QUINTIC_POLY).build() }
-    val x = Random.nextFloat() * config.jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 0.0)
-        .toFloat() * config.weaveNoiseScale
-    val y = Random.nextFloat() * config.jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 100.0)
-        .toFloat() * config.weaveNoiseScale * 0.5f
-
-    weaveNoiseOffset += config.weaveNoiseSpeed
-
-    val transformation = Mat.zeros(2, 3, CV_32F).apply {
-        put(0, 0, floatArrayOf(1.0F))
-        put(1, 1, floatArrayOf(1.0F))
-        put(0, 2, floatArrayOf(inputImage.width().toFloat() * x))
-        put(1, 2, floatArrayOf(inputImage.height().toFloat() * y))
+fun ProcessingDsl.vignette(image: Mat, config: Config) {
+    val mask by stored(dependencies = listOf(config.vignetteStrength)) {
+        createVignetteMask(
+            config.vignetteStrength.toDouble(),
+            image.size()
+        )
     }
-    Imgproc.warpAffine(
-        inputImage,
-        destinationImage,
-        transformation,
-        destinationImage.size(),
-        0,
-        Core.BORDER_REFLECT
-    )
+    Core.subtract(image, mask, image)
 }
 
 fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat, config: Config) {
@@ -95,28 +77,8 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) 
     Core.subtract(destinationImage, dynamicGrain, destinationImage)
 }
 
-fun ProcessingDsl.crushedLuminance(inputImage: Mat, destinationImage: Mat, config: Config) {
-    val contrastLut by stored { createSplineLUT(Knot(0.2f, 0.0f), Knot(0.8f, 1.0f)) }
-    Core.LUT(inputImage, contrastLut, destinationImage)
-    val lut by stored(listOf(config.crushedLuminanceStrength)) {
-        createSplineLUT(
-            Knot(0.0f, config.crushedLuminanceStrength * 0.2f),
-            Knot(0.2f, 0.2f),
-            Knot(0.8f, 0.8f),
-            Knot(1.0f, 1.0f - config.crushedLuminanceStrength * 0.2f)
-        )
-    }
-    Core.LUT(destinationImage, lut, destinationImage)
-}
-
-fun ProcessingDsl.vignette(image: Mat, config: Config) {
-    val mask by stored(dependencies = listOf(config.vignetteStrength)) {
-        createVignetteMask(
-            config.vignetteStrength.toDouble(),
-            image.size()
-        )
-    }
-    Core.subtract(image, mask, image)
+fun ProcessingDsl.colorCast(image: Mat, config: Config) {
+    Core.add(image, config.colorCast.toScalar(), image)
 }
 
 fun ProcessingDsl.scratches(image: Mat) {
@@ -163,8 +125,45 @@ fun ProcessingDsl.dust(image: Mat, config: Config) {
     Core.add(image, dynamicDust, image)
 }
 
-fun ProcessingDsl.colorCast(image: Mat, config: Config) {
-    Core.add(image, config.colorCast.toScalar(), image)
+fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat, config: Config) {
+    var weaveNoiseOffset by stored { 0.0 }
+    val weaveNoiseGenerator =
+        store { JNoise.newBuilder().perlin(3301, Interpolation.COSINE, FadeFunction.QUINTIC_POLY).build() }
+    val x = Random.nextFloat() * config.jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 0.0)
+        .toFloat() * config.weaveNoiseScale
+    val y = Random.nextFloat() * config.jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 100.0)
+        .toFloat() * config.weaveNoiseScale * 0.5f
+
+    weaveNoiseOffset += config.weaveNoiseSpeed
+
+    val transformation = Mat.zeros(2, 3, CV_32F).apply {
+        put(0, 0, floatArrayOf(1.0F))
+        put(1, 1, floatArrayOf(1.0F))
+        put(0, 2, floatArrayOf(inputImage.width().toFloat() * x))
+        put(1, 2, floatArrayOf(inputImage.height().toFloat() * y))
+    }
+    Imgproc.warpAffine(
+        inputImage,
+        destinationImage,
+        transformation,
+        destinationImage.size(),
+        0,
+        Core.BORDER_REFLECT
+    )
+}
+
+fun ProcessingDsl.crushedLuminance(inputImage: Mat, destinationImage: Mat, config: Config) {
+    val contrastLut by stored { createSplineLUT(Knot(0.2f, 0.0f), Knot(0.8f, 1.0f)) }
+    Core.LUT(inputImage, contrastLut, destinationImage)
+    val lut by stored(listOf(config.crushedLuminanceStrength)) {
+        createSplineLUT(
+            Knot(0.0f, config.crushedLuminanceStrength * 0.2f),
+            Knot(0.2f, 0.2f),
+            Knot(0.8f, 0.8f),
+            Knot(1.0f, 1.0f - config.crushedLuminanceStrength * 0.2f)
+        )
+    }
+    Core.LUT(destinationImage, lut, destinationImage)
 }
 
 fun ProcessingDsl.tone(image: Mat, config: Config) {

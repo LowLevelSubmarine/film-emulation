@@ -1,15 +1,23 @@
 foto-emulsion:
-    type: Web
-    title: Analoge Fotografie
-    author: Marcel Dierke
-    url:
-      value: https://kleinbildphotographie.de/analoge-fotografie/
-      date: 2025-02-22
+  type: Web
+  title: Analoge Fotografie
+  author: Marcel Dierke
+  url:
+    value: https://kleinbildphotographie.de/analoge-fotografie/
+    date: 2025-02-22
 film-structure:
-    type: Web
-    title: Aufbau des Farbfilms
-    author: Elmar Baumann
-    date: 2017-05-06
-    url:
-      value: https://www.elmar-baumann.de/fotografie/fotobuch/node24.html
-      date: 2025-02-22
+  type: Web
+  title: Aufbau des Farbfilms
+  author: Elmar Baumann
+  date: 2017-05-06
+  url:
+    value: https://www.elmar-baumann.de/fotografie/fotobuch/node24.html
+    date: 2025-02-22
+halation-example-image:
+  type: Web
+  title: Beispielbild für Halation
+  author: Illia Horokhovsky
+  date: 2024-04-17
+  url:
+    value: https://unsplash.com/de/fotos/eine-gruppe-von-menschen-die-auf-einem-u-bahnsteig-stehen-8HjecSHHZSo
+    date: 2025-02-22
