@@ -1,4 +1,5 @@
 = Weitere Implementierungen
 
-#include "weitere_Implementierungen/cache.typ"
-#include "weitere_Implementierungen/3DLuts.typ"
+#include "implementation/cache.typ"
+#include "implementation/user_interface.typ"
+#include "implementation/3DLuts.typ"

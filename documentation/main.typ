@@ -1,4 +1,6 @@
 #set heading(numbering: "1.")
+#set par(justify: true)
+#set text(lang: "de")
 #show raw: it => block(
   fill: rgb("#f4f4f4"),
   width: 100%,
@@ -8,6 +10,16 @@
   ),
   text(fill: rgb("#131313"), it)
 )
+
+#pad([
+  #block([
+    #text([Analoge Filmemulation in Echtzeit],
+        size: 22pt, weight: "bold")
+  ]) 
+  #block([Leonie Wehser und Florian Weichert], above: 1.5em)
+], top: 10em)
+
+#pagebreak()
 
 #outline(
   title: [Inhaltsverzeichnis],
@@ -26,4 +38,5 @@
 
 #pagebreak()
 
-#bibliography("sources.yaml", title: "Quellenverzeichnis")
+= Quellenverzeichnis
+#bibliography("sources.yaml", title: none)

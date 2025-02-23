@@ -1,9 +1,9 @@
-#import "../components.typ": authored_by
+#import "/components.typ": authored_by
 
 == Cache
+#authored_by("Florian Weichert")
 
 === Implementierung
-#authored_by("Florian Weichert")
 
 ```kotlin
 import kotlin.reflect.KProperty
