@@ -4,7 +4,6 @@
 #authored_by("")
 
 === Implementierung
-
 ```kotlin
 import nu.pattern.OpenCV
 import org.opencv.core.CvType

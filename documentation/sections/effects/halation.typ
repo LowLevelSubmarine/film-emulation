@@ -39,53 +39,88 @@
   caption: [Implementierungsablauf für die Halation],
 )<fig:halation-diagram>
 
+ #figure(
+      image("../../assets/effects/halation/input.png"),
+      caption: [Beispiel Eingabebild],
+  )<fig:halation-input>
+
+// #wrap-content(
+//     [
+//       #pad(
+//         box(width: 150pt)[
+//           #figure(
+//               image("../../assets/effects/halation/input.png"),
+//               caption: [Beispiel Eingabebild],
+//           )<fig:halation-input>
+//         ],
+//         left: 12pt, bottom: 12pt
+//       )
+//     ],
+//     [
+      
+//     ],
+//     align: right,
+// )
+
 #wrap-content(
     [
       #pad(
         box(width: 150pt)[
           #figure(
-              image("../../assets/effects/halation/input.png"),
-              caption: [Beispiel Eingabebild],
-          )<fig:halation-input>
-          #figure(
               image("../../assets/effects/halation/step1.png"),
               caption: [Extraktion des roten Bildkanals],
           )<fig:halation-step1>
-          #figure(
-              image("../../assets/effects/halation/step2.png"),
-              caption: [Isolierung der extrem hellen Bildbereiche],
-          )<fig:halation-step2>
-          #figure(
-              image("../../assets/effects/halation/step3.png"),
-              caption: [Weichzeichnung der isolierten Bildbereiche],
-          )<fig:halation-step3>
-          #figure(
-              image("../../assets/effects/halation/step4.png"),
-              caption: [Rückführung in einen 3-Kanal-Buffer],
-          )<fig:halation-step4>
-          #figure(
-              image("../../assets/effects/halation/output.png"),
-              caption: [Addition auf das Eingabebild],
-          )<fig:halation-output>
         ],
-        left: 12pt, bottom: 12pt
+        left: 12pt
       )
     ],
     [
-      ==== Step 1
+      #text("Extraktion des roten Bildkanals", weight: "bold") (@fig:halation-step1)
       - Halation entsteht fast ausschließlich durch rötliches Licht
       - Implementierung durch Extraktion des roten Bildkanals
         - OpenCV: extractChannel()
       - Folgeberechnungen sind durch Beschränkung auf 1/3 der Daten weniger rechenintensiv
+    ],
+    align: right,
+)
 
-      ==== Step 2
+#wrap-content(
+    [
+      #pad(
+        box(width: 150pt)[
+          #figure(
+              image("../../assets/effects/halation/step2.png"),
+              caption: [Isolierung der extrem hellen Bildbereiche],
+          )<fig:halation-step2>
+        ],
+        left: 12pt
+      )
+    ],
+    [
+      #text("Isolierung der extrem hellen Bildbereiche", weight: "bold") (@fig:halation-step2)
       - Halation betrifft nur die extrem hellen Bildbereiche, welche eine Reflexion innerhalb des Films o. Gehäuses verursachen
       - Es müssen alle Bildelemente, die nicht extrem hell sind, entfernt werden
       - Implementierung durch Gamma-Anpassung mit γ=15
         - OpenCV: LUT()
       - Andere Lösungen sind denkbar
+    ],
+    align: right,
+)
 
-      ==== Step 3
+#wrap-content(
+    [
+      #pad(
+        box(width: 150pt)[
+          #figure(
+              image("../../assets/effects/halation/step3.png"),
+              caption: [Weichzeichnung der isolierten Bildbereiche],
+          )<fig:halation-step3>
+        ],
+        left: 12pt
+      )
+    ],
+    [
+      #text("Weichzeichnung der isolierten Bildbereiche", weight: "bold") (@fig:halation-step3)
       - Halation zeichnet sich durch Lichthöfe um helle Bildbereiche herum aus
         - Intensität nimmt proportional zur Entfernung ab
       - Implementierung durch Weichzeichnung
@@ -93,15 +128,47 @@
           - Nicht direktional
           - Intensität nimmt weich ab
       - OpenCV: GaussianBlur
+    ],
+    align: right,
+)
 
-      ==== Step 4
+#wrap-content(
+    [
+      #pad(
+        box(width: 150pt)[
+          #figure(
+              image("../../assets/effects/halation/step4.png"),
+              caption: [Rückführung in einen 3-Kanal-Buffer],
+          )<fig:halation-step4>
+        ],
+        left: 12pt
+      )
+    ],
+    [
+      #text("Rückführung in einen 3-Kanal-Buffer", weight: "bold") (@fig:halation-step4)
       - Halation ist immer rötlich gefärbt
       - Implementierung durch Kopieren des bestehenden 1-Kanal-Bildes in den roten Bereich eines schwarzen 3-Kanal-Bildes
         - OpenCV: Mat.zeros()
         - OpenCV: insertChannel()
       - Passend: 3-Kanal-Buffer für Folgeschritt sowieso Voraussetzung
+    ],
+    align: right,
+)
 
-      ==== Step 5
+#wrap-content(
+    [
+      #pad(
+        box(width: 150pt)[
+          #figure(
+              image("../../assets/effects/halation/output.png"),
+              caption: [Addition auf das Eingabebild],
+          )<fig:halation-output>
+        ],
+        left: 12pt
+      )
+    ],
+    [
+      #text("Addition auf das Eingabebild", weight: "bold") (@fig:halation-output)
       - Halation hellt das Bild in den relevanten Regionen auf und lässt es ansonsten unberührt
       - Implementierung durch Addition auf das Original-Bild
         - Schwarze Bereiche verändern nicht das Bild, da x + 0 = x
