@@ -1,12 +1,13 @@
 #import "../../components.typ": authored_by
 
 == Gate Weave
+#authored_by("Florian Weichert")
 
-=== Theorie 
-#authored_by("")
+=== Theorie
+Das Analog-Bild läuft als Teil von Bewegt-Bildern sowohl während der Aufnahme als während der Wiedergabe mit einem Projekter oder der digitalen Aufzeichnung mit einem Scanner über verschiedene Rollenführungen. Diese Rollenführungen sorgt, besonders in älteren Systemen, für ungenauigkeiten in der Platzierung des Bildes. Diese Ungenauigkeiten zeigen sich in Form von weichen Schwankungen des Bildes. Dieser Effekt wird als Gate Weave bezeichnet. \ Zusätzlich kann ein ungenaues Auslösen des Verschlusses zu einem ähnlichen verwackeln füren. Dieser Effekt ist jedoch hochfrequenter aber weniger stark ausgeprägt. @gate-weave-1 @gate-weave-2
 
 === Implementierung
-#authored_by("")
+
 
 ```kotlin
 fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat, config: Config) {

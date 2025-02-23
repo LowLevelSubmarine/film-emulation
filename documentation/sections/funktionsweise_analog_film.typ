@@ -25,7 +25,7 @@ Der analoge Farbfilm beruht auf dem Prinzip der Fotoemulsion. Hierbei werden lic
         Das menschliche Auge ist nicht in der Lage ultraviolettes Licht wahrzunehmen. Daher befindet sich unter der Schutzschicht ein UV-Filter, der das ultraviolette Licht herausfiltert, sodass ulraviolettes Licht keinen Einfluss auf die darunter liegenden Emulsionsschichten haben kann.
 
         === Gelbe Emulsionsschichten
-        Die erste Emulsionsschicht ist für die Aufnahme von blauem Licht zuständig. Sie wird als Gelb bezeichnet, da sie während der Entwicklung gelben Farbstoff freisetzt.
+        Die erste Emulsionsschicht ist für die Aufnahme von blauem Licht zuständig. Sie wird als Gelb bezeichnet, da sie während der Entwicklung gelben Farbstoff freisetzt. Die Emulsionsschichten können je nach Film unterschiedlich aufgebaut sein. Es gibt Filme mit bis zu drei verschiedenen Empfindlichkeiten, um den Dynamik-Umfang zu erhöhen, diese werden dann als "Low speed-", "Medium speed-" und "High speed layers" bezeichnet. @multiple-emulsion-layers-per-color
 
         === Gelb-Filter
         Um die Farben des Bildes mölichst korrekt darzustellen, wird unter der Gelben Emulsionsschicht ein Gelb-Filter einesetzt um verbleibendes blaues Licht herauszufiltern, sodass weitere Emulsionsschichten nicht durch blaues Licht belichtet werden können.

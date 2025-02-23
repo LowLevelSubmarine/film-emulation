@@ -10,6 +10,8 @@
   ),
   text(fill: rgb("#131313"), it)
 )
+// Disable justification for paragraphs inside code blocks
+#show raw.where(block: true): set par(justify: false)
 
 #pad([
   #block([

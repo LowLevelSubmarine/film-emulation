@@ -1,15 +1,46 @@
 foto-emulsion:
-    type: Web
-    title: Analoge Fotografie
-    author: Marcel Dierke
-    url:
-      value: https://kleinbildphotographie.de/analoge-fotografie/
-      date: 2025-02-22
+  type: Web
+  title: Analoge Fotografie
+  author: Marcel Dierke
+  url:
+    value: https://kleinbildphotographie.de/analoge-fotografie/
+    date: 2025-02-22
 film-structure:
-    type: Web
-    title: Aufbau des Farbfilms
-    author: Elmar Baumann
-    date: 2017-05-06
-    url:
-      value: https://www.elmar-baumann.de/fotografie/fotobuch/node24.html
-      date: 2025-02-22
+  type: Web
+  title: Aufbau des Farbfilms
+  author: Elmar Baumann
+  date: 2017-05-06
+  url:
+    value: https://www.elmar-baumann.de/fotografie/fotobuch/node24.html
+    date: 2025-02-22
+multiple-emulsion-layers-per-color:
+  type: Web
+  title: Photographic film
+  url:
+    value: https://en.wikipedia.org/wiki/Photographic_film#cite_note-shinsaku-15
+    date: 2025-02-23
+  note: "Wir konnten keine andere kostenlose Quelle finden, die die Information bestätigt."
+  parent:
+    type: Book
+    title: Organic Chemistry of Photography
+    author: Shinsaku Fujita
+    date: 2004
+    serial-number: 978-3-540-20988-1
+understanding-film-flaws:
+  type: Web
+  title: Understanding Film Flaws
+  url:
+    value: https://carmencitafilmlab.com/blog/understanding-film-flaws/
+    date: 2025-02-23
+gate-weave-1:
+  type: Web
+  title: Film Breath and Gate Weave. Introduction to the new tools
+  url:
+    value: https://blog.dehancer.com/articles/film-breath-and-gate-weave/
+    date: 2025-02-23
+gate-weave-2:
+  type: Web
+  title: Photochemical Film Look
+  url:
+    value: https://mononodes.com/photochemical-film-look/
+    date: 2025-02-23
