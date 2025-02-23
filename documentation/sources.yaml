@@ -5,3 +5,11 @@ foto-emulsion:
     url:
       value: https://kleinbildphotographie.de/analoge-fotografie/
       date: 2025-02-22
+film-structure:
+    type: Web
+    title: Aufbau des Farbfilms
+    author: Elmar Baumann
+    date: 2017-05-06
+    url:
+      value: https://www.elmar-baumann.de/fotografie/fotobuch/node24.html
+      date: 2025-02-22
