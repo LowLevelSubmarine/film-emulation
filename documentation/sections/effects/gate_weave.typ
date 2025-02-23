@@ -16,7 +16,7 @@ fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat, config: Config) 
           JNoise.newBuilder().perlin(3301, 
           Interpolation.COSINE, 
           FadeFunction.QUINTIC_POLY).build() 
-          }
+        }
     val x = Random.nextFloat() * config.jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 0.0)
         .toFloat() * config.weaveNoiseScale
     val y = Random.nextFloat() * config.jitterScale + weaveNoiseGenerator.evaluateNoise(weaveNoiseOffset, 100.0)
