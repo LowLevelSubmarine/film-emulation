@@ -9,6 +9,12 @@ import kotlin.time.measureTime
 
 const val LUT_SIZE = 64
 
+/**
+ * Reads a LUT (Look-Up Table) file and returns its contents as a list of lists of floats.
+ *
+ * @param path The path to the LUT file.
+ * @return A list of lists of floats representing the LUT.
+ */
 fun readLutFile(path: String): List<List<Float>> {
     val lines = Files.readAllLines(Paths.get(path))
     return lines.takeLast(LUT_SIZE * LUT_SIZE * LUT_SIZE).map { line ->
@@ -16,6 +22,13 @@ fun readLutFile(path: String): List<List<Float>> {
     }
 }
 
+/**
+ * Converts a pixel using the provided LUT.
+ *
+ * @param pixel The pixel to convert, represented as a DoubleArray.
+ * @param lut The LUT to use for conversion.
+ * @return A ByteArray representing the converted pixel.
+ */
 fun convertPixel(pixel: DoubleArray, lut: List<List<Float>>): ByteArray {
     val r = ((pixel[0] / 255) * (LUT_SIZE - 1)).roundToInt()
     val g = ((pixel[1] / 255) * (LUT_SIZE - 1)).roundToInt()
@@ -31,6 +44,13 @@ fun convertPixel(pixel: DoubleArray, lut: List<List<Float>>): ByteArray {
     )
 }
 
+/**
+ * Converts an image using a LUT and saves the result to a specified output path.
+ *
+ * @param imgPath The path to the input image.
+ * @param lutPath The path to the LUT file.
+ * @param outputPath The path to save the converted image.
+ */
 fun convertWithLut(imgPath: String, lutPath: String, outputPath: String) {
     val lut = readLutFile(lutPath)
     val img = Imgcodecs.imread(imgPath, Imgcodecs.IMREAD_COLOR)
@@ -49,6 +69,9 @@ fun convertWithLut(imgPath: String, lutPath: String, outputPath: String) {
     Imgcodecs.imwrite(outputPath, output)
 }
 
+/**
+ * The main function that loads OpenCV, processes an image with a LUT, and measures the time taken.
+ */
 fun main() {
     OpenCV.loadLocally()
 

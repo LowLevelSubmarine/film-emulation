@@ -21,9 +21,12 @@ import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
 import kotlin.time.measureTime
 
-
 data class Ref<T>(var value: T)
 
+/**
+ * Main entry point of the application.
+ * Initializes OpenCV, sets up the server, and starts video streaming.
+ */
 suspend fun main() = coroutineScope {
     OpenCV.loadLocally()
     val configRef = Ref(Config.default)
@@ -77,6 +80,13 @@ suspend fun main() = coroutineScope {
     Unit
 }
 
+/**
+ * Creates a video stream from the default camera and processes frames.
+ *
+ * @param configRef Reference to the configuration object.
+ * @param targetFrameRate Target frame rate for the video stream.
+ * @param onFrameBytes Callback function to handle the processed frame bytes.
+ */
 suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFrameBytes: suspend (bytes: ByteArray) -> Unit) {
     coroutineScope {
         val videoCapture = VideoCapture(0)  // cameraIndex = 0
@@ -95,8 +105,6 @@ suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFr
             }
         }
 
-        //var lastFrame = TimeSource.Monotonic.markNow()
-        //val targetFrameTime = 1.seconds / targetFrameRate
         var currentFrame: Mat? = null
 
         launch {
@@ -104,14 +112,12 @@ suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFr
             val processedFrame = Mat()
             while (isActive) {
                 if (currentFrame == null) continue
-                //println("processing frame")
                 val frame = currentFrame!!
                 processing.apply {
                     reset()
                     measureTime("processing") { process(frame, processedFrame, configRef.value) }
                 }
                 currentFrame = null
-                //  processing.logTimings()
 
                 launch {
                     val buffer = run {
@@ -126,14 +132,12 @@ suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFr
 
         val capturedFrame = Mat()
         while (isActive) {
-            //if (lastFrame + targetFrameTime > TimeSource.Monotonic.markNow()) continue
             videoCapture.read(capturedFrame)
             if (currentFrame != null) {
                 println("processing couldn't keep up with frame rate")
                 continue
             }
             currentFrame = capturedFrame
-            //lastFrame = TimeSource.Monotonic.markNow()
             fpsCounter.count()
         }
 
@@ -141,19 +145,28 @@ suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFr
     }
 }
 
-//fun async(block: () -> Unit) = Thread(block).apply { start() }
-
+/**
+ * Class to count frames per second (FPS).
+ *
+ * @param sampleDuration Duration over which to sample FPS.
+ */
 class FpsCounter(
     private val sampleDuration: Duration = 2.seconds
 ) {
     private val samples = mutableListOf<TimeSource.Monotonic.ValueTimeMark>()
 
+    /**
+     * Records a frame count at the current time.
+     */
     fun count() {
         val now = TimeSource.Monotonic.markNow()
         samples.removeAll { mark -> now.minus(mark) > sampleDuration }
         samples.add(now)
     }
 
+    /**
+     * Gets the current FPS.
+     */
     val fps: Int
         get() {
             val now = TimeSource.Monotonic.markNow()

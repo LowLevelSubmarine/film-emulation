@@ -9,6 +9,9 @@ val config = Config.default.copy(
     halationStrength = 1f,
 )
 
+/**
+ * Main function to load an image, process it, and save the result.
+ */
 fun main() {
     OpenCV.loadLocally()
     val path = "./assets/presentation/stairs.png"
@@ -19,7 +22,6 @@ fun main() {
         Imgproc.resize(source, destination, source.size() / 5)
         adjustLuminance(destination, destination, contrast = 1.7, brightness = 1.2)
         adjustSaturation(destination, destination, saturation = 0.7)
-        //Imgcodecs.imwrite("$path-im.png", destination)
         process(destination, destination, config)
     }
     Imgcodecs.imwrite("$path-tone_cold.png", destination)
