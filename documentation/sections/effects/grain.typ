@@ -1,13 +1,14 @@
 #import "../../components.typ": authored_by
 
 == Grain
+#authored_by("Leonie Wehser")
 
 === Theorie 
-#authored_by("")
+- Feine Bildstörungen, anders als bei Digital-Film unabhängig von Pixeln, wirkt natürlicher
+- Entsteht durch die Ballung / Unregelmäßigkeit der Kristalle
+- Je höher der ISO-Wert (Empfindlichkeit) des Films, desto größer die Kristalle und stärker ausgeprägt der Film-Grain
 
 === Implementierung
-#authored_by("")
-
 ```kotlin
 fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) {
     val grainScale = 0.4
