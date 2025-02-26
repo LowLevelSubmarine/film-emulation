@@ -4,7 +4,6 @@
 #authored_by("Florian Weichert")
 
 === Implementierung
-
 ```kotlin
 import kotlin.reflect.KProperty
 import kotlin.time.Duration

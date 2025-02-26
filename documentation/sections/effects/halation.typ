@@ -4,7 +4,6 @@
 == Halation
 #authored_by("Leonie Wehser")
 
-
 === Theorie 
 #wrap-content(
     [
@@ -34,7 +33,6 @@
 )
 
 === Implementierung
-
 #figure(
   image("../../assets/effects/halation/diagram.png",
       height: 250pt),
@@ -74,7 +72,40 @@
       )
     ],
     [
-      #lorem(100)
+      ==== Step 1
+      - Halation entsteht fast ausschließlich durch rötliches Licht
+      - Implementierung durch Extraktion des roten Bildkanals
+        - OpenCV: extractChannel()
+      - Folgeberechnungen sind durch Beschränkung auf 1/3 der Daten weniger rechenintensiv
+
+      ==== Step 2
+      - Halation betrifft nur die extrem hellen Bildbereiche, welche eine Reflexion innerhalb des Films o. Gehäuses verursachen
+      - Es müssen alle Bildelemente, die nicht extrem hell sind, entfernt werden
+      - Implementierung durch Gamma-Anpassung mit γ=15
+        - OpenCV: LUT()
+      - Andere Lösungen sind denkbar
+
+      ==== Step 3
+      - Halation zeichnet sich durch Lichthöfe um helle Bildbereiche herum aus
+        - Intensität nimmt proportional zur Entfernung ab
+      - Implementierung durch Weichzeichnung
+        - Gauß-Filter passt am besten
+          - Nicht direktional
+          - Intensität nimmt weich ab
+      - OpenCV: GaussianBlur
+
+      ==== Step 4
+      - Halation ist immer rötlich gefärbt
+      - Implementierung durch Kopieren des bestehenden 1-Kanal-Bildes in den roten Bereich eines schwarzen 3-Kanal-Bildes
+        - OpenCV: Mat.zeros()
+        - OpenCV: insertChannel()
+      - Passend: 3-Kanal-Buffer für Folgeschritt sowieso Voraussetzung
+
+      ==== Step 5
+      - Halation hellt das Bild in den relevanten Regionen auf und lässt es ansonsten unberührt
+      - Implementierung durch Addition auf das Original-Bild
+        - Schwarze Bereiche verändern nicht das Bild, da x + 0 = x
+        - OpenCV: add()
     ],
     align: right,
 )

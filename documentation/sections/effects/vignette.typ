@@ -1,10 +1,9 @@
 #import "../../components.typ": authored_by
 
 == Vignette
+#authored_by("Leonie Wehser")
 
 === Theorie 
-#authored_by("")
-
 Unterscheidung zwischen
 - Mechanische oder physikalische Vignettierung 
 	- Lichtstrahlen durchqueren mehrere aufeinanderfolgende Öffnungen bevor die die Bildebene erreichen 
@@ -25,10 +24,6 @@ Unterscheidung zwischen
 
 
 === Implementierung
-#authored_by("")
-
-
-
 ```kotlin
 fun ProcessingDsl.vignette(image: Mat, config: Config) {
     val mask by stored(dependencies = listOf(config.vignetteStrength)) {

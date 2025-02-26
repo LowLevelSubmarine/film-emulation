@@ -1,13 +1,13 @@
 #import "../../components.typ": authored_by
 
 == Scratches
+#authored_by("Leonie Wehser")
 
 === Theorie 
-#authored_by("")
+- Kommen durch Staub oder Kratzer auf dem Film zustande
+- Können als helle oder dunkle Artefakte auf dem Bild auftreten
 
 === Implementierung
-#authored_by("")
-
 ```kotlin
 fun ProcessingDsl.scratches(image: Mat) {
     val textures by stored {
