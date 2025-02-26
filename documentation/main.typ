@@ -1,17 +1,19 @@
 #set heading(numbering: "1.")
 #set par(justify: true)
 #set text(lang: "de")
-#show raw: it => block(
-  fill: rgb("#f4f4f4"),
-  width: 100%,
-  inset: 8pt,
-  stroke: (
-    left: rgb("#d3d3d3") + 3pt,
-  ),
-  text(fill: rgb("#131313"), it)
-)
-// Disable justification for paragraphs inside code blocks
-#show raw.where(block: true): set par(justify: false)
+#show raw.where(block: true): (it) => {
+  set par(justify: false)
+  block(
+    fill: rgb("#f4f4f4"),
+    width: 100%,
+    inset: 8pt,
+    stroke: (
+      left: rgb("#d3d3d3") + 3pt,
+    ),
+    text(fill: rgb("#131313"), it)
+  )
+}
+
 
 #pad([
   #block([
