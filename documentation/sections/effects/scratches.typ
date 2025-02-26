@@ -4,10 +4,32 @@
 #authored_by("Leonie Wehser")
 
 === Theorie 
-- Kommen durch Staub oder Kratzer auf dem Film zustande
-- Können als helle oder dunkle Artefakte auf dem Bild auftreten
+- Scratches entstehen durch Staub oder Kratzer auf dem Film.
+- Sie können als helle oder dunkle Artefakte im Bild sichtbar werden.
+- Die Form und Intensität der Kratzer kann variieren, abhängig von der Ursache und der Art des Films.
+- In der digitalen Bildverarbeitung können solche Effekte simuliert werden, um den Look alter oder beschädigter Filme nachzubilden.
+- Diese Simulation kann für künstlerische Effekte oder zur Validierung von Algorithmen zur Kratzerentfernung genutzt werden.
 
 === Implementierung
+- Ziel der Implementierung:
+    - Simulation von Kratzern auf digitalen Bildern, um den Look alter oder beschädigter Filme zu erzeugen.
+    - Erzeugung zufälliger Kratzertexturen zur realistischen Nachbildung von Filmfehlern.
+- Beschreibung der Funktion scratches(image: Mat):
+    - Die Funktion arbeitet innerhalb einer ProcessingDsl-Umgebung und nimmt ein OpenCV-Mat-Objekt als Eingabe.
+    - Zunächst werden verschiedene Kratzertexturen aus Bilddateien geladen und in einer Liste gespeichert.
+    - Eine zufällige Auswahl an Texturen wird durch verschiedene Transformationen (z. B. Rotation) verändert, um Variabilität zu gewährleisten.
+    - Ein zufälliger Kratzeranteil (scratchAmount) wird berechnet, wobei eine geringe Wahrscheinlichkeit für eine hohe Anzahl an Kratzern besteht.
+    - Die Kratzertexturen werden dann zufällig auf das Eingangsbild angewendet:
+        - Eine zufällige Textur wird ausgewählt.
+        - Ein zufälliger Bereich (ROI) im Bild wird bestimmt.
+        - Die Textur wird auf diesen Bereich mit Core.add() additiv angewendet, um den Effekt eines Kratzers zu erzeugen.
+- Vorteile der Implementierung:
+    - Effiziente Erzeugung zufälliger Kratzereffekte mit realistischen Variationen.
+    - Nutzung vorhandener Kratzertexturen anstelle synthetischer Generierung für höhere Authentizität.
+    - Möglichkeit der Anpassung durch Variationen in Anzahl, Position und Transformationen der Kratzer.
+    - Flexibel in verschiedene Bildverarbeitungs-Pipelines integrierbar.
+    - Ermöglicht Tests von Algorithmen zur Kratzerentfernung oder künstlerische Anwendungen.
+
 ```kotlin
 fun ProcessingDsl.scratches(image: Mat) {
     val textures by stored {

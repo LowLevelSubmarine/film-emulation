@@ -4,6 +4,33 @@
 #authored_by("")
 
 === Implementierung
+- Ziel der Implementierung
+    - Funktion zur Anwendung einer 3D-Lookup-Tabelle (LUT) auf ein Bild entwickeln
+    - Farbkorrektur und -manipulation mit LUT-Dateien ermöglichen
+    - OpenCV und Kotlin zur effizienten Bildverarbeitung nutzen
+    - Verarbeitungsgeschwindigkeit für große Bilddateien optimieren
+- Beschreibung der Funktion readLutFile:
+    - 3D-LUT-Datei im .cube-Format einlesen
+    - Letzte Zeilen der Datei enthalten die LUT-Werte
+    - Werte als Liste von Float-Werten speichern und für Farbtransformation nutzen
+- Beschreibung der Funktion convertPixel:
+    - RGB-Werte des Pixels in LUT-Position umrechnen
+    - Pixelwerte von 0-255 auf LUT-Wertebereich (0 bis LUT_SIZE - 1) skalieren
+    - LUT zur Bestimmung neuer Farbwerte nutzen
+    - Transformierte Farbwerte als Byte-Array zur weiteren Verarbeitung ausgeben
+- Beschreibung der Funktion convertWithLut:
+    - Eingabebild mit OpenCV laden
+    - Leere Matrix für das Ausgabeformat erstellen
+    - Alle Pixel des Bildes iterieren und Farbwerte durch LUT-Werte ersetzen
+    - Verändertes Bild als neue Datei speichern
+    - Fehlerbehandlung für nicht ladbare Bilder enthalten
+- Vorteile der Implementierung
+    - Automatisierte Farbkorrektur durch LUTs
+    - Effiziente Verarbeitung durch direkten Zugriff auf LUT-Werte
+    - Flexibel nutzbar mit verschiedenen LUT-Dateien
+    - OpenCV-Integration für leistungsstarke Bildverarbeitung
+    - Skalierbar für verschiedene Bildauflösungen und LUT-Größen
+
 ```kotlin
 import nu.pattern.OpenCV
 import org.opencv.core.CvType
@@ -63,13 +90,12 @@ fun main() {
     val lutFilePath = "./assets/luts/Kodak Portra 400 UC.cube"
     val outputImagePath = "./assets/3dLutsTests/stairsNew.png"
 
-    val time = measureTime { 
+    val time = measureTime {
       convertWithLut(inputImagePath, lutFilePath, outputImagePath)
     }
 
     println(
-      "Image processed and saved to:
-      $outputImagePath in ${time.inWholeMilliseconds}ms"
+      "Image processed and saved to: $outputImagePath in ${time.inWholeMilliseconds}ms"
     )
 }
 ```
