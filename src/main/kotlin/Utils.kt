@@ -31,16 +31,13 @@ fun createGammaLUT(gammaValue: Double): Mat {
 /**
  * Creates a Lookup Table (LUT) using a spline interpolation based on the provided knots.
  *
- * @param knots A list of Knot objects representing the control points for the spline.
- * @return A Mat object representing the generated LUT.
- *
  * The function performs the following steps:
  * 1. Initializes a FloatBezierSpline with Vector2F type.
  * 2. Adds the provided knots to the spline after converting them to Vector2F.
  * 3. Creates and returns a LUT by mapping each index to a byte value derived from the spline interpolation.
  *
- * Note: The LUT is created by evaluating the spline at each point from 0 to 255, scaling the result to the range [0, 255],
- * and converting it to a byte.
+ * @param knots A list of Knot objects representing the control points for the spline.
+ * @return A Mat object representing the generated LUT.
  */
 fun createSplineLUT(knots: List<Knot>): Mat {
     val spline = FloatBezierSpline<Vector2F>()
@@ -63,7 +60,7 @@ fun createSplineLUT(vararg knots: Knot) = createSplineLUT(knots.toList())
 
 /**
  * Creates a linear Look-Up Table (LUT) based on the provided knots.
- * 
+ *
  * The function first creates a linear mapping based on the provided knots.
  * It then generates a LUT by applying the mapping to each value in the range [0, 255],
  * scaling the result to the range [0, 255], and converting it to a byte.
@@ -132,7 +129,7 @@ fun createSlog3ToSrgbLut(): Mat = createLUT { i ->
 
 /**
  * Creates a Look-Up Table (LUT) using the provided function.
- * 
+ *
  * The LUT is created by applying the provided function to each integer value from 0 to 255.
  * The resulting Byte values are stored in a ByteArray, which is then used to populate the Mat object.
  *
@@ -202,7 +199,7 @@ private fun mapSlrToSrgb(slrValue: Double): Double {
 
 /**
  * Creates a vignette mask with the specified strength and size.
- * 
+ *
  * The vignette mask is created by calculating the distance of each pixel from the center of the image.
  * The pixel values are adjusted based on this distance and the specified strength to create a vignette effect.
  *
@@ -251,7 +248,7 @@ fun createRandomOffsetTransformation(image: Mat): Mat {
 
 /**
  * Adjusts the luminance of the given image by modifying its contrast and brightness.
- * 
+ *
  * The formula used for adjustment is:
  * destination = image * contrast + (127 - 127 * contrast + (255 * brightness - 255))
  *
@@ -261,20 +258,25 @@ fun createRandomOffsetTransformation(image: Mat): Mat {
  * @param brightness The brightness factor to be applied. Default is 1.0 (no change).
  */
 fun adjustLuminance(image: Mat, destination: Mat, contrast: Number = 1.0, brightness: Number = 1.0) {
-    image.convertTo(destination, -1, contrast.toDouble(), 127.0 - contrast.toDouble() * 127.0 + (255.0 * brightness.toDouble() - 255.0))
+    image.convertTo(
+        destination,
+        -1,
+        contrast.toDouble(),
+        127.0 - contrast.toDouble() * 127.0 + (255.0 * brightness.toDouble() - 255.0)
+    )
 }
 
 /**
  * Adjusts the saturation of an image.
  *
- * This function converts the input image from BGR to HSV color space, 
+ * This function converts the input image from BGR to HSV color space,
  * adjusts the saturation channel by multiplying it with the given saturation value,
  * and then converts the image back to BGR color space.
  *
  * @param image The source image in BGR color space.
  * @param destination The destination image where the result will be stored.
- * @param saturation The factor by which to adjust the saturation. 
- *                   A value of 1.0 means no change, less than 1.0 decreases saturation, 
+ * @param saturation The factor by which to adjust the saturation.
+ *                   A value of 1.0 means no change, less than 1.0 decreases saturation,
  *                   and greater than 1.0 increases saturation.
  */
 fun adjustSaturation(image: Mat, destination: Mat, saturation: Number) {

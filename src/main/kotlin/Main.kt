@@ -7,7 +7,10 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.utils.io.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.awaitCancellation
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import kotlinx.serialization.json.Json
 import nu.pattern.OpenCV
 import org.opencv.core.Mat
@@ -16,10 +19,8 @@ import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.videoio.VideoCapture
 import org.opencv.videoio.Videoio
 import kotlin.time.Duration
-import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.TimeSource
-import kotlin.time.measureTime
 
 data class Ref<T>(var value: T)
 
@@ -31,7 +32,7 @@ suspend fun main() = coroutineScope {
     OpenCV.loadLocally()
     val configRef = Ref(Config.default)
     val frameReceivers = mutableListOf<suspend (bytes: ByteArray) -> Unit>()
-    launch { createVideoStream(configRef, 24, { frame -> frameReceivers.forEach { it(frame) }}) }
+    launch { createVideoStream(configRef, 24, { frame -> frameReceivers.forEach { it(frame) } }) }
 
     embeddedServer(Netty, 8080) {
         install(CORS) {
@@ -87,7 +88,11 @@ suspend fun main() = coroutineScope {
  * @param targetFrameRate Target frame rate for the video stream.
  * @param onFrameBytes Callback function to handle the processed frame bytes.
  */
-suspend fun createVideoStream(configRef: Ref<Config>, targetFrameRate: Int, onFrameBytes: suspend (bytes: ByteArray) -> Unit) {
+suspend fun createVideoStream(
+    configRef: Ref<Config>,
+    targetFrameRate: Int,
+    onFrameBytes: suspend (bytes: ByteArray) -> Unit
+) {
     coroutineScope {
         val videoCapture = VideoCapture(0)  // cameraIndex = 0
         val fpsCounter = FpsCounter()
