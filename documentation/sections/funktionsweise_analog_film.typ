@@ -1,10 +1,10 @@
-#import "@preview/wrap-it:0.1.0": wrap-content
+#import "@preview/wrap-it:0.1.1": wrap-content
 #import "../components.typ": authored_by
 
 = Funktionsweise des Analog-Films
 #authored_by("Florian Weichert")
 
-== Fotoemulsion
+== Fotoemulsion <topic:fotoemulsion>
 Der analoge Farbfilm beruht auf dem Prinzip der Fotoemulsion. Hierbei werden lichtempfindliche Salze verwendet um Informationen über die Intensität des einfallenden Lichts zu festzuhalten. Die lichtempfindlichen Salze bestehen aus einer Mischung der Silberhalogenide Silberbromid, Silberchlorid und Silberiodid. Diese Salze werden in einer Gelatineschicht auf einem Trägermaterial aufgebracht, sodass diese gleichmäßig verteilt sind. Wird nun Licht auf die Salze geworfen, bilden sich Belichtungskeime, welche für das menschliche Auge nicht sichtbar sind, jedoch über ihre lokale Konzentration Information über die Intensität des aufgetroffenen Lichts enthalten. Dieser Zustand wird als latentes (verborgenes) Bild bezeichnet. Während der Entwicklung werden dann chemische Vorgänge genutzt, um die Belichtungskeime sichtbar zu machen. So wird das latente Bild in ein sichtbares Bild umgewandelt. Zuletzt muss das Bild noch haltbar gemacht werden, da es sonst durch Lichteinwirkung oder Umwelteinflüsse zerstört werden könnte. Dies geschieht durch die Fixierung des Bildes, wobei die lichtempfindlichen Salze aus der Emulsionsschicht entfernt werden. @foto-emulsion
 
 == Struktur
