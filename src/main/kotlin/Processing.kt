@@ -33,10 +33,6 @@ fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat, config: Config
 /**
  * Converts an image from S-Log3 color space to sRGB color space using a Look-Up Table (LUT).
  *
- * This function uses a precomputed LUT to perform the color space conversion.
- * The LUT is created by the `createSlog3ToSrgbLut` function and stored for reuse.
- * The OpenCV `Core.LUT` function is used to apply the LUT to the input image.
- *
  * @receiver ProcessingDsl The DSL context in which this function is called.
  * @param inputImage The input image in S-Log3 color space.
  * @param destinationImage The output image in sRGB color space.
@@ -49,14 +45,9 @@ fun ProcessingDsl.slog3ToSrgb(inputImage: Mat, destinationImage: Mat) {
 /**
  * Applies a vignette effect to the given image using the specified configuration.
  *
- * The vignette effect is created by generating a mask based on the vignette strength from the configuration.
- * The mask is then subtracted from the original image to produce the vignette effect.
- *
  * @receiver The DSL context for processing.
  * @param image The image to which the vignette effect will be applied. This is a Mat object representing the image.
  * @param config The configuration object containing the vignette strength.
- *
- * @property config.vignetteStrength The strength of the vignette effect. This value is used to create the vignette mask.
  */
 fun ProcessingDsl.vignette(image: Mat, config: Config) {
     val mask by stored(dependencies = listOf(config.vignetteStrength)) {
@@ -70,19 +61,6 @@ fun ProcessingDsl.vignette(image: Mat, config: Config) {
 
 /**
  * Applies a halation effect to the input image and stores the result in the destination image.
- *
- * The halation effect is achieved by isolating the red channel of the input image, applying a gamma correction,
- * resizing, blurring, adjusting luminance, and then combining it back with the original image.
- *
- * The steps are as follows:
- * 1. Isolate the red channel from the input image.
- * 2. Apply gamma correction using a lookup table (LUT).
- * 3. Resize the red channel image to reduce its resolution.
- * 4. Apply Gaussian blur to the resized red channel image.
- * 5. Adjust the luminance of the blurred red channel image.
- * 6. Resize the red channel image back to its original resolution.
- * 7. Create a black image with 3 channels and insert the processed red channel into the red channel of this image.
- * 8. Add the processed image to the original input image to produce the final halation effect.
  *
  * @param inputImage The source image to which the halation effect will be applied.
  * @param destinationImage The image where the result will be stored.
@@ -146,10 +124,6 @@ fun ProcessingDsl.colorCast(image: Mat, config: Config) {
 /**
  * Applies random scratch textures to the given image.
  *
- * This function simulates scratches on the provided image by overlaying randomly
- * selected and transformed scratch textures. The number of scratches applied is
- * determined randomly, with a higher probability of fewer scratches.
- *
  * @param image The image to which the scratch textures will be applied.
  */
 fun ProcessingDsl.scratches(image: Mat) {
@@ -183,11 +157,6 @@ fun ProcessingDsl.scratches(image: Mat) {
 /**
  * Applies a dust effect to the given image using the provided configuration.
  *
- * This function uses a pre-defined dust texture, scales it, and applies it to the image.
- * The dust effect is applied with a certain probability (95% chance).
- * The dust texture is resized based on a fixed scale and the dust strength from the configuration.
- * A random offset transformation is applied to the dust texture before adding it to the image.
- *
  * @param image The image to which the dust effect will be applied.
  * @param config The configuration object containing the dust strength.
  *
@@ -211,18 +180,6 @@ fun ProcessingDsl.dust(image: Mat, config: Config) {
 
 /**
  * Applies a shake effect to the input image and stores the result in the destination image.
- *
- * The shake effect is achieved by combining random jitter and Perlin noise to create a
- * transformation matrix that is applied to the input image. The transformation matrix
- * is then used to warp the input image, producing the shake effect.
- *
- * The `weaveNoiseOffset` is used to incrementally change the noise pattern over time,
- * creating a continuous shaking effect. The `weaveNoiseGenerator` is a Perlin noise
- * generator used to produce smooth noise values.
- *
- * The transformation matrix is constructed with translation values based on the
- * jitter and noise values, and then applied to the input image using the `warpAffine`
- * function from OpenCV.
  *
  * @param inputImage The source image to which the shake effect will be applied.
  * @param destinationImage The image where the result will be stored.
@@ -258,9 +215,6 @@ fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat, config: Config) 
 /**
  * Applies a crushed luminance effect to the input image and stores the result in the destination image.
  *
- * This function first applies a contrast Look-Up Table (LUT) to the input image, and then applies a
- * luminance crushing LUT based on the provided configuration.
- *
  * @param inputImage The source image to be processed.
  * @param destinationImage The image where the processed result will be stored.
  * @param config The configuration object containing the strength of the crushed luminance effect.
@@ -281,21 +235,6 @@ fun ProcessingDsl.crushedLuminance(inputImage: Mat, destinationImage: Mat, confi
 
 /**
  * Applies a tone mapping effect to the given image based on the provided configuration.
- *
- * The function performs the following steps:
- * 1. Converts the input image from BGR to HSV color space.
- * 2. Extracts the hue, saturation, and luminance channels from the HSV image.
- * 3. Scales the hue channel to a range of 0-255.
- * 4. Creates a lookup table (LUT) to isolate orange tones in the hue channel.
- * 5. Applies the LUT to the hue channel to create a mask for orange tones.
- * 6. Modifies the mask by multiplying it with the saturation and luminance channels.
- * 7. Adjusts the luminance of the mask to enhance contrast and brightness.
- * 8. Creates a 3-channel version of the mask.
- * 9. Inverts the mask to isolate non-orange tones.
- * 10. Creates warm and cold color matrices based on the configuration.
- * 11. Multiplies the warm color matrix with the orange tones mask.
- * 12. Multiplies the cold color matrix with the inverted mask.
- * 13. Adds the warm and cold color parts to the original image.
  *
  * @param image The input image to be processed.
  * @param config The configuration object containing parameters for the tone mapping.
@@ -349,9 +288,6 @@ fun ProcessingDsl.tone(image: Mat, config: Config) {
 
 /**
  * A builder class for creating and manipulating transformation matrices.
- *
- * This class provides methods to create and apply transformations such as rotation and translation
- * to a transformation matrix. The transformation matrix is represented as a 2x3 matrix of type CV_32F.
  */
 class TransformationBuilder {
     /**
@@ -369,9 +305,6 @@ class TransformationBuilder {
 
     /**
      * Rotates the current transformation matrix by the specified angle in radians.
-     *
-     * This function creates a rotation matrix based on the given angle and applies it
-     * to the current transformation matrix.
      *
      * @param radians The angle of rotation in radians.
      */
@@ -392,9 +325,6 @@ class TransformationBuilder {
 
     /**
      * Applies a transformation matrix to the current transformation.
-     *
-     * If no transformation has been applied yet, it sets the current transformation to the given matrix.
-     * Otherwise, it multiplies the current transformation matrix by the given matrix.
      *
      * @param transformation The transformation matrix to be applied.
      */
@@ -417,9 +347,6 @@ class TransformationBuilder {
 
 /**
  * Builds a transformation matrix using the provided block of transformation instructions.
- *
- * This function creates an instance of `TransformationBuilder`, applies the given block of
- * transformation instructions to it, and then builds and returns the resulting transformation matrix.
  *
  * @param block A lambda with receiver of type `TransformationBuilder` that defines the transformation instructions.
  * @return A `Mat` object representing the transformation matrix.

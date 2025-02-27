@@ -31,11 +31,6 @@ fun createGammaLUT(gammaValue: Double): Mat {
 /**
  * Creates a Lookup Table (LUT) using a spline interpolation based on the provided knots.
  *
- * The function performs the following steps:
- * 1. Initializes a FloatBezierSpline with Vector2F type.
- * 2. Adds the provided knots to the spline after converting them to Vector2F.
- * 3. Creates and returns a LUT by mapping each index to a byte value derived from the spline interpolation.
- *
  * @param knots A list of Knot objects representing the control points for the spline.
  * @return A Mat object representing the generated LUT.
  */
@@ -48,11 +43,6 @@ fun createSplineLUT(knots: List<Knot>): Mat {
 /**
  * Creates a spline Look-Up Table (LUT) from the provided knots.
  *
- * This function takes a variable number of `Knot` objects and converts them into a list,
- * which is then used to create a spline LUT. A spline LUT is typically used for smooth
- * interpolation of values, often in the context of image processing or other applications
- * requiring smooth transitions between data points.
- *
  * @param knots A variable number of `Knot` objects representing the control points for the spline.
  * @return A spline LUT created from the provided knots.
  */
@@ -60,10 +50,6 @@ fun createSplineLUT(vararg knots: Knot) = createSplineLUT(knots.toList())
 
 /**
  * Creates a linear Look-Up Table (LUT) based on the provided knots.
- *
- * The function first creates a linear mapping based on the provided knots.
- * It then generates a LUT by applying the mapping to each value in the range [0, 255],
- * scaling the result to the range [0, 255], and converting it to a byte.
  *
  * @param knots A list of `Knot` objects that define the points for the linear mapping.
  * @return A `Mat` object representing the linear LUT.
@@ -114,11 +100,6 @@ fun createLinearMapping(points: List<Knot>): (Float) -> Float {
 /**
  * Creates a Look-Up Table (LUT) for converting S-Log3 encoded values to sRGB values.
  *
- * This function generates a LUT by iterating over possible 8-bit values (0-255),
- * normalizing them, mapping them from S-Log3 to linear space, and then mapping
- * from linear space to sRGB space. The resulting sRGB values are then scaled back
- * to 8-bit and stored in the LUT.
- *
  * @return A matrix (Mat) representing the LUT for S-Log3 to sRGB conversion.
  */
 fun createSlog3ToSrgbLut(): Mat = createLUT { i ->
@@ -129,9 +110,6 @@ fun createSlog3ToSrgbLut(): Mat = createLUT { i ->
 
 /**
  * Creates a Look-Up Table (LUT) using the provided function.
- *
- * The LUT is created by applying the provided function to each integer value from 0 to 255.
- * The resulting Byte values are stored in a ByteArray, which is then used to populate the Mat object.
  *
  * @param fn A function that takes an integer input (ranging from 0 to 255) and returns a Byte.
  * @return A Mat object representing the LUT, with 1 row and 256 columns, of type CV_8U.
@@ -148,9 +126,6 @@ private fun createLUT(fn: (i: Int) -> Byte): Mat {
 
 /**
  * Converts a given S-Log3 value to a standard linear representation (SLR).
- *
- * This function uses the S-Log3 to linear conversion formula based on the constants
- * provided in the Sony S-Log3 documentation.
  *
  * @param slog3Value The S-Log3 value to be converted.
  * @return The corresponding linear value, clamped between 0.0 and 1.0.
@@ -177,18 +152,12 @@ private fun mapSlog3ToSlr(slog3Value: Double): Double {
 }
 
 /**
- * TODO: Flo fragen, wofür die function ist
- * Converts a given SLR (Standard Linear RGB) value to an sRGB (Standard RGB) value.
+ * Converts a linear SLR (Standard Light Response) value to sRGB.
  *
- * The conversion is based on the sRGB transfer function, which is a standard way to convert
- * linear RGB values to sRGB values. The function handles both the linear and non-linear parts
- * of the sRGB curve.
- *
- * @param slrValue The SLR value to be converted. It should be a double precision floating point number.
- * @return The corresponding sRGB value as a double precision floating point number.
+ * @param slrValue The linear light intensity value (SLR), typically in the range [0,1].
+ * @return The gamma-corrected sRGB value.
  */
 private fun mapSlrToSrgb(slrValue: Double): Double {
-    return slrValue
     val a = 0.055
     return if (slrValue <= 0.0031308) {
         12.92 * slrValue
@@ -199,9 +168,6 @@ private fun mapSlrToSrgb(slrValue: Double): Double {
 
 /**
  * Creates a vignette mask with the specified strength and size.
- *
- * The vignette mask is created by calculating the distance of each pixel from the center of the image.
- * The pixel values are adjusted based on this distance and the specified strength to create a vignette effect.
  *
  * @param strength The strength of the vignette effect. A higher value results in a stronger vignette.
  * @param size The size of the mask to be created.
@@ -225,15 +191,6 @@ fun createVignetteMask(strength: Double, size: Size): Mat {
 /**
  * Creates a random offset transformation matrix for the given image.
  *
- * This function generates a 2x3 transformation matrix with random offsets
- * for the x and y coordinates. The transformation matrix is initialized
- * with zeros and then populated with the following values:
- * - [1, 0, offsetX]
- * - [0, 1, offsetY]
- *
- * The offsets (offsetX and offsetY) are random float values within the
- * width and height of the given image, respectively.
- *
  * @param image The input image for which the transformation matrix is created.
  * @return A 2x3 transformation matrix with random offsets.
  */
@@ -248,9 +205,6 @@ fun createRandomOffsetTransformation(image: Mat): Mat {
 
 /**
  * Adjusts the luminance of the given image by modifying its contrast and brightness.
- *
- * The formula used for adjustment is:
- * destination = image * contrast + (127 - 127 * contrast + (255 * brightness - 255))
  *
  * @param image The source image to be adjusted.
  * @param destination The destination image where the adjusted result will be stored.
@@ -268,10 +222,6 @@ fun adjustLuminance(image: Mat, destination: Mat, contrast: Number = 1.0, bright
 
 /**
  * Adjusts the saturation of an image.
- *
- * This function converts the input image from BGR to HSV color space,
- * adjusts the saturation channel by multiplying it with the given saturation value,
- * and then converts the image back to BGR color space.
  *
  * @param image The source image in BGR color space.
  * @param destination The destination image where the result will be stored.
@@ -292,7 +242,6 @@ fun adjustSaturation(image: Mat, destination: Mat, saturation: Number) {
 /**
  * Extension function to convert an integer to the next odd number.
  *
- * @receiver Int The integer to be converted.
  * @return Int The next odd number.
  */
 fun Int.odd() = this + 1 - this % 2
