@@ -11,31 +11,33 @@ Unterscheidung zwischen
 	- physikalisische Behinderung durch eine der oben genannten Gegenstände
 	- ist starke,dunkle,kreisförmige Verdunkelung, die in den Ecken am deutlichsten sichtbar ist
 	- verschwindet, wenn das Objektiv abgeblendet ist (kleine Blende)
-
-  - Mehrere aufeinanderfolgende Öffnungen
-  - Hindernisse: Linsenränder, Blende, Objektivgehäuse, Filter, Gegenlichtblende
-  - Physikalische Blockade -> Lichtabschwächung in Bildecken
-  - Charakteristisch: starke, dunkle, kreisförmige Abdunklung in Ecken
-  - Reduktion durch Abblenden (kleinere Blendenöffnung)
+	- Mehrere aufeinanderfolgende Öffnungen
+	- Hindernisse: Linsenränder, Blende, Objektivgehäuse, Filter, Gegenlichtblende
+	- Physikalische Blockade -> Lichtabschwächung in Bildecken
+	- Charakteristisch: starke, dunkle, kreisförmige Abdunklung in Ecken
+	- Reduktion durch Abblenden (kleinere Blendenöffnung)
 - Optische Vignettierung
 	- tritt auf wenn das Licht in einem steilen Winkel auf die Objektivblende auftritt  (internes physisches Hindernis)
 		- Licht wird teilweise von der Blende blockiert
 	-  Effekt oft bei Weitwinkelobjektiven (mit weit geöffneter Blende)
 	- durch Abblenden des Objektivs kann der Effekt eliminiert/reduziert werden
 	- Steiler Lichteinfall auf Objektivblende
-  - Teilweise Blockierung durch interne Objektivelemente
-  - Besonders bei Weitwinkelobjektiven mit großer Blendenöffnung
-  - Reduktion durch Abblenden
+	- Teilweise Blockierung durch interne Objektivelemente
+	- Besonders bei Weitwinkelobjektiven mit großer Blendenöffnung
+	- Reduktion durch Abblenden
 - Pixelvignettierung
-  - Ursache: Pixel-Sensoraufbau
-  - Sensor mit Millionen von Photonenschächten
-  - Kleine, tiefe Photonenschächte
-  - Bei starkem Lichteinfallswinkel kein vollständiger Lichteinfall
-  - Besonders an Bildrändern ausgeprägt
-  - Korrektur durch Sensoralgorithmen
+	- Pixelsensor besteht aus Millionen von Photonenschächten, die das auftreffende Licht messen/aufzeichnen
+	- Photonschächte sind extrem klein, haben aber eine gewisse Tiefe
+	- bei einem starken Lichteinfallwinkel trifft möglicherweise das Licht nicht auf den Boden der Schächte - die stärksten Lichtwinkel finden sich an den Bildrändern
+	- dieses Problem kann über Sensoralgorithmen korriegiert werden
+	- Ursache: Pixel-Sensoraufbau
+	- Sensor mit Millionen von Photonenschächten
+	- Kleine, tiefe Photonenschächte
+	- Bei starkem Lichteinfallswinkel kein vollständiger Lichteinfall
+	- Besonders an Bildrändern ausgeprägt
+	- Korrektur durch Sensoralgorithmen
 
 === Implementierung
-
 - Ziel der Implementierung
   - Erstellung einer Vignettenmaske mit einstellbarer Stärke
   - Anwendung zur Bildabdunklung

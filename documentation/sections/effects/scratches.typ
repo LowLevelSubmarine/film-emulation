@@ -3,38 +3,43 @@
 == Scratches
 #authored_by("Leonie Wehser")
 
-=== Theorie 
-- Scratches entstehen durch Staub oder Kratzer auf dem Film.
-- Sie können als helle oder dunkle Artefakte im Bild sichtbar werden.
-- Die Form und Intensität der Kratzer kann variieren, abhängig von der Ursache und der Art des Films.
-- In der digitalen Bildverarbeitung können solche Effekte simuliert werden, um den Look alter oder beschädigter Filme nachzubilden.
-- Diese Simulation kann für künstlerische Effekte oder zur Validierung von Algorithmen zur Kratzerentfernung genutzt werden.
+=== Theorie
+- Ursache: Staub oder Kratzer auf dem Film.
+- Sichtbarkeit: Helle oder dunkle Artefakte im Bild.
+- Variabilität: Form und Intensität abhängig von Ursache und Filmart.
+- Digitale Simulation:
+    - Nachbildung des Looks alter/beschädigter Filme.
+    - Nutzung für künstlerische Effekte oder Algorithmus-Validierung.
 
 === Implementierung
-- Ziel der Implementierung:
-    - Simulation von Kratzern auf digitalen Bildern, um den Look alter oder beschädigter Filme zu erzeugen.
-    - Erzeugung zufälliger Kratzertexturen zur realistischen Nachbildung von Filmfehlern.
-- Beschreibung der Funktion scratches(image: Mat):
-    - Die Funktion arbeitet innerhalb einer ProcessingDsl-Umgebung und nimmt ein OpenCV-Mat-Objekt als Eingabe.
-    - Zunächst werden verschiedene Kratzertexturen aus Bilddateien geladen und in einer Liste gespeichert.
-    - Eine zufällige Auswahl an Texturen wird durch verschiedene Transformationen (z. B. Rotation) verändert, um Variabilität zu gewährleisten.
-    - Ein zufälliger Kratzeranteil (scratchAmount) wird berechnet, wobei eine geringe Wahrscheinlichkeit für eine hohe Anzahl an Kratzern besteht.
-    - Die Kratzertexturen werden dann zufällig auf das Eingangsbild angewendet:
-        - Eine zufällige Textur wird ausgewählt.
-        - Ein zufälliger Bereich (ROI) im Bild wird bestimmt.
-        - Die Textur wird auf diesen Bereich mit Core.add() additiv angewendet, um den Effekt eines Kratzers zu erzeugen.
-- Vorteile der Implementierung:
-    - Effiziente Erzeugung zufälliger Kratzereffekte mit realistischen Variationen.
-    - Nutzung vorhandener Kratzertexturen anstelle synthetischer Generierung für höhere Authentizität.
-    - Möglichkeit der Anpassung durch Variationen in Anzahl, Position und Transformationen der Kratzer.
-    - Flexibel in verschiedene Bildverarbeitungs-Pipelines integrierbar.
-    - Ermöglicht Tests von Algorithmen zur Kratzerentfernung oder künstlerische Anwendungen.
+- Ziel:
+    - Simulation von Kratzern auf digitalen Bildern.
+    - Erzeugung zufälliger Kratzertexturen für realistischen Effekt.
+- Funktion scratches(image: Mat):
+    - Nutzung einer ProcessingDsl-Umgebung.
+    - Eingabe: OpenCV-Mat-Objekt.
+    - Schritte:
+        - Laden verschiedener Kratzertexturen aus Bilddateien.
+        - Speicherung in einer Liste.
+        - Transformation der Texturen (z. B. Rotation) für Variabilität.
+        - Berechnung des Kratzeranteils (scratchAmount):
+            - Geringe Wahrscheinlichkeit für hohe Anzahl an Kratzern.
+        - Anwendung der Kratzertexturen auf das Eingangsbild:
+            - Auswahl einer zufälligen Textur.
+            - Bestimmung eines zufälligen Bereichs (ROI) im Bild.
+            - Additive Anwendung der Textur mit Core.add().
+- Vorteile:
+    - Effiziente Erzeugung realistischer Kratzereffekte.
+    - Nutzung realer Kratzertexturen statt synthetischer Generierung.
+    - Anpassbarkeit durch Variation von Anzahl, Position, Transformationen.
+    - Einfache Integration in Bildverarbeitungs-Pipelines.
+    - Nützlich für Algorithmus-Tests oder künstlerische Anwendungen.
 
 ```kotlin
 fun ProcessingDsl.scratches(image: Mat) {
     val textures by stored {
-        val rawTextures = (0 until 10).map { 
-          i -> Imgcodecs.imread("./assets/scratches/$i.png") 
+        val rawTextures = (0 until 10).map {
+          i -> Imgcodecs.imread("./assets/scratches/$i.png")
         }
         (0 until 30).map {
             val transformation = buildTransformation {
@@ -42,9 +47,9 @@ fun ProcessingDsl.scratches(image: Mat) {
             }
             val texture = Mat()
             Imgproc.warpAffine(
-              rawTextures.random(), 
-              texture, 
-              transformation, 
+              rawTextures.random(),
+              texture,
+              transformation,
               texture.size()
             )
             texture
