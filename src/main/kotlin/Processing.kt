@@ -10,7 +10,13 @@ import org.opencv.imgproc.Imgproc.GaussianBlur
 import kotlin.math.*
 import kotlin.random.Random
 
-
+/**
+ * Processes an input image and applies various film emulation effects to the destination image.
+ *
+ * @param inputImage The source image to be processed.
+ * @param destinationImage The image where the processed result will be stored.
+ * @param config Configuration settings for the processing effects.
+ */
 fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat, config: Config) {
     //slog3ToSrgb(inputImage, destinationImage)
     measureTime("vignette") { vignette(inputImage, config) }
@@ -24,11 +30,25 @@ fun ProcessingDsl.process(inputImage: Mat, destinationImage: Mat, config: Config
     measureTime("tone") { tone(destinationImage, config) }
 }
 
+/**
+ * Converts an image from S-Log3 color space to sRGB color space using a Look-Up Table (LUT).
+ *
+ * @receiver ProcessingDsl The DSL context in which this function is called.
+ * @param inputImage The input image in S-Log3 color space.
+ * @param destinationImage The output image in sRGB color space.
+ */
 fun ProcessingDsl.slog3ToSrgb(inputImage: Mat, destinationImage: Mat) {
     val lut by stored { createSlog3ToSrgbLut() }
     Core.LUT(inputImage, lut, destinationImage)
 }
 
+/**
+ * Applies a vignette effect to the given image using the specified configuration.
+ *
+ * @receiver The DSL context for processing.
+ * @param image The image to which the vignette effect will be applied. This is a Mat object representing the image.
+ * @param config The configuration object containing the vignette strength.
+ */
 fun ProcessingDsl.vignette(image: Mat, config: Config) {
     val mask by stored(dependencies = listOf(config.vignetteStrength)) {
         createVignetteMask(
@@ -39,6 +59,13 @@ fun ProcessingDsl.vignette(image: Mat, config: Config) {
     Core.subtract(image, mask, image)
 }
 
+/**
+ * Applies a halation effect to the input image and stores the result in the destination image.
+ *
+ * @param inputImage The source image to which the halation effect will be applied.
+ * @param destinationImage The image where the result will be stored.
+ * @param config The configuration object containing parameters for the halation effect.
+ */
 fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat, config: Config) {
     val halationRes = 0.5
     val redChannelImage = store { Mat() }
@@ -61,6 +88,13 @@ fun ProcessingDsl.halation(inputImage: Mat, destinationImage: Mat, config: Confi
     Core.add(inputImage, threeChannelImage, destinationImage)
 }
 
+/**
+ * Applies a grain effect to the input image and stores the result in the destination image.
+ *
+ * @param inputImage The source image to which the grain effect will be applied.
+ * @param destinationImage The image where the result will be stored.
+ * @param config The configuration object containing the grain strength.
+ */
 fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) {
     val grainScale = 0.4
     val staticGrain = store(dependencies = listOf(config.grainStrength)) {
@@ -77,10 +111,21 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) 
     Core.subtract(destinationImage, dynamicGrain, destinationImage)
 }
 
+/**
+ * Applies a color cast to the given image using the specified configuration.
+ *
+ * @param image The image to which the color cast will be applied. This is a Mat object representing the image.
+ * @param config The configuration containing the color cast information. This should include a colorCast property that can be converted to a Scalar.
+ */
 fun ProcessingDsl.colorCast(image: Mat, config: Config) {
     Core.add(image, config.colorCast.toScalar(), image)
 }
 
+/**
+ * Applies random scratch textures to the given image.
+ *
+ * @param image The image to which the scratch textures will be applied.
+ */
 fun ProcessingDsl.scratches(image: Mat) {
     val textures by stored {
         val rawTextures = (0 until 10).map { i -> Imgcodecs.imread("./assets/scratches/$i.png") }
@@ -109,6 +154,14 @@ fun ProcessingDsl.scratches(image: Mat) {
     }
 }
 
+/**
+ * Applies a dust effect to the given image using the provided configuration.
+ *
+ * @param image The image to which the dust effect will be applied.
+ * @param config The configuration object containing the dust strength.
+ *
+ * @throws IllegalArgumentException if the dust texture cannot be loaded.
+ */
 fun ProcessingDsl.dust(image: Mat, config: Config) {
     val dustScale = 0.7
     val staticDust = store(dependencies = listOf(config.dustStrength)) {
@@ -125,6 +178,13 @@ fun ProcessingDsl.dust(image: Mat, config: Config) {
     Core.add(image, dynamicDust, image)
 }
 
+/**
+ * Applies a shake effect to the input image and stores the result in the destination image.
+ *
+ * @param inputImage The source image to which the shake effect will be applied.
+ * @param destinationImage The image where the result will be stored.
+ * @param config The configuration object containing parameters for the shake effect.
+ */
 fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat, config: Config) {
     var weaveNoiseOffset by stored { 0.0 }
     val weaveNoiseGenerator =
@@ -152,6 +212,13 @@ fun ProcessingDsl.shake(inputImage: Mat, destinationImage: Mat, config: Config) 
     )
 }
 
+/**
+ * Applies a crushed luminance effect to the input image and stores the result in the destination image.
+ *
+ * @param inputImage The source image to be processed.
+ * @param destinationImage The image where the processed result will be stored.
+ * @param config The configuration object containing the strength of the crushed luminance effect.
+ */
 fun ProcessingDsl.crushedLuminance(inputImage: Mat, destinationImage: Mat, config: Config) {
     val contrastLut by stored { createSplineLUT(Knot(0.2f, 0.0f), Knot(0.8f, 1.0f)) }
     Core.LUT(inputImage, contrastLut, destinationImage)
@@ -166,6 +233,12 @@ fun ProcessingDsl.crushedLuminance(inputImage: Mat, destinationImage: Mat, confi
     Core.LUT(destinationImage, lut, destinationImage)
 }
 
+/**
+ * Applies a tone mapping effect to the given image based on the provided configuration.
+ *
+ * @param image The input image to be processed.
+ * @param config The configuration object containing parameters for the tone mapping.
+ */
 fun ProcessingDsl.tone(image: Mat, config: Config) {
     val hsv by stored { Mat() }
     val hue by stored { Mat() }
@@ -213,22 +286,48 @@ fun ProcessingDsl.tone(image: Mat, config: Config) {
     Core.add(image, coldColorPart, image)
 }
 
+/**
+ * A builder class for creating and manipulating transformation matrices.
+ */
 class TransformationBuilder {
+    /**
+     * Creates a new 2x3 matrix of type CV_32F and populates it with the given values.
+     *
+     * @param values A list of Double values to be inserted into the matrix. The list should contain exactly 6 elements.
+     * @return A Mat object representing a 2x3 matrix with the provided values.
+     * @throws IllegalArgumentException if the size of the values list is not 6.
+     */
     private fun new(values: List<Double>) = Mat.zeros(2, 3, CV_32F).apply {
         put(0, 0, values.map { it.toFloat() }.toFloatArray())
     }
 
     private var transformation: Mat? = null
 
+    /**
+     * Rotates the current transformation matrix by the specified angle in radians.
+     *
+     * @param radians The angle of rotation in radians.
+     */
     fun rotate(radians: Double) {
         val rotation = new(listOf(cos(radians), sin(radians), 0.0, -sin(radians), cos(radians), 0.0))
         transform(rotation)
     }
 
+    /**
+     * Translates the current position by the given x and y offsets.
+     *
+     * @param x The horizontal offset by which to translate.
+     * @param y The vertical offset by which to translate.
+     */
     fun translate(x: Double, y: Double) {
         val translation = new(listOf(1.0, 0.0, x, 0.0, 1.0, y))
     }
 
+    /**
+     * Applies a transformation matrix to the current transformation.
+     *
+     * @param transformation The transformation matrix to be applied.
+     */
     private fun transform(transformation: Mat) {
         if (this.transformation == null) {
             this.transformation = transformation
@@ -237,7 +336,19 @@ class TransformationBuilder {
         this.transformation = this.transformation!!.mul(transformation)
     }
 
+    /**
+     * Builds and returns the transformation object.
+     *
+     * @return The transformation object that has been built.
+     * @throws IllegalStateException if the transformation object is not initialized.
+     */
     internal fun build() = transformation!!
 }
 
+/**
+ * Builds a transformation matrix using the provided block of transformation instructions.
+ *
+ * @param block A lambda with receiver of type `TransformationBuilder` that defines the transformation instructions.
+ * @return A `Mat` object representing the transformation matrix.
+ */
 fun buildTransformation(block: TransformationBuilder.() -> Unit): Mat = TransformationBuilder().apply(block).build()

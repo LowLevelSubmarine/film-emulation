@@ -11,6 +11,13 @@ import kotlin.random.Random
 
 data class Knot(val x: Float, val y: Float)
 
+/**
+ * Creates a gamma Look-Up Table (LUT) for image processing.
+ *
+ * @param gammaValue The gamma correction value to be applied. A higher value results in a brighter image,
+ *                   while a lower value results in a darker image.
+ * @return A Mat object representing the gamma LUT.
+ */
 fun createGammaLUT(gammaValue: Double): Mat {
     fun saturate(floatValue: Double): Byte {
         var value = Math.round(floatValue).toInt()
@@ -21,19 +28,48 @@ fun createGammaLUT(gammaValue: Double): Mat {
     return createLUT { i -> saturate((i / 255.0).pow(gammaValue) * 255.0) }
 }
 
+/**
+ * Creates a Lookup Table (LUT) using a spline interpolation based on the provided knots.
+ *
+ * @param knots A list of Knot objects representing the control points for the spline.
+ * @return A Mat object representing the generated LUT.
+ */
 fun createSplineLUT(knots: List<Knot>): Mat {
     val spline = FloatBezierSpline<Vector2F>()
     spline.addKnots(*knots.map { Vector2F(x = it.x, y = it.y) }.toTypedArray())
     return createLUT { i -> (spline.getCoordinatesAt(i / 255.0f).y * 255.0f).toInt().toByte() }
 }
 
+/**
+ * Creates a spline Look-Up Table (LUT) from the provided knots.
+ *
+ * @param knots A variable number of `Knot` objects representing the control points for the spline.
+ * @return A spline LUT created from the provided knots.
+ */
 fun createSplineLUT(vararg knots: Knot) = createSplineLUT(knots.toList())
 
+/**
+ * Creates a linear Look-Up Table (LUT) based on the provided knots.
+ *
+ * @param knots A list of `Knot` objects that define the points for the linear mapping.
+ * @return A `Mat` object representing the linear LUT.
+ */
 fun createLinearLUT(knots: List<Knot>): Mat {
     val mapping = createLinearMapping(knots)
     return createLUT { i -> (mapping(i / 255.0f) * 255.0).toInt().toByte() }
 }
 
+/**
+ * Creates a linear mapping function based on a list of points (knots).
+ * The function will interpolate the y-values for given x-values using linear interpolation.
+ *
+ * @param points A list of Knot objects representing the points to be used for interpolation.
+ *               Each Knot object should have x and y properties.
+ *               The list should contain at least two points.
+ * @return A function that takes a Float input and returns the interpolated Float output.
+ *         The function will clamp the output to the y-values of the first and last points
+ *         if the input is outside the range of the x-values of the provided points.
+ */
 fun createLinearMapping(points: List<Knot>): (Float) -> Float {
     // Ensure the points are sorted by their x-coordinate
     val sortedPoints = points.sortedBy { it.x }
@@ -61,12 +97,23 @@ fun createLinearMapping(points: List<Knot>): (Float) -> Float {
     }
 }
 
+/**
+ * Creates a Look-Up Table (LUT) for converting S-Log3 encoded values to sRGB values.
+ *
+ * @return A matrix (Mat) representing the LUT for S-Log3 to sRGB conversion.
+ */
 fun createSlog3ToSrgbLut(): Mat = createLUT { i ->
     val normalizedValue = i / 255.0
     val normalizedSrgbValue = mapSlrToSrgb(mapSlog3ToSlr(normalizedValue))
     (normalizedSrgbValue * 255.0).toInt().toByte()
 }
 
+/**
+ * Creates a Look-Up Table (LUT) using the provided function.
+ *
+ * @param fn A function that takes an integer input (ranging from 0 to 255) and returns a Byte.
+ * @return A Mat object representing the LUT, with 1 row and 256 columns, of type CV_8U.
+ */
 private fun createLUT(fn: (i: Int) -> Byte): Mat {
     val lut = Mat(1, 256, CvType.CV_8U)
     val lutData = ByteArray(256)
@@ -77,6 +124,12 @@ private fun createLUT(fn: (i: Int) -> Byte): Mat {
     return lut
 }
 
+/**
+ * Converts a given S-Log3 value to a standard linear representation (SLR).
+ *
+ * @param slog3Value The S-Log3 value to be converted.
+ * @return The corresponding linear value, clamped between 0.0 and 1.0.
+ */
 // https://pro.sony/s3/cms-static-content/uploadfile/06/1237494271406.pdf
 private fun mapSlog3ToSlr(slog3Value: Double): Double {
     // Constants for S-Log3
@@ -98,8 +151,13 @@ private fun mapSlog3ToSlr(slog3Value: Double): Double {
     return (out * 0.01).coerceIn(0.0, 1.0)
 }
 
+/**
+ * Converts a linear SLR (Standard Light Response) value to sRGB.
+ *
+ * @param slrValue The linear light intensity value (SLR), typically in the range [0,1].
+ * @return The gamma-corrected sRGB value.
+ */
 private fun mapSlrToSrgb(slrValue: Double): Double {
-    return slrValue
     val a = 0.055
     return if (slrValue <= 0.0031308) {
         12.92 * slrValue
@@ -108,6 +166,13 @@ private fun mapSlrToSrgb(slrValue: Double): Double {
     }
 }
 
+/**
+ * Creates a vignette mask with the specified strength and size.
+ *
+ * @param strength The strength of the vignette effect. A higher value results in a stronger vignette.
+ * @param size The size of the mask to be created.
+ * @return A Mat object representing the vignette mask.
+ */
 fun createVignetteMask(strength: Double, size: Size): Mat {
     val mask = Mat(size, CvType.CV_8UC3)
     val center = Point(size.height / 2, size.width / 2)
@@ -123,6 +188,12 @@ fun createVignetteMask(strength: Double, size: Size): Mat {
     return mask
 }
 
+/**
+ * Creates a random offset transformation matrix for the given image.
+ *
+ * @param image The input image for which the transformation matrix is created.
+ * @return A 2x3 transformation matrix with random offsets.
+ */
 fun createRandomOffsetTransformation(image: Mat): Mat {
     return Mat.zeros(2, 3, CV_32F).apply {
         put(0, 0, floatArrayOf(1.0F))
@@ -132,10 +203,32 @@ fun createRandomOffsetTransformation(image: Mat): Mat {
     }
 }
 
+/**
+ * Adjusts the luminance of the given image by modifying its contrast and brightness.
+ *
+ * @param image The source image to be adjusted.
+ * @param destination The destination image where the adjusted result will be stored.
+ * @param contrast The contrast factor to be applied. Default is 1.0 (no change).
+ * @param brightness The brightness factor to be applied. Default is 1.0 (no change).
+ */
 fun adjustLuminance(image: Mat, destination: Mat, contrast: Number = 1.0, brightness: Number = 1.0) {
-    image.convertTo(destination, -1, contrast.toDouble(), 127.0 - contrast.toDouble() * 127.0 + (255.0 * brightness.toDouble() - 255.0))
+    image.convertTo(
+        destination,
+        -1,
+        contrast.toDouble(),
+        127.0 - contrast.toDouble() * 127.0 + (255.0 * brightness.toDouble() - 255.0)
+    )
 }
 
+/**
+ * Adjusts the saturation of an image.
+ *
+ * @param image The source image in BGR color space.
+ * @param destination The destination image where the result will be stored.
+ * @param saturation The factor by which to adjust the saturation.
+ *                   A value of 1.0 means no change, less than 1.0 decreases saturation,
+ *                   and greater than 1.0 increases saturation.
+ */
 fun adjustSaturation(image: Mat, destination: Mat, saturation: Number) {
     Imgproc.cvtColor(image, destination, Imgproc.COLOR_BGR2HSV)
     val sat = Mat()
@@ -145,6 +238,12 @@ fun adjustSaturation(image: Mat, destination: Mat, saturation: Number) {
     Imgproc.cvtColor(image, destination, Imgproc.COLOR_HSV2BGR)
 }
 
+
+/**
+ * Extension function to convert an integer to the next odd number.
+ *
+ * @return Int The next odd number.
+ */
 fun Int.odd() = this + 1 - this % 2
 
 /*
@@ -159,9 +258,9 @@ fun loadLUT(cubeFilePath: String): Mat {
         if (line.startsWith("#") || line.isBlank()) return@forEachLine
         val config = regex.matchEntire(line)?.let { it.groups["key"]!!.value to it.groups["value"]!!.value }
         if (config != null) {
-            /*when (config.first) {
-                "LUT_3D_SIZE" -> lutSize = config.second.toInt()
-            }*/
+            //when (config.first) {
+            //    "LUT_3D_SIZE" -> lutSize = config.second.toInt()
+            //}
             return@forEachLine
         }
         rgbValues.add(line.split(" ").map { it.toFloat() }.toFloatArray())
