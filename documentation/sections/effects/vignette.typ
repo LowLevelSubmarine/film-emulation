@@ -7,9 +7,9 @@
 === Theorie 
 Vignettierung beschreibt die Abschattung zum Bildrand hin. Es gibt verschiedene Ursachen für Vignettierung:
 
-#text("1. Mechanische oder physikalische Vignettierung:", weight: "semibold") Hierbei durchqueren die Lichtstrahlen mehrere aufeinanderfolgende Öffnungen (wie das Objektivgehäuse, die Blende und die Linsenränder), bevor sie die Bildebene erreichen. Durch physikalische Behinderungen beim Durchqueren dieser Öffnungen tritt eine starke, dunkle, kreisförmige Verdunkelung auf, die in den Ecken am deutlichsten sichtbar ist. Um den Effekt zu mindern, hilft es, das Objektiv abzublenden.
+#text("1. Mechanische oder physikalische Vignettierung:", weight: "semibold") Hierbei durchqueren die Lichtstrahlen mehrere aufeinanderfolgende Öffnungen (wie das Objektivgehäuse, die Blende und die Linsenränder), bevor sie die Bildebene erreichen. Durch physikalische Behinderungen beim Durchqueren dieser Öffnungen tritt eine starke, dunkle, kreisförmige Verdunkelung auf, die in den Ecken am deutlichsten sichtbar ist. Um den Effekt zu mindern, hilft es, das Objektiv abzublenden. @vignettierung
 
-#text("2. Optische Vignettierung:", weight: "semibold") Diese tritt auf, wenn das Licht in einem steilen Winkel auf die Objektivblende trifft. Es entsteht ein internes physisches Hindernis, da das Licht teilweise von der Blende blockiert wird. Der Effekt tritt besonders oft bei Weitwinkelobjektiven mit großer Blendenöffnung auf. Durch Abblenden des Objektivs kann der Effekt reduziert oder sogar eliminiert werden.
+#text("2. Optische Vignettierung:", weight: "semibold") Diese tritt auf, wenn das Licht in einem steilen Winkel auf die Objektivblende trifft. Es entsteht ein internes physisches Hindernis, da das Licht teilweise von der Blende blockiert wird. Der Effekt tritt besonders oft bei Weitwinkelobjektiven mit großer Blendenöffnung auf. Durch Abblenden des Objektivs kann der Effekt reduziert oder sogar eliminiert werden. @vignettierung
 
 === Implementierung
 Um den klassischen Analog-Film-Look zu verbessern, wird ein Vignetteneffekt hinzugefügt. Dieser Effekt dunkelt die Bildränder ab und lenkt den Fokus auf das Zentrum des Bildes. Der Vignetteneffekt wird durch die Funktion `vignette(image: Mat, config: Config)` implementiert.

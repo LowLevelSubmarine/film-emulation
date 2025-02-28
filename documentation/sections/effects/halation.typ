@@ -12,8 +12,8 @@
       #pad(box(width: 180pt)[
         #figure(
             image("../../assets/effects/halation/theorie.png"),
-            caption: [Darstellung des \ einfallenden
-           Lichts auf einen Farbfilm],
+            caption: [Darstellung des einfallenden
+           Lichts auf einen Farbfilm @halation-and-its-simulation],
         )<fig:halation-theorie>
         #figure(
             image("../../assets/effects/halation/example.jpg"),
@@ -25,9 +25,9 @@
       Halation ist ein leuchtender Schein um helle Bereiche im Bild, der durch Streuung von Licht in der Filmschicht entsteht (@fig:halation-theorie). Dieser Effekt ist besonders an kontrastreichen Kanten (hell-dunkel Übergänge) sichtbar.
       Das Licht durchquert die Emulsionsschichten und wird auf der Rückseite des Kameragehäuses reflektiert, wodurch es erneut auf die lichtempfindlichen Schichten trifft.
       
-      Besonders betroffen ist dabei die rot-empfindliche Schicht, weshalb der Lichtschein auf dem entwickelten Bild eher rötlich erscheint. Mehrere Faktoren können die Stärke des Effekts beeinflussen: Eine glatte Oberfläche des Kameragehäuses reflektiert stärker, helles Licht erzeugt einen intensiveren Effekt, und eine höhere Filmempfindlichkeit verstärkt die Halation ebenfalls.
+      Besonders betroffen ist dabei die rot-empfindliche Schicht, weshalb der Lichtschein auf dem entwickelten Bild eher rötlich erscheint. Mehrere Faktoren können die Stärke des Effekts beeinflussen: Eine glatte Oberfläche des Kameragehäuses reflektiert stärker, helles Licht erzeugt einen intensiveren Effekt, und eine höhere Filmempfindlichkeit verstärkt die Halation ebenfalls. @halation-and-its-simulation
 
-      Eine Antihalation-Schicht kann die Halation deutlich reduzieren. Diese dunkle Schicht auf der Rückseite des Films absorbiert das Licht weitgehend und reduziert somit die interne Reflexion auf die lichtempfindlichen Schichten. Auch eine mattierte Rückseite des Kameragehäuses kann helfen, den Effekt zu minimieren.
+      Eine Antihalation-Schicht kann die Halation deutlich reduzieren. Diese dunkle Schicht auf der Rückseite des Films absorbiert das Licht weitgehend und reduziert somit die interne Reflexion auf die lichtempfindlichen Schichten. Auch eine mattierte Rückseite des Kameragehäuses kann helfen, den Effekt zu minimieren. @what-is-the-anti-halation-layer-in-film
     ],
     align: right,
 )
