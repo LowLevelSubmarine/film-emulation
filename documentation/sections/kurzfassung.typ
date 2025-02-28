@@ -1,0 +1,2 @@
+= Kurzfassung
+Diese Arbeit behandelt die Implementierung einer Bildverarbeitung zur glaubwürdigen Echtzeit-Emulation von Eigenschaften des Analog-Films. Die verschiedenen Aspekte des Analog-Films weden isoliert betrachtet, die Ursachen erläutert und die Implementierung der Emulation dieser vorgestellt. Das Endergebnis funktioniert auf einem gängigen Computer bei 30 Bildern pro Sekunde in Echtzeit und kann über verschiedene Parameter live konfiguriert werden.
