@@ -5,7 +5,7 @@
 #authored_by("Florian Weichert")
 
 === Theorie 
-Analogfilm hat im Vergleich zu digitalen Bildern einen höheren Dynamikumfang in den hellen Bildbereichen. Dieser Effekt entsteht durch die Eigenschaften der Fotoemulsion, die in der Lage ist, sehr helle Bildbereiche abzubilden, ohne dass diese überbelichtet wirken. Digitale Bilder hingegen haben eine geringere Dynamik in den hellen Bildbereichen, sie tendieren bei einer Überbelichtung schnell zu einem reinen Weiß @how-to-edit-like-film. Zusätzlich kann es passieren, dass im Scan-Vorgang die maximal hellen und dunklen Bereiche nicht perfekt abgebildet werden können.
+Analog-Film hat im Vergleich zu digitalen Bildern einen höheren Dynamikumfang in den hellen Bildbereichen. Dieser Effekt entsteht durch die Eigenschaften der Fotoemulsion, die in der Lage ist, sehr helle Bildbereiche abzubilden, ohne dass diese überbelichtet wirken. Digitale Bilder hingegen haben eine geringere Dynamik in den hellen Bildbereichen, sie tendieren bei einer Überbelichtung schnell zu einem reinen Weiß @how-to-edit-like-film. Zusätzlich kann es passieren, dass im Scan-Vorgang die maximal hellen und dunklen Bereiche nicht perfekt abgebildet werden können.
 === Implementierung
 #wrap-content(
     [

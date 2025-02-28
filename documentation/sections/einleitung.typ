@@ -2,7 +2,7 @@
 == Vorstellung
 Diese Arbeit beschäftigt sich mit der Implementierung von Effekten in der digitalen Bildverarbeitung. Es soll gezeigt werden, wie einzelne Aspekte des Analog-Films digital emuliert werden können.
 == Ziele
-Das Primärziel ist eine glaubwürdige Emulation eines Analog-Film in Echtzeit. Dafür sollen die Aspekte Vignettiertung, Halation, Grain, Farbstich, Kratzer, Staub, Gate-Weave, Crushed Luminance und Farbanpassungen umgesetzt werden. Zusätzlich sollen die Parameter der Effekte einfach in Echzeit anpassbar sein, um ihre Auswirkungen sichtbar zu machen.
+Das Primärziel ist eine glaubwürdige Emulation eines Analog-Film in Echtzeit. Dafür sollen die Aspekte Vignettiertung, Halation, Grain, Farbstich, Kratzer, Staub, Gate Weave, Crushed Luminance und Farbanpassungen umgesetzt werden. Zusätzlich sollen die Parameter der Effekte einfach in Echzeit anpassbar sein, um ihre Auswirkungen sichtbar zu machen.
 == Vorgehensweise
 Die Implementierung der Effekte erfolgt in der hohen Programmiersprache Kotlin. Die Bibliothek OpenCV wird verwendet, um die Bildverarbeitung hardwarenah zu realisieren. Die Effekte werden in einer Pipeline nacheinander auf das Bild angewendet. Um die Performance zu verbessern, werden statische Werte, die wiederholt berechnet werden müssten, in einem Cache gespeichert.
 == Aufbau

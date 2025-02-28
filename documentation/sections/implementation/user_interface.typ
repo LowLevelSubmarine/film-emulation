@@ -18,7 +18,7 @@ Angepasst werden können folgende Parameter:
   - Cold-Color-Cast: Steuerung kalter Bildbereiche
   - Halation: Lichtstreueffekte (Stärke, Gaussian Blur)
   - Crushed Luminance: Helligkeitskompression
-  - Gate-Weave: Filmprojektionseffekte
+  - Gate Weave: Filmprojektionseffekte
 Es gibt einen Reset-Button, der die Einstellungen mit `resetConfig()` auf die Standardwerte zurücksetzt.
 Die ConfigSlider-Komponente verwendet ```html <input type='range'>``` für die Wertsteuerung. Es kann angegeben werden, in welchen `Steps` der Slider bewegt werden darf, z.B. 0.01 oder 1. Ebenso werden `min` und `max` definiert, um die Skala des Sliders festzulegen, z.B. von 0 bis 1. Ansonsten wird der aktuelle Wert im `value` übergeben. `onValue` wird bei Veränderungen an dem Slider aktiviert und ruft `updateConfig()` auf, welches zum einen die Methode zur Weiterleitung ans Backend aufruft, als auch das neue Value in den useState speichert.
 
