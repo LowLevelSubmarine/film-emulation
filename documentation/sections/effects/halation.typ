@@ -109,7 +109,9 @@ Außerdem wird die Maske mit `Imgproc.resize()` verkleinert. Für diese sind die
 
       Ziel der Funktion ist es weiche Lichthöfe um die hellen Bildbereich herum zu erstellen.
       Dies konnte durch Implementierung des `GaussionBlur()` realisiert werden, da dieser nicht direktional ist und die Intensität weich proportional zur Entfernung abnimmt(@fig:halation-step3).
-      Anschließend wird die Helligkeit der Maske 
+      In diesem Schritt können auch noch mit `config.halationGaussianSize` und `config.halationSigmaX` Änderungen an der Kurve des Gaussian Blur vorgenommen werden.
+      
+      Anschließend wird die Helligkeit der Maske angepasst und die Maske wieder zurück auf die Größe des Eingabebildes skaliert.
     ],
     align: right,
 )
