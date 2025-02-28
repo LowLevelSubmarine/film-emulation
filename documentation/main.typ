@@ -75,6 +75,8 @@ Unterschrift: #line(length: 100%, stroke: 0.05em)
 #pagebreak()
 #include "sections/weitere_implementierungen.typ"
 #pagebreak()
+#include "sections/evaluation.typ"
+#pagebreak()
 #include "sections/fazit.typ"
 #pagebreak()
 
