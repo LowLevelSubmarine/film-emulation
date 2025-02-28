@@ -1,4 +1,4 @@
-export default function CoolSlider(
+export default function ConfigSlider(
   {
     step,
     value,

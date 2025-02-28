@@ -7,16 +7,16 @@
 === Theorie
 Analoge Farbfilme werden durch chemische Reaktionen verarbeitet, wobei es aus verschiedenen Gründen zu Farbstichen kommen kann. Zum einen können die Farbstoffe mit der Zeit verblassen, wobei die drei Farbschichten je nach Zusammensetzung unterschiedlich schnell verblassen. Dadurch können bei älteren Filmen oder Abzügen Rot-, Blau- oder Grünstiche entstehen.
 
-Wenn die Filme oder Abzüge bei hohen Temperaturen oder hoher Luftfeuchtigkeit gelagert werden, beschleunigt dies die chemischen Reaktionen. Außerdem kann UV-Licht die Farben verändern, besonders bei Dias und Farbnegativen. 
+Wenn die Filme oder Abzüge bei hohen Temperaturen oder hoher Luftfeuchtigkeit gelagert werden, beschleunigt dies die chemischen Reaktionen. Außerdem kann UV-Licht die Farben verändern, besonders bei Dias und Farbnegativen. @behandlung-filrollen
 
-Auch falsche Belichtungszeiten können Farbstiche verursachen. Bei Unterbelichtung kann es zu einem Blaustich kommen, bei Überbelichtung hingegen zu einem Gelbstich. Ebenso können bei der Entwicklung Fehler auftreten, etwa durch ungenaue Temperaturen oder falsche Chemiekonzentrationen.
+Auch falsche Belichtungszeiten können Farbstiche verursachen. Bei Unterbelichtung kann es zu einem Blaustich kommen, bei Überbelichtung hingegen zu einem Gelbstich. Ebenso können bei der Entwicklung Fehler auftreten, etwa durch ungenaue Temperaturen oder falsche Chemiekonzentrationen. @negativ-fehler
 
-Zu guter Letzt kann auch der Scanner einen eigenen Farbstich hinzufügen, ebenso wie ein Drucker, wenn ein falsches Farbprofil eingestellt ist oder es zu Tintenschwankungen kommt. Ungewollte Graustufenanpassungen verfälschen zudem Tiefen und Höhen.
+Zu guter Letzt kann auch der Scanner einen eigenen Farbstich hinzufügen, wenn ein falsches Farbprofil eingestellt ist oder es zu Tintenschwankungen kommt.
 
 Farbstiche können korrigiert werden, indem der ursprüngliche Farbeindruck wiederhergestellt wird, entweder manuell oder softwaregestützt.
 
 === Implementierung
-Die Funktion `colorCast` simuliert oder kompensiert einen globalen Farbstich. Durch den Konfigurationswert `config.colorCast` kann die Anpassung flexibel gesteuert werden. Der Wert wird mittels `Core.add(image, config.colorCast.toScalar(), image)` auf alle Pixel des Bildes angewendet (@fig:color_cast-output).
+Die Funktion `colorCast` simuliert einen globalen Farbstich. Durch den Konfigurationswert `config.colorCast` kann die Anpassung flexibel gesteuert werden. Der Wert wird mittels `Core.add(image, config.colorCast.toScalar(), image)` auf alle Pixel des Bildes angewendet (@fig:color_cast-output).
 ```kotlin
 fun ProcessingDsl.colorCast(
     image: Mat, config: Config
@@ -36,21 +36,21 @@ fun ProcessingDsl.colorCast(
     #box(width: 145pt)[
       #figure(
             image("../../assets/effects/input.png", width: 100%),
-            caption: [Beispiel Eingabebild],
+            caption: [Eingabebild - Color Cast],
         )<fig:color_cast-input>
     ] ],
   [
     #box(width: 145pt)[
        #figure(
             image("../../assets/effects/color_cast/modification.png", width: 100%),
-            caption: [Color Cast Maske],
+            caption: [Modifikation - Color Cast],
         )<fig:color_cast-modification>
     ]],
     [
     #box(width: 145pt)[
       #figure(
             image("../../assets/effects/color_cast/output.png", width: 100%),
-            caption: [Ausgabebild für Color Cast],
+            caption: [Ausgabebild - Color Cast],
         )<fig:color_cast-output>
     ]
   ]

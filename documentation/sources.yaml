@@ -72,3 +72,17 @@ flutter-hooks-principle:
   url:
     value: https://pub.dev/packages/flutter_hooks#principle
     date: 2025-02-28
+behandlung-filrollen:
+  type: Web
+  title: Behandlung und Lagerung von Audio- und Videoträgern - IASA-TC 05
+  author: Dietrich Schüller und Albrecht Häfner
+  date: 2019
+  url:
+    value: https://www.iasa-web.org/book/export/html/5864
+    date: 2025-02-28
+negativ-fehler:
+  type: Web
+  title: Negativfehler
+  url:
+    value: https://de.wikipedia.org/wiki/Negativfehler#Farbige_Negative
+    date: 2025-02-28
