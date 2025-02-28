@@ -14,13 +14,14 @@
     text(fill: rgb("#131313"), it)
   )
 }
+#set outline.entry(fill: none)
 
 
 #pad([
   #block([
     #text([Analoge Filmemulation in Echtzeit],
         size: 22pt, weight: "bold")
-  ]) 
+  ])
   #block([Leonie Wehser und Florian Weichert], above: 1.5em)
 ], top: 10em)
 
@@ -31,8 +32,6 @@
   depth: 2,
   indent: auto,
 )
-
-#set outline.entry(fill: none)
 
 #pagebreak()
 #include "sections/einleitung.typ"
