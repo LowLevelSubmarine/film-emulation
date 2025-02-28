@@ -42,7 +42,7 @@ Die @fig:halation-diagram zeigt den Verarbeitungsablauf zur Simulation von Halat
   )<fig:halation-diagram>
 ]
 
-Um Halation zu simulieren, wird ein Eingabebild benötigt, das helle Bildbereiche enthält, die den Effekt verursachen. In diesem Beispielbild sind die hellsten Bereiche die Fenster, durch die das Tageslicht ins Zimmer fällt. Dieses Bild wird in den folgenden Schritten bearbeitet, um die Halation zu simulieren.
+Um Halation zu emulieren, wird ein Eingabebild benötigt, das helle Bildbereiche enthält, die den Effekt verursachen. In diesem Beispielbild sind die hellsten Bereiche die Fenster, durch die das Tageslicht ins Zimmer fällt. Dieses Bild wird in den folgenden Schritten bearbeitet, um die Halation zu emulieren.
 
 #box(width: 100%)[
   #figure(
@@ -66,14 +66,14 @@ Um Halation zu simulieren, wird ein Eingabebild benötigt, das helle Bildbereich
   [
     #text("Extraktion des roten Bildkanals", weight: "bold") \ 
     Wie im Theorie-Abschnitt beschrieben, entsteht Halation hauptsächlich durch rötlich reflektiertes Licht.
-    Daher wird der rote Bildkanal isoliert, indem man `extractChannel()` verwendet, wobei der rote Kanal in OpenCV der zweite Kanal ist (@fig:halation-step1). Dies hat den zusätzlichen Vorteil, dass die nachfolgenden Berechnungen weniger rechenintensiv sind, da nur ein Drittel der Daten verarbeitet werden müssen.
+    Daher wird der rote Bildkanal isoliert, hierfür wird `extractChannel()` verwendet, wobei der rote Kanal in OpenCV der zweite Kanal ist (@fig:halation-step1). Dies hat den zusätzlichen Vorteil, dass die nachfolgenden Berechnungen weniger rechenintensiv sind, da nur ein Drittel der Daten verarbeitet werden müssen.
   ],
   align: right,
 )
 
 #text("High-Pass-Filter (Helligkeit)", weight: "bold") \
 Es sind nur die extrem hellen Bildbereiche von Interesse, welche eine Reflexion innerhalb des Films oder Gehäuses verursachen.
-Deshalb müssen alle Bildelemente, die nicht extrem hell sind, entfernt werden.
+Deshalb müssen alle Bildelemente, die nicht nahe weiß sind, entfernt werden.
 Dafür wurde ein Gamma-LUT (`config.halationThreshold`= γ = 20.0) mit einer starken Helligkeitskompression definiert, wodurch alle Eingabewerte sehr dunkel erscheinen, abgesehen von Werten, die in der Nähe von 255 liegen.
 Dieser Lookup-Table wird mit `Core.LUT()` auf den roten Bildkanal angewendet (@fig:halation-lut).
 
@@ -115,7 +115,7 @@ Außerdem wird die Maske mit `Imgproc.resize()` verkleinert. Für diese sind die
       #text("Weichzeichnen (Gauß)", weight: "bold")\
       Ziel dieses Schrittes ist es, weiche Lichthöfe um die hellen Bildbereiche zu erzeugen.
       Dies wird durch die Anwendung des `GaussianBlur()` erreicht, da dieser nicht direktional ist und die Intensität proportional zur Entfernung weich abnimmt (@fig:halation-step3).
-      In diesem Schritt können auch Anpassungen an der Kurve des Gaussian Blur mit `config.halationGaussianSize` und `config.halationSigmaX` vorgenommen werden.
+      In dem Schritt können auch Anpassungen an der Kurve des Gaussian Blur durch `config.halationGaussianSize` und `config.halationSigmaX` vorgenommen werden.
       
       Anschließend wird die Helligkeit der Maske angepasst und die Maske wieder auf die Größe des Eingabebildes skaliert.
     ],
@@ -136,7 +136,7 @@ Außerdem wird die Maske mit `Imgproc.resize()` verkleinert. Für diese sind die
   ],
   [
     #text("Umformung zu einem 3-Kanal-Buffer", weight: "bold")\
-    Um die erstellte Halation-Maske zum Eingangsbild hinzufügen zu können, muss die 1-Kanal-Maske wieder in ein 3-Kanal-Bild umgewandelt werden. Dazu erstellt man zunächst mit `Mat.zeros()` ein schwarzes 3-Kanal-Bild. Anschließend wird der vorhandene rote Kanal mit der Maske durch `Core.insertChannel()` überschrieben.
+    Um die erstellte Halation-Maske zum Eingangsbild hinzufügen zu können, muss die 1-Kanal-Maske wieder in ein 3-Kanal-Bild umgewandelt werden. Dazu wird zunächst mit `Mat.zeros()` ein schwarzes 3-Kanal-Bild erstellt. Anschließend wird der vorhandene rote Kanal mit der Maske durch `Core.insertChannel()` überschrieben.
   ],
   align: right,
 )
@@ -146,7 +146,7 @@ Zum Schluss wird die Halation-Maske mit `Core.add()` auf das Eingabebild addiert
 Dabei werden nur die relevanten Bereiche des Bildes aufgehellt, während die anderen Bereiche unverändert bleiben.
 Dies liegt daran, dass die schwarzen Bereiche in der Maske den Wert 0 enthalten. Wenn ein Pixelwert x aus dem Eingabebild mit 0 addiert wird, bleibt dieser unverändert.
 
-Am Ende erhält man ein Bild, das die Halation simuliert. Die hellsten Bereiche des Bildes sind nun von einem leichten rötlichen Schimmer umgeben, der den Effekt der Lichtstreuung in der Filmschicht nachahmt.
+Am Ende erhält man ein Bild, das die Halation simuliert. Die hellsten Bereiche des Bildes sind von einem leichten rötlichen Schimmer umgeben, der den Effekt der Lichtstreuung in der Filmschicht nachahmt.
 
 #box(width: 100%)[
   #figure(
