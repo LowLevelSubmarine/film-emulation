@@ -9,11 +9,11 @@ Beim Abgleich der Analog-Bilder (beispielhaft @fig:tone-example-digital) mit den
     columns: (1fr, 1fr),
     gutter: 20pt,
     [#figure(
-        image("/assets/effects/tone/example-digital.png",),
+        image("../../assets/effects/tone/example-digital.png",),
         caption: [Beispiel Digital-Bild mit "realistischen" Farben],
     )<fig:tone-example-digital>],
     [#figure(
-        image("/assets/effects/tone/example-analog.jpg",),
+        image("../../assets/effects/tone/example-analog.jpg",),
         caption: [Beispiel Analog-Bild],
     )<fig:tone-example-analog>],
 )
@@ -22,7 +22,7 @@ Beim Abgleich der Analog-Bilder (beispielhaft @fig:tone-example-digital) mit den
 Um unterschiedliche Farbtöne eines Bildes getrennt von einander anzupassen ist es zunächst sinnvoll das Bild in einen Farbraum zu konvertieren, in dem die Farbtöne auf einen einzigen Wert abgebildet werden (z.B. HSV, Farbton ist "Hue"). So können die Farbtöne nach einem Mapping durch ein LUT als Maske für weitere Verarbeitungen verwendet werden (@fig:tone-effect-hue-filter). In diesem Fall wird eine Maske für orange Farbtöne erstellt.
 
 #figure(
-        image("/assets/hue-filter.png",),
+        image("../../assets/hue-filter.png",),
         caption: [Abbildung der Farbton-Werte auf Intensitätswerte einer Maske für warme Farbtöne],
     )<fig:tone-effect-hue-filter>
 

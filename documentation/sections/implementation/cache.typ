@@ -1,4 +1,4 @@
-#import "/components.typ": authored_by
+#import "../../components.typ": authored_by
 
 == Cache
 #authored_by("Florian Weichert")
