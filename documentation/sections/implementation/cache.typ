@@ -16,7 +16,6 @@ fun storageTest() {
 Aufgrund von Kotlins Syntactic Sugar kann die Funktion `storageTest` als Extension-Function eine Instanz von Storage für den Aufruf vorraussetzen. Zusätzlich kann der letzte Parameter einer Funktion, sollte er eine Funktion sein, außerhalb der Klammern übergeben werden. Diese beiden Sprach-Features ermöglichen es, den Cache-Aufruf noch weiter zu vereinfachen:
 ```kotlin
 fun Storage.storageTest() {
-  // Beispiel Cache-Aufruf
   val veryExpensiveCalculationResult = store { 1 + 2 }
 }
 ```
