@@ -5,7 +5,7 @@
 #authored_by("Florian Weichert")
 
 === Theorie 
-Analog-Film hat im Vergleich zu digitalen Bildern eine höheren Dynamik-Umfang in den hellen Bildbereichen. Dieser Effekt entsteht durch die Eigenschaften der Fotoemulsion, die in der Lage ist, sehr helle Bildbereiche abzubilden, ohne dass diese überbelichtet wirken. Digitale Bilder hingegen haben eine geringere Dynamik in den hellen Bildbereichen, sie tendieren bei einer Überbelichtung schnell zu einem reinen Weiß @how-to-edit-like-film. Zusätzlich kann es passieren, dass der im Scan-Vorgang die maximal hellen und dunklen Bereiche nicht perfekt abgebildet werden können.
+Analogfilm hat im Vergleich zu digitalen Bildern einen höheren Dynamikumfang in den hellen Bildbereichen. Dieser Effekt entsteht durch die Eigenschaften der Fotoemulsion, die in der Lage ist, sehr helle Bildbereiche abzubilden, ohne dass diese überbelichtet wirken. Digitale Bilder hingegen haben eine geringere Dynamik in den hellen Bildbereichen, sie tendieren bei einer Überbelichtung schnell zu einem reinen Weiß @how-to-edit-like-film. Zusätzlich kann es passieren, dass im Scan-Vorgang die maximal hellen und dunklen Bereiche nicht perfekt abgebildet werden können.
 === Implementierung
 #wrap-content(
     [
@@ -19,7 +19,7 @@ Analog-Film hat im Vergleich zu digitalen Bildern eine höheren Dynamik-Umfang i
       ]
     ],
     [
-      Um diese Eigenschaften des analogen Films zu emulieren, wird eine Luminanz-Kurve (@fig:crushed-luminance-curve) auf das Bild angewendet. Dafür wird zunächst ein LUT generiert, welches die Luminanz-Werte anhand einer Splines auf andere Luminanz-Werte abbildet. Diese Spline wird durch 2-Dimensionale Knoten definiert. Das anschließend generierte LUT wird auf Performance-Gründen zwischengespeichert. Anschließend wird das LUT auf das Bild angewendet. Die Stärke der Luminanz-Veränderung kann durch einen Parameter (`crushedLuminanceStrength`) angepasst werden. Damit das Bild durch die neue Luminanz-Kurve nicht zu sehr an Kontrast verliert, wird zuvor ein Kontrast-LUT auf das Bild angewendet. Dieses besteht aus zwei Knoten (also lineare Interpolation) und wird ebenfalls zwischengespeichert.
+      Um diese Eigenschaften des analogen Films zu emulieren, wird eine Luminanz-Kurve (@fig:crushed-luminance-curve) auf das Bild angewendet. Dafür wird zunächst ein LUT generiert, welches die Luminanz-Werte anhand einer Splines auf andere Luminanz-Werte abbildet. Diese Spline wird durch 2-dimensionale Knoten definiert. Das anschließend generierte LUT wird aus Performance-Gründen zwischengespeichert. Anschließend wird das LUT auf das Bild angewendet. Die Stärke der Luminanz-Veränderung kann durch einen Parameter (`crushedLuminanceStrength`) angepasst werden. Damit das Bild durch die neue Luminanz-Kurve nicht zu sehr an Kontrast verliert, wird zuvor ein Kontrast-LUT auf das Bild angewendet. Dieses besteht aus zwei Knoten (also lineare Interpolation) und wird ebenfalls zwischengespeichert.
     ],
     align: right,
 )
