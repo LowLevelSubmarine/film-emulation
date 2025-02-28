@@ -15,37 +15,43 @@ Zu guter Letzt kann auch der Scanner einen eigenen Farbstich hinzufügen, ebenso
 
 Farbstiche können korrigiert werden, indem der ursprüngliche Farbeindruck wiederhergestellt wird, entweder manuell oder softwaregestützt.
 
-#wrap-content(
-    [
-      #pad(box(width: 160pt)[
-        #figure(
+=== Implementierung
+Die Funktion `colorCast` simuliert oder kompensiert einen globalen Farbstich. Durch den Konfigurationswert `config.colorCast` kann die Anpassung flexibel gesteuert werden. Der Wert wird mittels `Core.add(image, config.colorCast.toScalar(), image)` auf alle Pixel des Bildes angewendet (@fig:color_cast-output).
+```kotlin
+fun ProcessingDsl.colorCast(
+    image: Mat, config: Config
+) {
+    Core.add(
+        image, 
+        config.colorCast.toScalar(), 
+        image
+    )
+}   
+```
+
+#grid(
+  columns: (1fr, 1fr, 1fr),
+  align: (left, center, right),
+  [
+    #box(width: 145pt)[
+      #figure(
             image("../../assets/effects/input.png", width: 100%),
             caption: [Beispiel Eingabebild],
         )<fig:color_cast-input>
-        #figure(
+    ] ],
+  [
+    #box(width: 145pt)[
+       #figure(
             image("../../assets/effects/color_cast/modification.png", width: 100%),
             caption: [Color Cast Maske],
         )<fig:color_cast-modification>
-        #figure(
+    ]],
+    [
+    #box(width: 145pt)[
+      #figure(
             image("../../assets/effects/color_cast/output.png", width: 100%),
             caption: [Ausgabebild für Color Cast],
         )<fig:color_cast-output>
-      ], left: 12pt, bottom: 12pt)
-    ],
-    [
-        === Implementierung
-        Die Funktion `colorCast` simuliert oder kompensiert einen globalen Farbstich. Durch den Konfigurationswert `config.colorCast` kann die Anpassung flexibel gesteuert werden. Der Wert wird mittels `Core.add(image, config.colorCast.toScalar(), image)` auf alle Pixel des Bildes angewendet (@fig:color_cast-output).
-        ```kotlin
-        fun ProcessingDsl.colorCast(
-            image: Mat, config: Config
-        ) {
-            Core.add(
-                image, 
-                config.colorCast.toScalar(), 
-                image
-            )
-        }   
-        ```
-     ],
-  align: right,
+    ]
+  ]
 )

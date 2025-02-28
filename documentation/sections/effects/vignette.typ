@@ -13,49 +13,55 @@ Vignettierung beschreibt die Abschattung zum Bildrand hin. Es gibt verschiedene 
 
 #text("3. Pixelvignettierung:", weight: "semibold") Ein Pixelsensor besteht aus Millionen von Photonenschächten, die das auftreffende Licht messen. Diese Schächte sind extrem klein, haben aber eine gewisse Tiefe. Bei starkem Lichteinfall trifft das Licht möglicherweise nicht den Boden der Schächte. Besonders ausgeprägt ist der Effekt an den Bildrändern. Man kann den Effekt durch bestimmte Sensoralgorithmen korrigieren.
 
-#wrap-content(
-    [
-      #pad(box(width: 160pt)[
-        #figure(
+=== Implementierung
+Um den klassischen Analogfilm-Look zu verbessern, wird ein Vignetteneffekt hinzugefügt. Dieser Effekt dunkelt die Bildränder ab und lenkt den Fokus auf das Zentrum des Bildes. Der Vignetteneffekt wird durch die Funktion `vignette(image: Mat, config: Config)` implementiert.
+
+Der Effekt wird in mehreren Schritten umgesetzt:
+Zunächst wird eine Vignettenmaske erstellt, die die Bildränder abdunkelt (@fig:vignette-modification). Die Stärke des Effekts wird durch den Konfigurationswert `config.vignetteStrength` bestimmt.
+Die Berechnung der Maske erfolgt nur einmal und wird zwischengespeichert, solange der Wert von `config.vignetteStrength` unverändert bleibt, um die Effizienz zu erhöhen. Die Maske wird dann auf die Größe des Eingabebildes skaliert und schließlich vom Bild subtrahiert, um den Vignetteneffekt zu erzeugen (@fig:vignette-output).
+
+```kotlin
+fun ProcessingDsl.vignette(
+  image: Mat, 
+  config: Config
+) {
+  val mask by stored(
+    dependencies = listOf(config.vignetteStrength)
+  ) {
+    createVignetteMask(
+      config.vignetteStrength.toDouble(),
+      image.size()
+    )
+  }
+  Core.subtract(image, mask, image)
+}
+```
+
+#grid(
+  columns: (1fr, 1fr, 1fr),
+  align: (left, center, right),
+  [
+    #box(width: 145pt)[
+      #figure(
             image("../../assets/effects/input.png", width: 100%),
             caption: [Beispiel Eingabebild],
         )<fig:vignette-input>
-        #figure(
+    ] ],
+  [
+    #box(width: 145pt)[
+       #figure(
             image("../../assets/effects/vignette/modification.png", width: 100%),
-            caption: [Vignette-Modifikation],
+            caption: [Vignettierungsmaske],
         )<fig:vignette-modification>
-        #figure(
-            image("../../assets/effects/vignette/output.png", width: 100%),
-            caption: [Ausgabebild für Vignette],
-        )<fig:vignette-output>
-      ], left: 12pt, bottom: 12pt)
-    ],
+    ]],
     [
-      === Implementierung
-      Um den klassischen Analogfilm-Look zu verbessern, wird ein Vignetteneffekt hinzugefügt. Dieser Effekt dunkelt die Bildränder ab und lenkt den Fokus auf das Zentrum des Bildes. Der Vignetteneffekt wird durch die Funktion `vignette(image: Mat, config: Config)` implementiert.
-
-      Der Effekt wird in mehreren Schritten umgesetzt:
-      Zunächst wird eine Vignettenmaske erstellt, die die Bildränder abdunkelt (@fig:vignette-modification). Die Stärke des Effekts wird durch den Konfigurationswert `config.vignetteStrength` bestimmt.
-      Die Berechnung der Maske erfolgt nur einmal und wird zwischengespeichert, solange der Wert von `config.vignetteStrength` unverändert bleibt, um die Effizienz zu erhöhen. Die Maske wird dann auf die Größe des Eingabebildes skaliert und schließlich vom Bild subtrahiert, um den Vignetteneffekt zu erzeugen (@fig:vignette-output).
-
-      ```kotlin
-      fun ProcessingDsl.vignette(
-        image: Mat, 
-        config: Config
-      ) {
-        val mask by stored(
-          dependencies = listOf(config.vignetteStrength)
-        ) {
-          createVignetteMask(
-            config.vignetteStrength.toDouble(),
-            image.size()
-          )
-        }
-        Core.subtract(image, mask, image)
-      }
-      ```
-	  ],
-  align: right,
+    #box(width: 145pt)[
+      #figure(
+            image("../../assets/effects/vignette/output.png", width: 100%),
+            caption: [Ausgabebild für Vignettiertung],
+        )<fig:vignette-output>
+    ]
+  ]
 )
 
 
