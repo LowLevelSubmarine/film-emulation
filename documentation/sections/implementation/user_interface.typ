@@ -6,6 +6,7 @@
 #authored_by("Leonie Wehser")
 
 === Implementierung
+
 - Grundstruktur
   - Anwendung basiert auf Preact, besteht aus mehreren Komponenten
   - Hauptkomponente App rendert ConfigUi und VideoStream

@@ -44,21 +44,21 @@ fun ProcessingDsl.vignette(
     #box(width: 145pt)[
       #figure(
             image("../../assets/effects/input.png", width: 100%),
-            caption: [Beispiel Eingabebild],
+            caption: [Eingabebild - Vignette],
         )<fig:vignette-input>
     ] ],
   [
     #box(width: 145pt)[
        #figure(
             image("../../assets/effects/vignette/modification.png", width: 100%),
-            caption: [Vignettierungsmaske],
+            caption: [Modifikation - Vignette],
         )<fig:vignette-modification>
     ]],
     [
     #box(width: 145pt)[
       #figure(
             image("../../assets/effects/vignette/output.png", width: 100%),
-            caption: [Ausgabebild für Vignettiertung],
+            caption: [Ausgabebild - Vignette],
         )<fig:vignette-output>
     ]
   ]

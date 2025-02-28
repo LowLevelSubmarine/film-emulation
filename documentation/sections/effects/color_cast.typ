@@ -36,21 +36,21 @@ fun ProcessingDsl.colorCast(
     #box(width: 145pt)[
       #figure(
             image("../../assets/effects/input.png", width: 100%),
-            caption: [Beispiel Eingabebild],
+            caption: [Eingabebild - Color Cast],
         )<fig:color_cast-input>
     ] ],
   [
     #box(width: 145pt)[
        #figure(
             image("../../assets/effects/color_cast/modification.png", width: 100%),
-            caption: [Color Cast Maske],
+            caption: [Modifikation - Color Cast],
         )<fig:color_cast-modification>
     ]],
     [
     #box(width: 145pt)[
       #figure(
             image("../../assets/effects/color_cast/output.png", width: 100%),
-            caption: [Ausgabebild für Color Cast],
+            caption: [Ausgabebild - Color Cast],
         )<fig:color_cast-output>
     ]
   ]

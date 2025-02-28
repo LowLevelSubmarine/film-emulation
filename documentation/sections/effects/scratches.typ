@@ -59,21 +59,21 @@ fun ProcessingDsl.scratches(image: Mat) {
     #box(width: 145pt)[
      #figure(
             image("../../assets/effects/input.png", width: 100%),
-            caption: [Beispiel Eingabebild],
+            caption: [Eingabebild - Scratches],
         )<fig:scratches-input>
     ] ],
   [
     #box(height: 165pt, width: 145pt)[
        #figure(
             image("../../assets/effects/scratches/modification.png", height: 100%, width: 100%),
-            caption: [Kratzer-Maske],
+            caption: [Modifikation - Scratches],
         )<fig:scratches-modification>
     ]],
     [
     #box(width: 145pt)[
       #figure(
             image("../../assets/effects/scratches/output.png", width:  100%),
-            caption: [Ausgabebild für Kratzer],
+            caption: [Ausgabebild - Scratches],
         )<fig:scratches-output>
     ]
   ]

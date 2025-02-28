@@ -31,33 +31,6 @@ Ziel ist es, Filmrauschen durch statisches und dynamisches Rauschen zu simuliere
 Um das Rauschen dynamisch darzustellen, wird ein zufälliger Offset mit `createRandomOffsetTransformation()` generiert. Diese Transformation wird auf die Grain-Textur angewendet, um bei jedem Frame ein anderes Rauschen zu simulieren, ähnlich wie bei analogen Filmen. Das Ergebnis wird in `dynamicGrain` gespeichert. Dabei verhindert `Core.BORDER_REFLECT`, dass das Rauschen am Rand des Bildes abgeschnitten wird.
 
 Bevor das Rauschen zum Eingabebild hinzugefügt wird, wird das Bild um `150 * config.grainStrength` aufgehellt, um zu verhindern, dass das Ausgabebild durch das Rauschen zu dunkel wird. Abschließend wird das dynamische Rauschen vom Eingabebild subtrahiert, um den gewünschten Effekt zu erzeugen.
-
-#grid(
-  columns: (1fr, 1fr, 1fr),
-  align: (left, center, right),
-  [
-    #box(width: 145pt)[
-      #figure(
-          image("../../assets/effects/input.png", width: 100%),
-          caption: [Beispiel Eingabebild],
-      )<fig:grain-input>
-    ] ],
-  [
-    #box(width: 145pt)[
-      #figure(
-          image("../../assets/effects/grain/modification.png", width: 100%),
-          caption: [Grain-Maskierung],
-      )<fig:grain-modification>
-    ]],
-    [
-    #box(width: 145pt)[
-      #figure(
-          image("../../assets/effects/grain/output.png", width: 100%),
-          caption: [Ausgabebild für Körnung],
-      )<fig:grain-output>
-    ]
-  ]
-)
   
 ```kotlin
 fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) {
@@ -100,3 +73,30 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) 
     Core.subtract(destinationImage, dynamicGrain, destinationImage)
 }
 ```
+
+#grid(
+  columns: (1fr, 1fr, 1fr),
+  align: (left, center, right),
+  [
+    #box(width: 145pt)[
+      #figure(
+          image("../../assets/effects/input.png", width: 100%),
+          caption: [Eingabebild - Grain],
+      )<fig:grain-input>
+    ] ],
+  [
+    #box(width: 145pt)[
+      #figure(
+          image("../../assets/effects/grain/modification.png", width: 100%),
+          caption: [Modifikation - Grain],
+      )<fig:grain-modification>
+    ]],
+    [
+    #box(width: 145pt)[
+      #figure(
+          image("../../assets/effects/grain/output.png", width: 100%),
+          caption: [Ausgabebild - Grain],
+      )<fig:grain-output>
+    ]
+  ]
+)
