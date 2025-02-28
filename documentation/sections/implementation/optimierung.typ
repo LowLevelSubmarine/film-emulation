@@ -1,4 +1,4 @@
-#import "/components.typ": authored_by
+#import "../../components.typ": authored_by
 
 == Optimierung
 #authored_by("Florian Weichert")

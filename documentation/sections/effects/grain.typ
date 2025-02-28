@@ -89,9 +89,9 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) 
         Mat(texture, Rect(Point(), inputImage.size()))
     }
     val dynamicGrain = store { Mat() }
-
+    // random offset
     val transformation = createRandomOffsetTransformation(inputImage)
-    
+    // BORDER_REFLECT sorgt dafür dass das Grain nicht ausßerhalb des bildes liegen kann, sondern reflektiert wird
     Imgproc.warpAffine(
       staticGrain,
       dynamicGrain,
@@ -100,6 +100,7 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) 
       0,
       Core.BORDER_REFLECT
     )
+    // hellt das gesammte Bild auf, damit durch das Grain das bild nicht zu dunkel wird
     Core.add(
       inputImage,
       Scalar.all(150.0 * config.grainStrength.toDouble()),
