@@ -1,4 +1,4 @@
-#import "../../components.typ": authored_by
+#import "../../components.typ": authored_by, input_output_figures
 
 == Tone
 #authored_by("Florian Weichert")
@@ -84,3 +84,5 @@ fun ProcessingDsl.tone(image: Mat, config: Config) {
     Core.add(image, coldColorPart, image)
 }
 ```
+
+#input_output_figures("Tone", "/assets/effects/tone/output.png")

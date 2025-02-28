@@ -1,5 +1,5 @@
 #import "@preview/wrap-it:0.1.1": wrap-content
-#import "../../components.typ": authored_by
+#import "../../components.typ": authored_by, input_output_figures
 
 == Crushed Luminance
 #authored_by("Florian Weichert")
@@ -45,3 +45,4 @@ fun ProcessingDsl.crushedLuminance(
     Core.LUT(destinationImage, lut, destinationImage)
 }
 ```
+#input_output_figures("Crushed Luminance", "/assets/effects/crushed_luminance/output.png")
