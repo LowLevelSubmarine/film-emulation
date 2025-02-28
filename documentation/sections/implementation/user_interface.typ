@@ -1,5 +1,7 @@
 #import "../../components.typ": authored_by
 
+// prevent breaks
+#box[
 == User Interface
 #authored_by("Leonie Wehser")
 
@@ -8,6 +10,7 @@
   - Anwendung basiert auf Preact, besteht aus mehreren Komponenten
   - Hauptkomponente App rendert ConfigUi und VideoStream
   - UI-Elemente mittig ausgerichtet
+]
 - ConfigUi-Komponente
   - Verwaltung der Konfigurationseinstellungen
   - useState zur Speicherung des aktuellen Zustands
