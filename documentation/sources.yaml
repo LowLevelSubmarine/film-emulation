@@ -65,10 +65,3 @@ how-to-edit-like-film:
   url:
     value: https://alikgriffin.com/how-to-edit-like-film/
     date: 2025-02-23
-flutter-hooks-principle:
-  type: Web
-  title: Flutter Hooks Principle
-  author: Remi Rousselet
-  url:
-    value: https://pub.dev/packages/flutter_hooks#principle
-    date: 2025-02-28
