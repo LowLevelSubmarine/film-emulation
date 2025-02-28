@@ -20,9 +20,9 @@ fun Storage.storageTest() {
   val veryExpensiveCalculationResult = store { 1 + 2 }
 }
 ```
-Um den jeweiligen Wert im Cache jedoch auch ohne Schlüssel identifizieren zu können wird anstelle eines herkömmlichen Schlüssels ein Zähler verwendet. Dieser wird bei jedem Aufruf des Caches inkrementiert und dient als Identifikator für den jeweiligen Wert. Damit der Cache auch schlussendlich verwendet werden kann, muss der Zähler vor jedem einzelnen Durchlauf der Pipeline einmal zurückgesetzt werden. Die Inspiration für diese Implementierung stammt aus der Dokumentation zu der Flutter Bibliothek `flutter_hooks` @flutter-hooks-principle.
+Um den jeweiligen Wert im Cache jedoch auch ohne Schlüssel identifizieren zu können wird anstelle eines herkömmlichen Schlüssels ein Zähler verwendet. Dieser wird bei jedem Aufruf des Caches inkrementiert und dient als Identifikator für den jeweiligen Wert. Damit der Cache auch schlussendlich verwendet werden kann, muss der Zähler vor jedem einzelnen Durchlauf der Pipeline einmal zurückgesetzt werden. Die Inspiration für diese Implementierung stammt aus der Dokumentation zu der Flutter Bibliothek "flutter_hooks"#footnote[https://github.com/rrousselGit/flutter_hooks/blob/16a0b7/README.md#principle].
 #parbreak()
-Für die Invalidierung des Caches anhand von Abhängigkeiten wird neben dem Wert selbst auch eine List aller angegebenen Abhängigkeiten gespeichert. Sollte sich mit einem Aufruf des Caches eine der Abhängigkeiten geändert haben, wird der Wert neu berechnet und im Cache gespeichert:
+Für die Invalidierung des Caches anhand von Abhängigkeiten wird neben dem Wert selbst auch eine Liste aller angegebenen Abhängigkeiten gespeichert. Sollte sich mit einem Aufruf des Caches eine der Abhängigkeiten geändert haben, wird der Wert neu berechnet und im Cache gespeichert:
 ```kotlin
 fun Storage.storageTest() {
   var multiplier = 1
