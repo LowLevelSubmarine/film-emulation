@@ -66,7 +66,7 @@ fun createVignetteMask(strength: Double, size: Size): Mat {
     #box(width: 145pt)[
        #figure(
             image("../../assets/effects/vignette/modification.png", width: 100%),
-            caption: [Modifikation - Vignette],
+            caption: [Vignettierungsmaske],
         )<fig:vignette-modification>
     ]],
     [
