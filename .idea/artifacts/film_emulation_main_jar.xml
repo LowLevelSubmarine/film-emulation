@@ -1,0 +1,57 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="film-emulation.main:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/film_emulation_main_jar</output-path>
+    <root id="archive" name="film-emulation.main.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="film-emulation.main" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-io-jvm/3.0.3/916639189295c184f0e0766fe0c4bcbb4227cc0c/ktor-io-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-unix-common/4.1.116.Final/1f77d6d8e582ded200e0be1462afbc7563144e12/netty-transport-native-unix-common-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-resolver/4.1.116.Final/82fc6bbf59eae483712c8716b8d1f5112b1721a0/netty-resolver-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.articdive/jnoise-transformers/4.1.0/53530fe8b614be4ccda97119f5e356dacfa24c50/jnoise-transformers-4.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-io-bytestring-jvm/0.5.4/d02e90094c25c6c4689a9f4359c3dc3543f66958/kotlinx-io-bytestring-jvm-0.5.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-cors-jvm/3.0.3/976804c8ba61ebecf306b5fe123ee4e8b3c5407f/ktor-server-cors-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-cio-jvm/3.0.3/1da3020fb6b71621965a766d26371aba114ca533/ktor-server-cio-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-http-cio-jvm/3.0.3/669f2105dbf39bcddd5a824a9dbf67e1a1c75255/ktor-http-cio-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-io-core-jvm/0.5.4/16566a36d64d88af421fbee163eeeb6aa6406a43/kotlinx-io-core-jvm-0.5.4.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/2.0.21/669e1d35e4ca1797f9ddb2830dd6c36c0ca531e4/kotlin-reflect-2.0.21.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/dev.benedikt.math/bezier-spline/2.0.0/1fc971c1c0cdb2896553c8ae89ae3bd5b6f3e161/bezier-spline-2.0.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.9.0/9beade4c1c1569e4f36cbd2c37e02e3e41502601/kotlinx-coroutines-core-jvm-1.9.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport/4.1.116.Final/3fa60bbc84222a691bb0686a82308b8e180812b7/netty-transport-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-common/4.1.116.Final/6871f95af2bc3a98fda34a580baf6cac8cbc2944/netty-common-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec-http/4.1.116.Final/75a0455171848a4188a9f77e9a1e76a036381260/netty-codec-http-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-events-jvm/3.0.3/160a5976b0ba1a2e2bd62609aa13f2bb472fec88/ktor-events-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-epoll/4.1.116.Final/ce620832453892a92be73f672cd79a36f8c60235/netty-transport-classes-epoll-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec/4.1.116.Final/cbe928f601e51a0b5750342b6dad5d35fa12f745/netty-codec-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-codec-http2/4.1.116.Final/5aefc3cf9ca7df764d0b15b9cb9b6e706a4a55b3/netty-codec-http2-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-handler/4.1.116.Final/eaef854ef33f3fd3d0ecf927690d8112c710bc05/netty-handler-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-classes-kqueue/4.1.116.Final/12a664d6008cca14a3a87de2109a46f6aeafc48e/netty-transport-classes-kqueue-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-kqueue/4.1.116.Final/c86e723fce6a825b33017a5a212c6ffd14882854/netty-transport-native-kqueue-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-core-jvm/1.8.0/fe5bb37ab4a3771f14c63e0c333c98bdfeb1d7cc/kotlinx-serialization-core-jvm-1.8.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.articdive/jnoise-pipeline/4.1.0/331d5adb61361d98bb0efdc8306cc82327f557ab/jnoise-pipeline-4.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-utils-jvm/3.0.3/8938221fdf8253200824443515b7a2bef4d09d3/ktor-utils-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="library" level="project" name="Gradle: org.fusesource.jansi:jansi:2.4.1" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.1.0/85f8b81009cda5890e54ba67d64b5e599c645020/kotlin-stdlib-2.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.articdive/jnoise-modules/4.1.0/5b36dab84fad68c9956e4961c8d62ecb7ec69c29/jnoise-modules-4.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-serialization-jvm/3.0.3/e9b6b6fb4d3a3ab57a002af75b72299effb2535f/ktor-serialization-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.articdive/jnoise-core/4.1.0/d631bc94d1326af85dae43f65f0e240c6bc1a15/jnoise-core-4.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/2.0.16/172931663a09a1fa515567af5fbef00897d3c04/slf4j-api-2.0.16.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.typesafe/config/1.4.3/b57e0fbdc7270d8ea59c1ba367457a5cc7ba0e98/config-1.4.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-transport-native-epoll/4.1.116.Final/1c6021a777b96562078d38f62ab8bd7d87627d18/netty-transport-native-epoll-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-websockets-jvm/3.0.3/4ef069eb6f7933e8ff45859cc2b013914f5c511e/ktor-websockets-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.articdive/jnoise-modifiers/4.1.0/46cd2452385d95f1830eefc172cbf577617cb3f5/jnoise-modifiers-4.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.netty/netty-buffer/4.1.116.Final/77a86414b9c1e52622e467f1ef7ccb473996742a/netty-buffer-4.1.116.Final.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-netty-jvm/3.0.3/45d3a514832f3a992d8f87d3b0d206ef51b992c5/ktor-server-netty-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="library" level="project" name="Gradle: org.jspecify:jspecify:0.3.0" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.openpnp/opencv/4.9.0-0/a50feb53802d310e8a2633c6a0a3aec8a6ac04d1/opencv-4.9.0-0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-serialization-json-jvm/1.8.0/8253bf6e8c713a3dace54493a838e0f8fd3e08fa/kotlinx-serialization-json-jvm-1.8.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/de.articdive/jnoise-generators/4.1.0/44225d791d5bdece59d776258e9c5717b1de096d/jnoise-generators-4.1.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.alpn/alpn-api/1.1.3.v20160715/a1bf3a937f91b4c953acd13e8c9552347adc2198/alpn-api-1.1.3.v20160715.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-server-core-jvm/3.0.3/91ac7599d2c8667a452bdb39b63c22ca21902e55/ktor-server-core-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-network-jvm/3.0.3/d5f4795edf9260ae92f21c2579ef1cd5c0b9d469/ktor-network-jvm-3.0.3.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.ktor/ktor-http-jvm/3.0.3/2f066c327a7424ed4a6d25aa7549981edddc6022/ktor-http-jvm-3.0.3.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
