@@ -12,7 +12,7 @@ Vignettierung beschreibt die Abschattung zum Bildrand hin. Es gibt verschiedene 
 #text("2. Optische Vignettierung:", weight: "semibold") Diese tritt auf, wenn das Licht in einem steilen Winkel auf die Objektivblende trifft. Es entsteht ein internes physisches Hindernis, da das Licht teilweise von der Blende blockiert wird. Der Effekt tritt besonders oft bei Weitwinkelobjektiven mit großer Blendenöffnung auf. Durch Abblenden des Objektivs kann der Effekt reduziert oder sogar eliminiert werden.
 
 === Implementierung
-Um den klassischen Analogfilm-Look zu verbessern, wird ein Vignetteneffekt hinzugefügt. Dieser Effekt dunkelt die Bildränder ab und lenkt den Fokus auf das Zentrum des Bildes. Der Vignetteneffekt wird durch die Funktion `vignette(image: Mat, config: Config)` implementiert.
+Um den klassischen Analog-Film-Look zu verbessern, wird ein Vignetteneffekt hinzugefügt. Dieser Effekt dunkelt die Bildränder ab und lenkt den Fokus auf das Zentrum des Bildes. Der Vignetteneffekt wird durch die Funktion `vignette(image: Mat, config: Config)` implementiert.
 
 Der Effekt wird in mehreren Schritten umgesetzt:
 Es wird eine Vignettenmaske erstellt, die die Bildränder abdunkelt (@fig:vignette-modification). `createVignetteMask()` erstellt dafür ein schwarzes 3-Kanal-Bild von der Größe des Eingabebildes und speichert den Mittelpunkt des Bildes in `center`. Anschließend speichert man die maximale Distanz vom Mittelpunkt zum Bildrand in `maxDist`. 

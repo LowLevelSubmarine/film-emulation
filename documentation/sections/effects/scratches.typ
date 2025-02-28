@@ -13,7 +13,7 @@ Um Kratzer auf digitalen Bildern zu simulieren, wird die Funktion `scratches` ve
 
 Zunächst werden zehn verschiedene Kratzertexturen aus Bilddateien geladen und in einer Liste gespeichert. Diese Texturen basieren auf realen Kratzern, um eine realistische Darstellung zu gewährleisten. Anschließend werden 30 zufällige Rotationen erstellt und auf zufällige Kratzertexturen angewendet, um Variabilität zu erzeugen.
 
-Der Anteil der anzuwendenden Kratzer (`scratchAmount`) wird berechnet. In 90% der Fälle wird kein Kratzer angewendet. In den restlichen 10% der Fälle wird eine geringe Anzahl von Kratzern festgelegt, wobei die maximale Anzahl 5 beträgt. Danach werden die Kratzertexturen auf das Eingangsbild angewendet. Eine zufällige Textur aus der Liste der 30 transformierten Kratzer wird ausgewählt (@fig:scratches-modification) und ein zufälliger Bereich (ROI = Region of Interest) im Bild bestimmt. Die Textur wird additiv auf das Eingangsbild im ROI-Bereich hinzugefügt. (@fig:scratches-output).
+Der Anteil der anzuwendenden Kratzer (`scratchAmount`) wird berechnet. In 90% der Fälle wird kein Kratzer angewendet. In den restlichen 10% der Fälle wird eine geringe Anzahl von Kratzern festgelegt, wobei die maximale Anzahl 5 beträgt. Danach werden die Kratzertexturen auf das Eingangsbild angewendet. Eine zufällige Textur aus der Liste der 30 transformierten Kratzer wird ausgewählt (@fig:scratches-modification) und ein zufälliger Bereich, der ROI genannt wird #footnote[Region of Interest], im Bild bestimmt. Die Textur wird additiv auf das Eingangsbild in der ROI hinzugefügt. (@fig:scratches-output).
 
 ```kotlin
 fun ProcessingDsl.scratches(image: Mat) {
