@@ -86,3 +86,15 @@ negativ-fehler:
   url:
     value: https://de.wikipedia.org/wiki/Negativfehler#Farbige_Negative
     date: 2025-02-28
+halation-and-its-simulation:
+  type: Web
+  title: Halation and its simulation in Dehancer
+  url:
+    value: https://blog.dehancer.com/articles/halation/
+    date: 2025-02-28
+what-is-the-anti-halation-layer-in-film:
+  type: Web
+  title: What is the anti-halation layer in film?
+  url:
+    value: https://www.lomography.com/magazine/352787-what-is-the-anti-halation-layer
+    date: 2025-02-28
