@@ -43,13 +43,13 @@
 
 Ich, Leonie Wehser 852904, versichere an Eides statt durch meine Unterschrift, dass ich die vorstehende Arbeit selbständig und ohne fremde Hilfe angefertigt und alle Stellen, die ich wörtlich oder sinngemäß aus veröffentlichten oder nicht veröffentlichten Schriften entnommen habe, als solche kenntlich gemacht habe und mich auch keiner anderen als der angegebenen Quellen oder sonstiger Hilfsmittel bedient habe. Ich versichere an Eides statt, dass ich die vorgenannten Angaben nach bestem Wissen und Gewissen gemacht habe und dass die Angaben der Wahrheit entsprechen und ich nichts verschwiegen habe.
 
-Unterschrift: #line(length: 100%, stroke: 0.07em)
+Unterschrift: #line(length: 100%, stroke: 0.05em)
 
 #v(2em)
 
 Ich, Florian Weichert 871104, versichere an Eides statt durch meine Unterschrift, dass ich die vorstehende Arbeit selbständig und ohne fremde Hilfe angefertigt und alle Stellen, die ich wörtlich oder sinngemäß aus veröffentlichten oder nicht veröffentlichten Schriften entnommen habe, als solche kenntlich gemacht habe und mich auch keiner anderen als der angegebenen Quellen oder sonstiger Hilfsmittel bedient habe. Ich versichere an Eides statt, dass ich die vorgenannten Angaben nach bestem Wissen und Gewissen gemacht habe und dass die Angaben der Wahrheit entsprechen und ich nichts verschwiegen habe.
 
-Unterschrift: #line(length: 100%, stroke: 0.07em)
+Unterschrift: #line(length: 100%, stroke: 0.05em)
 
 #pagebreak()
 

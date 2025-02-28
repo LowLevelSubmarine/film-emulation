@@ -5,6 +5,9 @@ Diese Arbeit beschäftigt sich mit der Implementierung von Effekten in der digit
 == Ziele
 Das Primärziel ist eine glaubwürdige Emulation eines Analog-Film in Echtzeit. Dafür sollen die Aspekte Vignettiertung, Halation, Grain, Farbstich, Kratzer, Staub, Gate Weave, Crushed Luminance und Farbanpassungen umgesetzt werden. Zusätzlich sollen die Parameter der Effekte einfach in Echzeit anpassbar sein, um ihre Auswirkungen sichtbar zu machen.
 
+== Motivation
+Die Emulation von Analog-Film erfordert ein weitreichendes Verständnis verschiedener Bildverarbeitungstechniken. Für die Implementierung ist es sinnvoll, die einzelnen Aspekte des Analog-Films zu verstehen und deren Entstehung erklären zu können. Die Umsetzung der Effekte in Echtzeit erfordert eine effiziente Implementierung, um die nötige Performance zu gewährleisten.
+
 == Vorgehensweise
 Die Implementierung der Effekte erfolgt in der hohen Programmiersprache Kotlin. Die Bibliothek OpenCV wird verwendet, um die Bildverarbeitung hardwarenah zu realisieren. Die Effekte werden in einer Pipeline nacheinander auf das Bild angewendet. Zur Verbesserung der Performance, werden statische Werte, die wiederholt berechnet werden müssten, in einem Cache gespeichert.
 
