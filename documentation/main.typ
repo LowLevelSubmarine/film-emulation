@@ -1,15 +1,19 @@
 #set heading(numbering: "1.")
 #set par(justify: true)
 #set text(lang: "de")
-#show raw: it => block(
-  fill: rgb("#f4f4f4"),
-  width: 100%,
-  inset: 8pt,
-  stroke: (
-    left: rgb("#d3d3d3") + 3pt,
-  ),
-  text(fill: rgb("#131313"), it)
-)
+#set page(numbering: "1 / 1")
+#show raw.where(block: true): (it) => {
+  set par(justify: false)
+  block(
+    fill: rgb("#f4f4f4"),
+    width: 100%,
+    inset: 8pt,
+    stroke: (
+      left: rgb("#d3d3d3") + 3pt,
+    ),
+    text(fill: rgb("#131313"), it)
+  )
+}
 #set outline.entry(fill: none)
 
 #pad([
@@ -28,14 +32,18 @@
   indent: auto,
 )
 
+#set outline.entry(fill: none)
+
 #pagebreak()
-
 #include "sections/einleitung.typ"
+#pagebreak()
 #include "sections/funktionsweise_analog_film.typ"
+#pagebreak()
 #include "sections/effekte_analog_film.typ"
+#pagebreak()
 #include "sections/weitere_implementierungen.typ"
+#pagebreak()
 #include "sections/fazit.typ"
-
 #pagebreak()
 
 = Quellenverzeichnis
