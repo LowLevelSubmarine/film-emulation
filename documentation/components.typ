@@ -1,4 +1,3 @@
-#let authored_by(name) = [
-  #set pad(top: -1em)
-  _Geschrieben von #(name)_\
+#let authored_by(name) = block()[
+  _Geschrieben von #(name)_
 ]

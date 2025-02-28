@@ -1,6 +1,7 @@
 #set heading(numbering: "1.")
 #set par(justify: true)
 #set text(lang: "de")
+#set page(numbering: "1 / 1")
 #show raw.where(block: true): (it) => {
   set par(justify: false)
   block(
@@ -27,19 +28,22 @@
 
 #outline(
   title: [Inhaltsverzeichnis],
-  fill: none,
   depth: 2,
   indent: auto,
 )
 
+#set outline.entry(fill: none)
+
 #pagebreak()
-
 #include "sections/einleitung.typ"
+#pagebreak()
 #include "sections/funktionsweise_analog_film.typ"
+#pagebreak()
 #include "sections/effekte_analog_film.typ"
+#pagebreak()
 #include "sections/weitere_implementierungen.typ"
+#pagebreak()
 #include "sections/fazit.typ"
-
 #pagebreak()
 
 = Quellenverzeichnis

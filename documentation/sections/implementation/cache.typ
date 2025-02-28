@@ -1,88 +1,32 @@
-#import "../../components.typ": authored_by
+#import "/components.typ": authored_by
 
 == Cache
 #authored_by("Florian Weichert")
+Für die Implementierung von Effekten ist es oft sinnvoll, dass bestimmte Werte nur einmal berechnet werden, um die Performance zu verbessern. Dafür kann ein Cache verwendet werden, der die Werte speichert und bei erneutem Zugriff auf den gleichen Wert zurückgibt. Der Cache sollte dabei in der Nutzung so einfach wie möglich sein, um die Implementierung der jeweiligen Effekte nicht unnötig zu verkomplizieren. Außerdem sollte der Cache ohne viel Aufwand invalidiert werden können, um sicherzustellen, dass die Werte immer aktuell sind. Das ist besonders dann relevant wenn gecachte Werte von den in Echtzeit anpassbaren Einstellungen des Nutzers abhängig sind.
 
 === Implementierung
+Um die Nutzung des Caches möglichst einfach zu gestalten, sollte dieser ohne einen expliziten Schlüssel auskommen. So genügt als Parameter für die Nutzung eines gecachten Wertes ausschließlich die Funktion, die den jeweiligen Wert berechnet, sollte Wert noch nicht im Cache gespeichert worden sein:
 ```kotlin
-import kotlin.reflect.KProperty
-import kotlin.time.Duration
-import kotlin.time.DurationUnit
-import kotlin.time.measureTimedValue
-
-class ProcessingDsl {
-    private val storage = Storage()
-    private val timings = mutableMapOf<String, Duration>()
-    fun <T> store(
-      dependencies: List<Any>? = null, 
-      creator: () -> T) = storage.store(dependencies) { 
-        creator() 
-      }
-    fun <T> stored(
-      dependencies: List<Any>? = null, 
-      creator: () -> T) = storage.stored(dependencies) { 
-        creator() 
-      }
-    fun reset() {
-        storage.reset()
-        timings.clear()
-    }
-
-    fun logTimings() {
-        println(timings.map { 
-          "${it.key}: ${it.value.toString(DurationUnit.MILLISECONDS)}" 
-        })
-    }
-
-    fun storeTime(name: String, duration: Duration) {
-        timings[name] = duration
-    }
-
-    inline fun <R> measureTime(name: String, fn: () -> R): R {
-        val timedValue = measureTimedValue(fn)
-        storeTime(name, timedValue.duration)
-        return timedValue.value
-    }
+fun storageTest() {
+  val storage = Storage()
+  // Beispiel Cache-Aufruf
+  val veryExpensiveCalculationResult = storage.store({ 1 + 2 })
 }
-
-private class Storage {
-    private val storage = mutableMapOf<Int, Any?>()
-    private val lastDependencies = mutableMapOf<Int, List<Any>?>()
-    private var counter = 0
-
-    @Suppress("UNCHECKED_CAST")
-    fun <T> store(dependencies: List<Any>?, creator: () -> T): T {
-        val value = 
-          if (
-            storage.containsKey(counter) && 
-            lastDependencies[counter] == dependencies
-          ) {
-            storage[counter] as T
-          } else {
-              lastDependencies[counter] = dependencies
-              val value = creator()
-              storage[counter] = value
-              value
-          }
-        counter++
-        return value
-    }
-
-    fun <T> stored(dependencies: List<Any>?, creator: () -> T) =
-        store(dependencies) { StoredValueDelegate(creator()) }
-
-    fun reset() {
-        counter = 0
-    }
+```
+Aufgrund von Kotlins Syntactic Sugar kann die Funktion `storageTest` als Extension-Function eine Instanz von Storage für den Aufruf vorraussetzen. Zusätzlich kann der letzte Parameter einer Funktion, sollte er eine Funktion sein, außerhalb der Klammern übergeben werden. Diese beiden Sprach-Features ermöglichen es, den Cache-Aufruf noch weiter zu vereinfachen:
+```kotlin
+fun Storage.storageTest() {
+  // Beispiel Cache-Aufruf
+  val veryExpensiveCalculationResult = store { 1 + 2 }
 }
-
-class StoredValueDelegate<T>(private var value: T) {
-    operator fun getValue(thisRef: Nothing?, property: KProperty<*>): T {
-        return this.value
-    }
-
-    operator fun setValue(thisRef: Nothing?, property: KProperty<*>, value: T) {
-        this.value = value
-    }
+```
+Um den jeweiligen Wert im Cache jedoch auch ohne Schlüssel identifizieren zu können wird anstelle eines herkömmlichen Schlüssels ein Zähler verwendet. Dieser wird bei jedem Aufruf des Caches inkrementiert und dient als Identifikator für den jeweiligen Wert. Damit der Cache auch schlussendlich verwendet werden kann, muss der Zähler vor jedem einzelnen Durchlauf der Pipeline einmal zurückgesetzt werden. Die Inspiration für diese Implementierung stammt aus der Dokumentation zu der Flutter Bibliothek `flutter_hooks` @flutter-hooks-principle.
+#parbreak()
+Für die Invalidierung des Caches anhand von Abhängigkeiten wird neben dem Wert selbst auch eine List aller angegebenen Abhängigkeiten gespeichert. Sollte sich mit einem Aufruf des Caches eine der Abhängigkeiten geändert haben, wird der Wert neu berechnet und im Cache gespeichert:
+```kotlin
+fun Storage.storageTest() {
+  var multiplier = 1
+  val veryExpensiveCalculationResult =
+      store(dependencies = listOf(multiplier)) { 3 * multiplier }
 }
 ```

@@ -1,4 +1,4 @@
-#import "@preview/wrap-it:0.1.0": wrap-content
+#import "@preview/wrap-it:0.1.1": wrap-content
 #import "../../components.typ": authored_by
 
 == Halation

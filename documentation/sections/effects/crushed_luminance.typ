@@ -1,12 +1,28 @@
+#import "@preview/wrap-it:0.1.1": wrap-content
 #import "../../components.typ": authored_by
 
 == Crushed Luminance
 #authored_by("Florian Weichert")
 
 === Theorie 
-@how-to-edit-like-film
-
+Analog-Film hat im Vergleich zu digitalen Bildern eine höheren Dynamik-Umfang in den hellen Bildbereichen. Dieser Effekt entsteht durch die Eigenschaften der Fotoemulsion, die in der Lage ist, sehr helle Bildbereiche abzubilden, ohne dass diese überbelichtet wirken. Digitale Bilder hingegen haben eine geringere Dynamik in den hellen Bildbereichen, sie tendieren bei einer Überbelichtung schnell zu einem reinen Weiß @how-to-edit-like-film. Zusätzlich kann es passieren, dass der im Scan-Vorgang die maximal hellen und dunklen Bereiche nicht perfekt abgebildet werden können.
 === Implementierung
+#wrap-content(
+    [
+      #pad(left: 12pt, bottom: 12pt)[
+        #box(width: 150pt)[
+          #figure(
+              image("../../assets/effects/crushed_luminance/modification.png"),
+              caption: [Nachahmung der verwendeten Luminanz-Kurve],
+          )<fig:crushed-luminance-curve>
+        ]
+      ]
+    ],
+    [
+      Um diese Eigenschaften des analogen Films zu emulieren, wird eine Luminanz-Kurve (@fig:crushed-luminance-curve) auf das Bild angewendet. Dafür wird zunächst ein LUT generiert, welches die Luminanz-Werte anhand einer Splines auf andere Luminanz-Werte abbildet. Diese Spline wird durch 2-Dimensionale Knoten definiert. Das anschließend generierte LUT wird auf Performance-Gründen zwischengespeichert. Anschließend wird das LUT auf das Bild angewendet. Die Stärke der Luminanz-Veränderung kann durch einen Parameter (`crushedLuminanceStrength`) angepasst werden. Damit das Bild durch die neue Luminanz-Kurve nicht zu sehr an Kontrast verliert, wird zuvor ein Kontrast-LUT auf das Bild angewendet. Dieses besteht aus zwei Knoten (also lineare Interpolation) und wird ebenfalls zwischengespeichert.
+    ],
+    align: right,
+)
 
 ```kotlin
 fun ProcessingDsl.crushedLuminance(
