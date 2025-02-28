@@ -1,6 +1,8 @@
 #import "@preview/wrap-it:0.1.1": wrap-content
 #import "../../components.typ": authored_by
 
+#pagebreak()
+
 == Halation
 #authored_by("Leonie Wehser")
 
@@ -20,7 +22,7 @@
       ], left: 12pt, bottom: 12pt)
     ],
     [
-      Halation ist ein leuchtender Schein um helle Bereiche im Bild, der durch Streuung von Licht in der Filmschicht entsteht (@fig:halation-theorie). Dieser Effekt tritt besonders an kontrastreichen Kanten (hell-dunkel Übergänge) auf.
+      Halation ist ein leuchtender Schein um helle Bereiche im Bild, der durch Streuung von Licht in der Filmschicht entsteht (@fig:halation-theorie). Dieser Effekt ist besonders an kontrastreichen Kanten (hell-dunkel Übergänge) sichtbar.
       Das Licht durchquert die Emulsionsschichten und wird auf der Rückseite des Kameragehäuses reflektiert, wodurch es erneut auf die lichtempfindlichen Schichten trifft.
       
       Besonders betroffen ist dabei die rot-empfindliche Schicht, weshalb der Lichtschein auf dem entwickelten Bild eher rötlich erscheint. Mehrere Faktoren können die Stärke des Effekts beeinflussen: Eine glatte Oberfläche des Kameragehäuses reflektiert stärker, helles Licht erzeugt einen intensiveren Effekt, und eine höhere Filmempfindlichkeit verstärkt die Halation ebenfalls.
@@ -31,12 +33,12 @@
 )
 
 === Implementierung
-Die @fig:halation-diagram zeigt den Ablauf der Implementierung zur Simulation von Halation. Der Prozess beginnt mit der Extraktion des roten Farbkanals, da Halation hauptsächlich in diesem Spektrum auftritt. Durch eine Kombination aus Hochpassfilterung und Weichzeichnung wird ein diffuses Leuchten erzeugt, das anschließend auf das Originalbild addiert wird. Dadurch entsteht ein natürlicher, filmischer Halation-Effekt.
+Die @fig:halation-diagram zeigt den Verarbeitungsablauf zur Simulation von Halation. Der Prozess beginnt mit der Extraktion des roten Farbkanals, da Halation hauptsächlich in diesem Spektrum auftritt. Durch eine Kombination aus Hochpassfilterung und Weichzeichnung wird ein diffuses Leuchten erzeugt, das anschließend auf das Originalbild addiert wird. Dadurch entsteht ein natürlicher, filmischer Halation-Effekt.
 
 #box(width: 100%)[
   #figure(
     image("../../assets/effects/halation/diagram.png", height: 250pt),
-    caption: [Implementierungsablauf für die Halation],
+    caption: [Verarbeitungsablauf für die Halation],
   )<fig:halation-diagram>
 ]
 
@@ -65,7 +67,7 @@ Um Halation zu simulieren, wird ein Eingabebild benötigt, das helle Bildbereich
   [
     #text("Extraktion des roten Bildkanals", weight: "bold") \ 
     Wie im Theorie-Abschnitt beschrieben, entsteht Halation hauptsächlich durch rötlich reflektiertes Licht.
-    Daher wird der rote Bildkanal isoliert, indem man `extractChannel()` verwendet, wobei der rote Kanal in OpenCV der zweite Kanal ist (@fig:halation-step1). Dies hat den zusätzlichen Vorteil, dass die nachfolgenden Berechnungen weniger rechenintensiv sind, da nur ein Drittel der Daten verarbeitet werden muss.
+    Daher wird der rote Bildkanal isoliert, indem man `extractChannel()` verwendet, wobei der rote Kanal in OpenCV der zweite Kanal ist (@fig:halation-step1). Dies hat den zusätzlichen Vorteil, dass die nachfolgenden Berechnungen weniger rechenintensiv sind, da nur ein Drittel der Daten verarbeitet werden müssen.
   ],
   align: right,
 )
