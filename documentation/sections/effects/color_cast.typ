@@ -5,12 +5,15 @@
 #authored_by("Leonie Wehser")
 
 === Theorie
-Analoge Farbfilme werden durch chemische Reaktionen verarbeitet, dabei kann es aus verschiedenen Gründen zu Farbstichen kommen. 
-Zum Einen können die Farbstoffe mit dem Alter verblassen, wobei die 3 Farbschichten je nach Zusammensetzung unterschiedlich schnell verblassen. Dadurch können bei älteren Filmen oder Abzügen ein Rot-, Blau-, oder Grünstich entstehen.
-Wenn die Filme oder Abzüge bei hohen Temperaturen oder Luftfeuchtigkeit gelagert werden, beschleunigt dies die chemischen Reaktionen. Außerdem kann UV-Licht die Farben verändern, besonders bei Dieas und Farbnegativen.
-Bei falscher Belichtungszeit können auch Farbstiche entstehen. Bei Unterbelichtung kann es zu einem Blaustich kommen, bei Überbelichtung hingegen zu einem Gelbstich. Genauso können bei der Entwicklung Fehler auftreten, durch ungenaue Temperatur oder falsche Chemiekonzentrationen.
-Zu guter Letzt kann auch der Scanner einen eigenen Farbstich hinzufügen, genauso kann bei dem Drucker ein falsches Farbprofie eingestellt sein oder es kann zu Tintenschwankungen kommen. Ungewollte Graustufenanpassungen verfälschen Tiefen und Höhen.
-Man kann Farbstiche korrigieren, indem man den ursprünglichen Farbeindruck wiederherstellt, entweder manuell oder softwaregestützt.
+Analoge Farbfilme werden durch chemische Reaktionen verarbeitet, wobei es aus verschiedenen Gründen zu Farbstichen kommen kann. Zum einen können die Farbstoffe mit der Zeit verblassen, wobei die drei Farbschichten je nach Zusammensetzung unterschiedlich schnell verblassen. Dadurch können bei älteren Filmen oder Abzügen Rot-, Blau- oder Grünstiche entstehen.
+
+Wenn die Filme oder Abzüge bei hohen Temperaturen oder hoher Luftfeuchtigkeit gelagert werden, beschleunigt dies die chemischen Reaktionen. Außerdem kann UV-Licht die Farben verändern, besonders bei Dias und Farbnegativen. 
+
+Auch falsche Belichtungszeiten können Farbstiche verursachen. Bei Unterbelichtung kann es zu einem Blaustich kommen, bei Überbelichtung hingegen zu einem Gelbstich. Ebenso können bei der Entwicklung Fehler auftreten, etwa durch ungenaue Temperaturen oder falsche Chemiekonzentrationen.
+
+Zu guter Letzt kann auch der Scanner einen eigenen Farbstich hinzufügen, ebenso wie ein Drucker, wenn ein falsches Farbprofil eingestellt ist oder es zu Tintenschwankungen kommt. Ungewollte Graustufenanpassungen verfälschen zudem Tiefen und Höhen.
+
+Farbstiche können korrigiert werden, indem der ursprüngliche Farbeindruck wiederhergestellt wird, entweder manuell oder softwaregestützt.
 
 #wrap-content(
     [
@@ -18,32 +21,20 @@ Man kann Farbstiche korrigieren, indem man den ursprünglichen Farbeindruck wied
         #figure(
             image("../../assets/effects/input.png", width: 100%),
             caption: [Beispiel Eingabebild],
-        )<fig:grain-input>
+        )<fig:color_cast-input>
         #figure(
             image("../../assets/effects/color_cast/modification.png", width: 100%),
             caption: [Color Cast Maske],
-        )<fig:grain-modification>
+        )<fig:color_cast-modification>
         #figure(
             image("../../assets/effects/color_cast/output.png", width: 100%),
             caption: [Ausgabebild für Color Cast],
-        )<fig:grain-output>
+        )<fig:color_cast-output>
       ], left: 12pt, bottom: 12pt)
     ],
     [
-      === Implementierung
-        - Ziel der Implementierung:
-            - Simulation oder Kompensation eines Farbstichs.
-            - Flexible Anpassung durch Konfigurationswerte.
-            - Grundlage für automatisierte Farbkorrektur.
-        - Beschreibung der Funktion colorCast in Kotlin:
-            - Eingabe: Bild (Mat) und Konfiguration (Config).
-            - Nutzung von Core.add(image, config.colorCast.toScalar(), image) für Farbanpassungen.
-            - Umwandlung der Konfigurationsfarbe in OpenCV-Scalar-Format.
-            - Ergebnis: Anpassung aller Pixel um die definierten Farbwerte.
-        - Vorteile der Implementierung:
-            - Effiziente Anwendung durch OpenCV.
-            - Anpassbarkeit durch Konfigurationswerte.
-            - Ermöglicht automatisierte Farbkorrekturen.
+        === Implementierung
+        Die Funktion `colorCast` simuliert oder kompensiert einen globalen Farbstich. Durch den Konfigurationswert `config.colorCast` kann die Anpassung flexibel gesteuert werden. Der Wert wird mittels `Core.add(image, config.colorCast.toScalar(), image)` auf alle Pixel des Bildes angewendet (@fig:color_cast-output).
         ```kotlin
         fun ProcessingDsl.colorCast(
             image: Mat, config: Config
