@@ -1,4 +1,4 @@
-#import "../../components.typ": authored_by
+#import "../../components.typ": authored_by, input_output_figures
 
 == Dust
 #authored_by("Florian Weichert")
@@ -40,3 +40,5 @@ fun ProcessingDsl.dust(image: Mat, config: Config) {
     Core.add(image, dynamicDust, image)
 }
 ```
+
+#input_output_figures("Dust", "/assets/effects/dust/output.png")
