@@ -29,9 +29,9 @@ Die Form und Intensität dieser Artefakte hängen von der Ursache und der Art de
         === Implementierung
         Um Kratzer auf digitalen Bildern zu simulieren, wird die Funktion `scratches` verwendet.
 
-        Zunächst werden verschiedene Kratzertexturen aus Bilddateien geladen und in einer Liste gespeichert. Dabei werden reale Kratzertexturen verwendet, um synthetische Generierung zu vermeiden und realistische Ergebnisse zu erzielen. Die Texturen werden durch Rotation transformiert, um Variabilität zu erzeugen.
+        Zunächst werden 10 verschiedene Kratzertexturen aus Bilddateien geladen und in einer Liste gespeichert. Diese Texturen basieren auf realen Kratzern, um eine realistische Darstellung zu gewährleisten. Anschließend werden 30 zufällige Rotationen erstellt und auf zufällige Kratzertexturen angewendet, um Variabilität zu erzeugen.
 
-        Der Anteil der anzuwendenden Kratzer (`scratchAmount`) wird berechnet, wobei eine geringe Wahrscheinlichkeit für eine hohe Anzahl an Kratzern festgelegt wird. Anschließend werden die Kratzertexturen auf das Eingangsbild angewendet. Dazu wird eine zufällige Textur ausgewählt (@fig:scratches-modification) und ein zufälliger Bereich (ROI = Region of Interest) im Bild bestimmt. Die Textur wird additiv auf das Eingangsbild angewendet (@fig:scratches-output).
+        Der Anteil der anzuwendenden Kratzer (`scratchAmount`) wird berechnet. In 90% der Fälle wird kein Kratzer angewendet. In den restlichen 10% der Fälle wird eine geringe Anzahl von Kratzern festgelegt, wobei die maximale Anzahl 5 beträgt. Danach werden die Kratzertexturen auf das Eingangsbild angewendet. Eine zufällige Textur aus der Liste der 30 transformierten Kratzer wird ausgewählt (@fig:scratches-modification) und ein zufälliger Bereich (ROI = Region of Interest) im Bild bestimmt. Die Textur wird additiv auf das Eingangsbild angewendet (@fig:scratches-output).
     ],
   align: right,
 )

@@ -18,7 +18,7 @@
       == Grain
       #authored_by("Leonie Wehser")
       === Theorie
-      Wie im  @topic:fotoemulsion erläutert, enthalten analoge Farbfilme lichtempfindliche Kristalle. Die Körnung variiert zufällig über das Bild. Bei der Entwicklung können durch die Kristalle feine, chemisch bedingte Bildstörungen auftreten. Durch diese unregelmäßige, organische Verteilung wird den Bilder ein natürlicheres Aussehen verliehen. Der ISO-Wert hat auch einen Einfluss auf die Korn-Bildung. Bei höhreren ISO-Werten bilden sich größere Kristalle und somit auch ein stärkeres Rauschen (@fig:grain-ISO1600). Ein glatteres Bild erhält man bei niedrigen ISO-Werten (@fig:grain-ISO25).
+      Wie im @topic:fotoemulsion erläutert, enthalten analoge Farbfilme lichtempfindliche Kristalle. Die Körnung variiert zufällig über das Bild. Bei der Entwicklung können durch die Kristalle feine, chemisch bedingte Bildstörungen auftreten. Diese unregelmäßige, organische Verteilung verleiht den Bildern ein natürlicheres Aussehen. Der ISO-Wert beeinflusst die Korn-Bildung: Bei höheren ISO-Werten bilden sich größere Kristalle und somit auch ein stärkeres Rauschen (@fig:grain-ISO1600). Ein glatteres Bild erhält man bei niedrigeren ISO-Werten (@fig:grain-ISO25).
     ],
   align: right,
 )
@@ -73,20 +73,25 @@ fun ProcessingDsl.grain(inputImage: Mat, destinationImage: Mat, config: Config) 
     val grainScale = 0.4
     val staticGrain = store(dependencies = listOf(config.grainStrength)) {
         val texture = Imgcodecs.imread("./assets/grain/grain4.jpeg")
+        // effekt verringern
         Core.multiply(
           texture,
           Scalar.all(config.grainStrength.toDouble()),
           texture
         )
+        // verringerung der Größe
         val size = Size(
           texture.width().toDouble() * grainScale,
           texture.height().toDouble() * grainScale
         )
+        // verkleinerung des bildes
         Imgproc.resize(texture, texture, size)
         Mat(texture, Rect(Point(), inputImage.size()))
     }
     val dynamicGrain = store { Mat() }
+
     val transformation = createRandomOffsetTransformation(inputImage)
+    
     Imgproc.warpAffine(
       staticGrain,
       dynamicGrain,
