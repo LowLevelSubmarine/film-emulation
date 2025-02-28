@@ -1,7 +1,7 @@
 #import "@preview/wrap-it:0.1.1": wrap-content
 #import "../../components.typ": authored_by
 
-== Color Cast
+== Farbstich
 #authored_by("Leonie Wehser")
 
 === Theorie
