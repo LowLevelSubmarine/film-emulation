@@ -11,14 +11,14 @@ Vignettierung beschreibt die Abschattung zum Bildrand hin. Es gibt verschiedene 
 
 #text("2. Optische Vignettierung:", weight: "semibold") Diese tritt auf, wenn das Licht in einem steilen Winkel auf die Objektivblende trifft. Es entsteht ein internes physisches Hindernis, da das Licht teilweise von der Blende blockiert wird. Der Effekt tritt besonders oft bei Weitwinkelobjektiven mit großer Blendenöffnung auf. Durch Abblenden des Objektivs kann der Effekt reduziert oder sogar eliminiert werden.
 
-#text("3. Pixelvignettierung:", weight: "semibold") Ein Pixelsensor besteht aus Millionen von Photonenschächten, die das auftreffende Licht messen. Diese Schächte sind extrem klein, haben aber eine gewisse Tiefe. Bei starkem Lichteinfall trifft das Licht möglicherweise nicht den Boden der Schächte. Besonders ausgeprägt ist der Effekt an den Bildrändern. Man kann den Effekt durch bestimmte Sensoralgorithmen korrigieren.
-
 === Implementierung
 Um den klassischen Analogfilm-Look zu verbessern, wird ein Vignetteneffekt hinzugefügt. Dieser Effekt dunkelt die Bildränder ab und lenkt den Fokus auf das Zentrum des Bildes. Der Vignetteneffekt wird durch die Funktion `vignette(image: Mat, config: Config)` implementiert.
 
 Der Effekt wird in mehreren Schritten umgesetzt:
-Zunächst wird eine Vignettenmaske erstellt, die die Bildränder abdunkelt (@fig:vignette-modification). Die Stärke des Effekts wird durch den Konfigurationswert `config.vignetteStrength` bestimmt.
-Die Berechnung der Maske erfolgt nur einmal und wird zwischengespeichert, solange der Wert von `config.vignetteStrength` unverändert bleibt, um die Effizienz zu erhöhen. Die Maske wird dann auf die Größe des Eingabebildes skaliert und schließlich vom Bild subtrahiert, um den Vignetteneffekt zu erzeugen (@fig:vignette-output).
+Es wird eine Vignettenmaske erstellt, die die Bildränder abdunkelt (@fig:vignette-modification). `createVignetteMask()` erstellt dafür ein schwarzes 3-Kanal-Bild von der Größe des Eingabebildes und speichert den Mittelpunkt des Bildes in `center`. Anschließend speichert man die maximale Distanz vom Mittelpunkt zum Bildrand in `maxDist`. 
+In einer doppelten Schleife wird für jeden Pixel der Richtungsvektor `delta` zum Mittelpunkt berechnet. Mit diesem Vektor wird die Distanz zum Mittelpunkt berechnet und mit dem maximalen Abstand normiert. Nun kann der Farbwert für den Pixel berechnet werden, indem die normierte Distanz mit der Stärke des Effekts multipliziert und auf den Wertebereich von 0 bis 255 skaliert wird. Dieser Wert wird als Grauwert für alle drei Kanäle des Pixels gesetzt.
+Die Stärke des Effekts wird durch den Konfigurationswert `config.vignetteStrength` bestimmt.
+Die Berechnung der Maske erfolgt nur einmal und wird zwischengespeichert, solange der Wert von `config.vignetteStrength` unverändert bleibt, um die Effizienz zu erhöhen. Die Maske wird vom Bild subtrahiert, um den Vignetteneffekt zu erzeugen (@fig:vignette-output).
 
 ```kotlin
 fun ProcessingDsl.vignette(
@@ -34,6 +34,21 @@ fun ProcessingDsl.vignette(
     )
   }
   Core.subtract(image, mask, image)
+}
+
+fun createVignetteMask(strength: Double, size: Size): Mat {
+    val mask = Mat(size, CvType.CV_8UC3)
+    val center = Point(size.height / 2, size.width / 2)
+    val maxDist = sqrt(center.x.pow(2.0) + center.y.pow(2.0))
+    for (x in 0 until size.height.toInt()) {
+        for (y in 0 until size.width.toInt()) {
+            val delta = Point(x - center.x, y - center.y)
+            val dist = sqrt(delta.x.pow(2.0) + delta.y.pow(2.0)) / maxDist
+            val value = min((dist * strength * 255).toInt(), 255).toByte()
+            mask.at(Byte::class.java, x, y).v3c = Mat.Tuple3(value, value, value)
+        }
+    }
+    return mask
 }
 ```
 
