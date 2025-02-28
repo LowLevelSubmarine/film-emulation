@@ -42,6 +42,7 @@ Die @fig:halation-diagram zeigt den Verarbeitungsablauf zur Simulation von Halat
   )<fig:halation-diagram>
 ]
 
+Um Halation zu simulieren, wird ein Eingabebild benötigt, das helle Bildbereiche enthält, die den Effekt verursachen. In diesem Beispielbild sind die hellsten Bereiche die Fenster, durch die das Tageslicht ins Zimmer fällt. Dieses Bild wird in den folgenden Schritten bearbeitet, um die Halation zu simulieren.
 
 #box(width: 100%)[
   #figure(
@@ -49,8 +50,6 @@ Die @fig:halation-diagram zeigt den Verarbeitungsablauf zur Simulation von Halat
       caption: [Beispiel Eingabebild],
   )<fig:halation-input>
 ]
-
-Um Halation zu simulieren, wird ein Eingabebild benötigt, das helle Bildbereiche enthält, die den Effekt verursachen. In diesem Beispielbild sind die hellsten Bereiche die Fenster, durch die das Tageslicht ins Zimmer fällt. Dieses Bild wird in den folgenden Schritten bearbeitet, um die Halation zu simulieren.
 
 #wrap-content(
   [
