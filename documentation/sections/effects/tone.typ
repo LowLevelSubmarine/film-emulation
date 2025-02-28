@@ -19,7 +19,7 @@ Beim Abgleich der Analog-Bilder (beispielhaft @fig:tone-example-digital) mit den
 )
 
 === Implementierung
-Um unterschiedliche Farbtöne eines Bildes getrennt voneinander anzupassen, ist es zunächst sinnvoll, das Bild in einen Farbraum zu konvertieren, in dem die Farbtöne auf einen einzigen Wert abgebildet werden #footnote[z.B. HSV, der Farbton ist dann das "H" als "Hue"]. So können die Farbtöne nach einem Mapping durch ein LUT als Maske für weitere Verarbeitungen verwendet werden (@fig:tone-effect-hue-filter). In diesem Fall wird eine Maske für orange Farbtöne erstellt.
+Um unterschiedliche Farbtöne eines Bildes getrennt voneinander anzupassen, ist es zunächst sinnvoll, das Bild in einen Farbraum zu konvertieren, in dem die Farbtöne auf einen einzigen Wert abgebildet werden #footnote[Zum Beispiel HSV, der Farbton ist dann das "H" als "Hue"]. So können die Farbtöne nach einem Mapping durch ein LUT als Maske für weitere Verarbeitungen verwendet werden (@fig:tone-effect-hue-filter). In diesem Fall wird eine Maske für orange Farbtöne erstellt.
 
 #figure(
     image("../../assets/hue-filter.png",),

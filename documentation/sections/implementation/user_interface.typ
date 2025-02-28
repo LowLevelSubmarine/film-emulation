@@ -25,7 +25,7 @@ Angepasst werden können folgende Parameter:
 )
   
 Es gibt einen Reset-Button, der die Einstellungen mit `resetConfig()` auf die Standardwerte zurücksetzt.
-Die ConfigSlider-Komponente verwendet ```html <input type='range'>``` für die Wertsteuerung. Es kann angegeben werden, in welchen `Steps` der Slider bewegt werden darf, z.B. 0.01 oder 1. Ebenso werden `min` und `max` definiert, um die Skala des Sliders festzulegen, z.B. von 0 bis 1. Ansonsten wird der aktuelle Wert im `value` übergeben. `onValue` wird bei Veränderungen an dem Slider aktiviert und ruft `updateConfig()` auf, welches zum einen die Methode zur Weiterleitung ans Backend aufruft, als auch das neue Value in den useState speichert.
+Die ConfigSlider-Komponente verwendet ```html <input type='range'>``` für die Wertsteuerung. Es kann angegeben werden, in welchen `Steps` der Slider bewegt werden darf, zum Beispiel 0.01 oder 1. Ebenso werden `min` und `max` definiert, um die Skala des Sliders festzulegen, beispielsweise von 0 bis 1. Ansonsten wird der aktuelle Wert im `value` übergeben. `onValue` wird bei Veränderungen an dem Slider aktiviert und ruft `updateConfig()` auf, welches zum einen die Methode zur Weiterleitung ans Backend aufruft, als auch das neue Value in den useState speichert.
 
 Die `VideoStream`-Komponente hat über `http://localhost:8080/stream` Zugriff auf die Frames, welche als einzelne Bilder übermittelt werden. Angezeigt werden diese als Live-Stream über ein ```html <img>```-Element. 
 ]
