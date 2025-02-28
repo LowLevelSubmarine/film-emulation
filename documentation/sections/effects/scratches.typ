@@ -5,8 +5,8 @@
 #authored_by("Leonie Wehser")
 
 === Theorie
-Wenn Staub oder Kratzer auf dem Film kommen, entstehen helle oder dunkle Artefakte im Bild. 
-Form und Intensität ist abhängig von der Ursache und der Filmart.
+Staub oder Kratzer auf dem Film führen zu hellen oder dunklen Artefakten im Bild. 
+Die Form und Intensität dieser Artefakte hängen von der Ursache und der Art des Films ab.
 
 #wrap-content(
     [
@@ -14,45 +14,27 @@ Form und Intensität ist abhängig von der Ursache und der Filmart.
         #figure(
             image("../../assets/effects/input.png", width: 100%),
             caption: [Beispiel Eingabebild],
-        )<fig:grain-input>
+        )<fig:scratches-input>
         #figure(
             image("../../assets/effects/scratches/modification.png", width: 100%),
             caption: [Kratzer-Maske],
-        )<fig:grain-modification>
+        )<fig:scratches-modification>
         #figure(
             image("../../assets/effects/scratches/output.png", width: 100%),
             caption: [Ausgabebild für Kratzer],
-        )<fig:grain-output>
+        )<fig:scratches-output>
       ], left: 12pt, bottom: 12pt)
     ],
     [
-      === Implementierung
-        - Ziel:
-            - Simulation von Kratzern auf digitalen Bildern.
-            - Erzeugung zufälliger Kratzertexturen für realistischen Effekt.
-        - Funktion scratches(image: Mat):
-            - Nutzung einer ProcessingDsl-Umgebung.
-            - Eingabe: OpenCV-Mat-Objekt.
-            - Schritte:
-                - Laden verschiedener Kratzertexturen aus Bilddateien.
-                - Speicherung in einer Liste.
-                - Transformation der Texturen (z. B. Rotation) für Variabilität.
-                - Berechnung des Kratzeranteils (scratchAmount):
-                    - Geringe Wahrscheinlichkeit für hohe Anzahl an Kratzern.
-                - Anwendung der Kratzertexturen auf das Eingangsbild:
-                    - Auswahl einer zufälligen Textur.
-                    - Bestimmung eines zufälligen Bereichs (ROI) im Bild.
-                    - Additive Anwendung der Textur mit Core.add().
-        - Vorteile:
-            - Effiziente Erzeugung realistischer Kratzereffekte.
-            - Nutzung realer Kratzertexturen statt synthetischer Generierung.
-            - Anpassbarkeit durch Variation von Anzahl, Position, Transformationen.
-            - Einfache Integration in Bildverarbeitungs-Pipelines.
-            - Nützlich für Algorithmus-Tests oder künstlerische Anwendungen.
-         ],
+        === Implementierung
+        Um Kratzer auf digitalen Bildern zu simulieren, wird die Funktion `scratches` verwendet.
+
+        Zunächst werden verschiedene Kratzertexturen aus Bilddateien geladen und in einer Liste gespeichert. Dabei werden reale Kratzertexturen verwendet, um synthetische Generierung zu vermeiden und realistische Ergebnisse zu erzielen. Die Texturen werden durch Rotation transformiert, um Variabilität zu erzeugen.
+
+        Der Anteil der anzuwendenden Kratzer (`scratchAmount`) wird berechnet, wobei eine geringe Wahrscheinlichkeit für eine hohe Anzahl an Kratzern festgelegt wird. Anschließend werden die Kratzertexturen auf das Eingangsbild angewendet. Dazu wird eine zufällige Textur ausgewählt (@fig:scratches-modification) und ein zufälliger Bereich (ROI = Region of Interest) im Bild bestimmt. Die Textur wird additiv auf das Eingangsbild angewendet (@fig:scratches-output).
+    ],
   align: right,
 )
-
 
 ```kotlin
 fun ProcessingDsl.scratches(image: Mat) {
@@ -90,3 +72,4 @@ fun ProcessingDsl.scratches(image: Mat) {
     }
 }
 ```
+
