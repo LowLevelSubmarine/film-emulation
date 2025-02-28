@@ -5,7 +5,7 @@
 Für die Implementierung von Effekten ist es oft sinnvoll, dass bestimmte Werte nur einmal berechnet werden, um die Performance zu verbessern. Dafür kann ein Cache verwendet werden, der die Werte speichert und bei erneutem Zugriff auf den gleichen Wert zurückgibt. Der Cache sollte dabei in der Nutzung so einfach wie möglich sein, um die Implementierung der jeweiligen Effekte nicht unnötig zu verkomplizieren. Außerdem sollte der Cache ohne viel Aufwand invalidiert werden können, um sicherzustellen, dass die Werte immer aktuell sind. Das ist besonders dann relevant, wenn gecachte Werte von den in Echtzeit anpassbaren Einstellungen des Nutzers abhängig sind.
 
 === Implementierung
-Um die Nutzung des Caches möglichst einfach zu gestalten, sollte dieser ohne einen expliziten Schlüssel auskommen. So genügt als Parameter für die Nutzung eines gecachten Wertes ausschließlich die Funktion, die den jeweiligen Wert berechnet, sollte der Wert noch nicht im Cache gespeichert worden sein:
+Um die Nutzung des Caches möglichst einfach zu gestalten, sollte dieser ohne einen expliziten Schlüssel auskommen. So genügt als Parameter für die Nutzung eines gecachten Wertes ausschließlich eine Lambda-Funktion, die den zu cachenden Wert berechnet. Diese Funktion wird verwendent, wenn der Wert noch nicht im Cache gespeichert worden ist:
 ```kotlin
 fun storageTest() {
   val storage = Storage()
