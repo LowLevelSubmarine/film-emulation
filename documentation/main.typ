@@ -32,8 +32,6 @@
   indent: auto,
 )
 
-#set outline.entry(fill: none)
-
 #pagebreak()
 #include "sections/einleitung.typ"
 #pagebreak()
